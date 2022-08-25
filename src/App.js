@@ -1,81 +1,41 @@
-// import logo from "./logo.svg";
-// import "./App.css";
-// import { withRouter } from "./withRouter";
-// import { useNavigate, Outlet } from "react-router";
-// import { Provider, connect } from "react-redux";
-
-// import TitleBar from "./Components/TitleBar";
-// import { Component } from "react";
-
-// import PropTypes from "prop-types";
-// import { loadUser } from "./actions/authAction";
-// import { returnErrors, clearErrors } from "./actions/errorAction";
-// import { LOGIN_FAIL, RESET_FAIL, AUTH_ERROR, CLEAR_ERRORS, NO_ERROR } from "./actions/types";
-// class App extends Component {
-//   static propTypes = {
-//     isAuthenticated: PropTypes.bool,
-//     isLoading: PropTypes.bool,
-//     error: PropTypes.object.isRequired,
-//     loadUser: PropTypes.func.isRequired,
-//     clearErrors: PropTypes.func.isRequired,
-//     returnErrors: PropTypes.func.isRequired,
-//     user: PropTypes.object
-//   };
-//   componentWillMount() {
-//     this.props.loadUser();
-//     //console.log("AppWillMount")
-//   }
-
-//   componentDidUpdate(prevProps, prevState) {
-//     const error = this.props.error;
-//     console.log(error);
-//     if (error !== prevProps.error) {
-
-//       if (error.id === null || error.id === undefined) return;
-//       else if (
-//         error.id === AUTH_ERROR ||
-//         error.id === LOGIN_FAIL ||
-//         error.id === RESET_FAIL ||
-//         error.id === CLEAR_ERRORS
-//       ) {
-//         this.props.navigate("/Login");
-//       } else if (error.id === NO_ERROR) {
-//         this.props.navigate("/Main");
-//       }
-//     }
-//   }
-
-//   render() {
-//     return (
-//       <div className="App ">
-
-//         {/* <TitleBar /> */}
-
-//       </div>
-//     );
-//   }
-// }
-
-// const mapStateToProps = state => ({
-//   isAuthenticated: state.auth.isAuthenticated,
-//   isLoading: state.auth.isLoading,
-//   error: state.error,
-//   user: state.auth.user
-// });
-
-// export default withRouter(
-//   connect(mapStateToProps, { loadUser, returnErrors, clearErrors })(App)
-// );
-import React from 'react';
+import React, { useCallback } from 'react';
 import logo from "./logo.svg";
 import "./App.css";
+import { useDropzone } from 'react-dropzone';
 
-//import TitleBar from "./Components/TitleBar";
+import {
+
+  faPowerOff
+}
+  from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+function MyDropzone() {
+  const onDrop = useCallback(acceptedFiles => {
+    console.log(acceptedFiles);
+  }, [])
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
+  return (
+    <div {...getRootProps()} className="content-center items-center p-8 border-2 border-dashed ">
+      <input {...getInputProps()} />
+      {
+        isDragActive ?
+          <p>Drop the files here ...</p> :
+          <p>Drag 'n' drop some files here, or click to select files</p>
+      }
+    </div>
+  )
+}
 
 const App = () => {
   return (
-    <div className='App'>
-      Hello
+    <div className='App bg-slate-600  p-3'>
+      <div className='absolute top-3 left-3'>
+        <FontAwesomeIcon icon={faPowerOff} fixedWidth size='lg' />
+      </div>
+
+      <MyDropzone />
     </div>
   )
 }
