@@ -1,0 +1,95 @@
+.App {
+  text-align: center;
+  /* background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); */
+  background-color: white;
+  font-family: shamel, Helvetica, Arial, sans-serif;
+min-width: 400px;
+min-height: 600px;
+  border-radius: 40px;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.app-title {
+  font-family: arabic;
+  font-weight: black;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+/* .nav-link {
+  color: black;
+} */
+
+.profile-image {
+  border-radius: 64px;
+  padding: 10px;
+}
+
+.fa-icon {
+  border-radius: 50%;
+}
+
+.login-form {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.title-bar {
+  background-color: #0d6efd;
+  position: relative;
+  -webkit-app-region: drag;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.icon-container {
+  position: relative;
+  border-radius: 6px;
+
+  background-color: transparent;
+  -webkit-app-region: no-drag;
+}
+.icon-container:hover {
+  background-color: white;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@font-face {
+  font-family: "arabic";
+  src: local("arabic"),
+    url(./fonts/arabic/BoutrosNewsH1-Bold.ttf) format("opentype");
+}
+@font-face {
+  font-family: "shamel";
+  src: local("arabic"), url(./fonts/arabic/shamel.ttf) format("opentype");
+}
