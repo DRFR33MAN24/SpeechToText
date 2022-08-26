@@ -38,11 +38,11 @@ min-height: 600px;
   border-bottom-right-radius: 20px;
 }
 .title-bar {
-  background-color: #0d6efd;
-  position: relative;
+
   -webkit-app-region: drag;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  height: 20px;
+  width: 100%;
+
 }
 .icon-container {
   position: relative;
