@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FileItem = ({ name, type, length }) => {
   return (
-    <div class=" card bg-base-100 shadow-xl p-2 my-1">
+    <div class=" card bg-base-100 shadow-xl p-2 my-1 rounded-none">
       <div className="flex flex-row justify-between items-center">
         <div>
           <FontAwesomeIcon icon={faFile} fixedWidth size="lg" />
@@ -22,7 +22,7 @@ const FileItem = ({ name, type, length }) => {
         </div>
         <div className="flex flex-row items-center">
           <span className="badge badge-accent mx-2 p-3">255</span>
-          <div className="btn btn-circle btn-error">
+          <div className="btn btn-square btn-error">
             <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
           </div>
         </div>
@@ -46,21 +46,23 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className="  content-center items-center my-3 overflow-auto bg-base-content rounded px-3 "
+      className="  content-center items-center my-3 overflow-auto bg-neutral  px-3 "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
         <div>
           <div className="flex flex-row justify-evenly my-2">
-            <div className="btn btn-info ">Add more files</div>
-            <div className="btn btn-error ">Clear List</div>
+            <div className="btn btn-accent rounded-none ">Add more files</div>
+            <div className="btn btn-error btn-outline rounded-none ">
+              Clear List
+            </div>
           </div>
           {filesToConvert.map((file, index) => (
             <FileItem key={index} name={file.name} />
           ))}
         </div>
       ) : (
-        <div className="border-2 border-dashed">
+        <div className="border-2 border-dashed min-h-16">
           {isDragActive ? (
             <p>Drop the files here ...</p>
           ) : (
@@ -76,7 +78,7 @@ const App = () => {
   return (
     <div className="App bg-neutral  p-3">
       <div className="flex flex-row justify-start items-center p-2 fixed top-0 left-0">
-        <div className="btn btn-circle btn-error">
+        <div className="btn btn-outline btn-square btn-error btn-sm">
           <FontAwesomeIcon
             icon={faPowerOff}
             fixedWidth
@@ -84,22 +86,24 @@ const App = () => {
             className="text-base"
           />
         </div>
-        <div className="btn btn-circle btn-info mx-1">
+        <div className="btn btn-outline btn-square border-white  btn-sm  mx-1">
           <FontAwesomeIcon
             icon={faGear}
             fixedWidth
             size="lg"
-            className="text-base"
+            className="text-white"
           />
         </div>
       </div>
 
       <div className="title-bar  top-1 bg-transparent "></div>
 
-      <div className=" stats stats-horizontal  shadow my-9">
-        <div className="stat content-center items-center">
-          <div className="btn btn-circle btn-accent">
-            <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+      <div className=" stats stats-horizontal  shadow my-9 rounded-none flex">
+        <div className="stat  items-center ">
+          <div className="justify-center items-center">
+            <div className="btn btn-circle btn-accent ">
+              <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+            </div>
           </div>
           <div className="mt-2 text-lg">Start</div>
         </div>
@@ -118,7 +122,7 @@ const App = () => {
           <div className="stat-value">6</div>
         </div>
       </div>
-      <div className="card bg-base-100 shadow-xl p-3 ">
+      <div className="card bg-base-100 shadow-xl p-3 rounded-none ">
         <div className="flex flex-row justify-start items-center">
           <div
             className="radial-progress text-accent"
