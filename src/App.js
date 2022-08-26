@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState,CSSProperties } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { useDropzone } from "react-dropzone";
@@ -7,11 +7,30 @@ import {
   faPowerOff,
   faGear,
   faPlayCircle,
+  faWindowClose,
+  faFile
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FileItem = ({ name, type, length }) => {
-  return <div className="shadow flex flex-row">file</div>;
+  return (
+<div class=" card bg-base-100 shadow-xl p-2 my-1">
+<div className="flex flex-row justify-between items-center">
+   <div>
+   <FontAwesomeIcon icon={faFile} fixedWidth size="lg" />
+    {name}
+  </div>
+  <div>
+    <div className="btn btn-circle btn-warning">
+      <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
+    </div>
+
+  </div>
+
+</div>
+ 
+</div>
+  )
 };
 
 function MyDropzone() {
@@ -29,13 +48,13 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className="  content-center items-center p-8 m-4   "
+      className="  content-center items-center my-3 overflow-auto "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
         <div>
           {filesToConvert.map((file, index) => (
-            <FileItem key={index} />
+            <FileItem key={index} name={file.name} />
           ))}
         </div>
       ) : (
@@ -52,16 +71,17 @@ function MyDropzone() {
 }
 
 const App = () => {
+ 
   return (
     <div className="App bg-neutral  p-3">
-      <div className="absolute top-4 left-5">
+      <div className=" bg-base-100  rounded-full p-2 fixed top-0 left-0">
         <FontAwesomeIcon icon={faPowerOff} fixedWidth size="lg" />
         <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
       </div>
 
       <div className="title-bar  top-1 bg-transparent "></div>
 
-      <div class="stats stats-horizontal  shadow my-3">
+      <div className=" stats stats-horizontal  shadow my-3">
         <div className="stat content-center items-center">
           <div className="btn btn-circle btn-accent">
             <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
@@ -82,10 +102,9 @@ const App = () => {
           <div className="stat-value">6</div>
         </div>
       </div>
-      <div className=" content-center justify-center flex flex-row  border-2 m-4">
-        <div>total files </div>
-        <div>failed attempts </div>
-      </div>
+        <div className="card bg-base-100 shadow-xl">
+          <div className="radial-progress" >70%</div>
+        </div>
       <MyDropzone />
     </div>
   );
