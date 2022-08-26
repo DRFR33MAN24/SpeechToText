@@ -80,7 +80,7 @@ function MyDropzone() {
 const App = () => {
   return (
     <div className="App bg-neutral ">
-      <div className="flex flex-row justify-between items-center fixed  bg-neutral  z-10 w-full ">
+      <div className="flex flex-row justify-between items-center fixed top-0  bg-neutral  z-10 w-full ">
         <div className="flex flex-row justify-start items-center p-2  ">
           <button className="btn btn-outline btn-square btn-error btn-sm">
             <FontAwesomeIcon
@@ -99,56 +99,56 @@ const App = () => {
             />
           </div>
         </div>
-        <div className="title-bar  top-1 bg-primary  "> Speech to text...</div>
+        <div className="title-bar  top-1   "> Speech to text...</div>
       </div>
 
-      <div className=" stats stats-horizontal  shadow mt-9 mb-1 rounded-none flex">
-        <div className="stat  items-center ">
-          <div className="justify-center items-center">
-            <div className="btn btn-circle btn-accent ">
-              <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+      <div className="mx-1">
+        <div className=" stats stats-horizontal  shadow mt-9 mb-1  rounded-none flex">
+          <div className="stat  items-center ">
+            <div className="justify-center items-center">
+              <div className="btn btn-circle btn-accent ">
+                <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+              </div>
+            </div>
+            <div className="mt-2 text-lg">Start</div>
+          </div>
+          <div className="stat">
+            <div className="stat-title">Files</div>
+            <div className="stat-value">66</div>
+          </div>
+          <div className="stat">
+            <div className="stat-title">Estimated Time</div>
+            <div className=" text-lg">1 Hr</div>
+            <div className=" text-lg">40 Min</div>
+          </div>
+          <div className="stat">
+            <div className="stat-title">Network requests</div>
+            <div className="stat-value">6</div>
+          </div>
+        </div>
+        <div className="card bg-base-100 shadow-xl p-3 rounded-none ">
+          <div className="flex flex-row justify-between items-center">
+            <div
+              className="radial-progress text-accent"
+              style={{ "--value": 70, "--thickness": "10px", "--size": "5rem" }}
+            >
+              70%
+            </div>
+            TestFile.mp3
+            <div className="mr-5">
+              <ul class="steps steps-vertical">
+                <li class="step step-accent">
+                  <div className="text-xl ">Split Audio files 5/320</div>
+                </li>
+                <li class="step step-neutral">
+                  <div className="text-xl ">Upload to server</div>
+                </li>
+              </ul>
             </div>
           </div>
-          <div className="mt-2 text-lg">Start</div>
         </div>
-
-        <div className="stat">
-          <div className="stat-title">Files</div>
-          <div className="stat-value">66</div>
-        </div>
-
-        <div className="stat">
-          <div className="stat-title">Estimated Time</div>
-          <div className=" text-lg">1 Hr</div>
-          <div className=" text-lg">40 Min</div>
-        </div>
-        <div className="stat">
-          <div className="stat-title">Network requests</div>
-          <div className="stat-value">6</div>
-        </div>
+        <MyDropzone />
       </div>
-      <div className="card bg-base-100 shadow-xl p-3 rounded-none ">
-        <div className="flex flex-row justify-between items-center">
-          <div
-            className="radial-progress text-accent"
-            style={{ "--value": 70, "--thickness": "10px", "--size": "5rem" }}
-          >
-            70%
-          </div>
-          TestFile.mp3
-          <div className="mr-5">
-            <ul class="steps steps-vertical">
-              <li class="step step-accent">
-                <div className="text-xl ">Split Audio files 5/320</div>
-              </li>
-              <li class="step step-neutral">
-                <div className="text-xl ">Upload to server</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <MyDropzone />
     </div>
   );
 };
