@@ -77,7 +77,7 @@ function MyDropzone() {
 const App = () => {
   return (
     <div className="App bg-neutral  p-3">
-      <div className="flex flex-row justify-start items-center p-2 fixed top-0 left-0">
+      <div className="flex flex-row justify-start items-center p-2 fixed top-0 left-0 z-10 bg-neutral">
         <div className="btn btn-outline btn-square btn-error btn-sm">
           <FontAwesomeIcon
             icon={faPowerOff}
