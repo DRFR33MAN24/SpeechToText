@@ -3,16 +3,16 @@ import logo from "./logo.svg";
 import "./App.css";
 import { useDropzone } from "react-dropzone";
 
-import { faPowerOff, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPowerOff,
+  faGear,
+  faPlayCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const FileItem = ({name,type,length})=>{
-  return(
-    <div>
-      
-    </div>
-    )
-}
+const FileItem = ({ name, type, length }) => {
+  return <div className="shadow flex flex-row">file</div>;
+};
 
 function MyDropzone() {
   const [filesToConvert, setFilesToConvert] = useState([]);
@@ -35,9 +35,7 @@ function MyDropzone() {
       {filesToConvert.length !== 0 ? (
         <div>
           {filesToConvert.map((file, index) => (
-            <div className="border-1 bg-orange-500 my-1" key={index}>
-              file.name
-            </div>
+            <FileItem key={index} />
           ))}
         </div>
       ) : (
@@ -55,7 +53,7 @@ function MyDropzone() {
 
 const App = () => {
   return (
-    <div className="App bg-slate-600  p-3">
+    <div className="App bg-neutral  p-3">
       <div className="absolute top-4 left-5">
         <FontAwesomeIcon icon={faPowerOff} fixedWidth size="lg" />
         <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
@@ -63,30 +61,27 @@ const App = () => {
 
       <div className="title-bar  top-1 bg-transparent "></div>
 
-      <div class="stats stats-horizontal  shadow">
-  
-  
-     <div className="stat">
-    <div className="stat-title">Downloads</div>
-    <div className="stat-value">31K</div>
-    <div className="stat-desc">Jan 1st - Feb 1st</div>
-  </div>
-  
-  <div className="stat">
-    <div className="stat-title">New Users</div>
-    <div className="stat-value">4,200</div>
-    <div className="stat-desc">↗︎ 400 (22%)</div>
-  </div>
-  
-  <div className="stat">
-    <div className="stat-title">New Registers</div>
-    <div className="stat-value">1,200</div>
-    <div className="stat-desc">↘︎ 90 (14%)</div>
-  </div>
-  
- 
-  
-</div>
+      <div class="stats stats-horizontal  shadow my-3">
+        <div className="stat content-center items-center">
+          <div className="btn btn-circle btn-accent">
+            <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+          </div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-title">Files</div>
+          <div className="stat-value">66</div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-title">Estimated Time</div>
+          <div className="">1 Hr 40 Min</div>
+        </div>
+        <div className="stat">
+          <div className="stat-title">Failed Network Requests</div>
+          <div className="stat-value">6</div>
+        </div>
+      </div>
       <div className=" content-center justify-center flex flex-row  border-2 m-4">
         <div>total files </div>
         <div>failed attempts </div>

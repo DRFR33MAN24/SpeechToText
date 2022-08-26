@@ -5,7 +5,7 @@ const { app, BrowserWindow, webContents, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
 const {
   setupTitlebar,
-  attachTitlebarToWindow
+  attachTitlebarToWindow,
 } = require("custom-electron-titlebar/main");
 // setup the titlebar main process
 //setupTitlebar();
@@ -13,8 +13,8 @@ const {
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 400,
-    height: 600,
+    width: 600,
+    height: 800,
     titleBarStyle: "hidden",
     frame: false,
     resizable: true,
@@ -27,7 +27,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       //preload: path.join(__dirname, "preload.js")
-    }
+    },
   });
   win.setMenuBarVisibility(false);
   //attachTitlebarToWindow(win);

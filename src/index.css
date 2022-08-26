@@ -2,14 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* @layer base {
+  body {
+    @apply bg-base-100;
+  }
+} */
+
+/* body {
   margin: 0;
   background-color: transparent;
   font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-}
+} */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
