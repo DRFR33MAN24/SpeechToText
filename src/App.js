@@ -14,15 +14,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FileItem = ({ name, type, length }) => {
   return (
-    <div class=" card bg-base-100 shadow-xl p-2 my-1 rounded-none">
+    <div class=" card bg-base-100  p-2 my-1 rounded-none border-2">
       <div className="flex flex-row justify-between items-center">
         <div>
           <FontAwesomeIcon icon={faFile} fixedWidth size="lg" />
           {name}
         </div>
         <div className="flex flex-row items-center">
-          <span className="badge badge-accent mx-2 p-3">255</span>
-          <div className="btn btn-square btn-error">
+          <span className="badge badge-accent mx-2 p-3 ">255</span>
+          <span className="badge badge-accent-content mx-2 p-3 ">15 min</span>
+          <div className="btn btn-square btn-sm btn-error rounded-none">
             <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
           </div>
         </div>
@@ -46,13 +47,15 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className="  content-center items-center my-3 overflow-auto bg-neutral  px-3 "
+      className="  content-center items-center mb-3 mt-1 overflow-auto bg-base-100  px-3 "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
         <div>
           <div className="flex flex-row justify-evenly my-2">
-            <div className="btn btn-accent rounded-none ">Add more files</div>
+            <button className="btn btn-accent rounded-none ">
+              Add more files
+            </button>
             <div className="btn btn-error btn-outline rounded-none ">
               Clear List
             </div>
@@ -78,27 +81,27 @@ const App = () => {
   return (
     <div className="App bg-neutral  p-3">
       <div className="flex flex-row justify-start items-center p-2 fixed top-0 left-0 z-10 bg-neutral">
-        <div className="btn btn-outline btn-square btn-error btn-sm">
+        <button className="btn btn-outline btn-square btn-error btn-sm">
           <FontAwesomeIcon
             icon={faPowerOff}
             fixedWidth
             size="lg"
             className="text-base"
           />
-        </div>
+        </button>
         <div className="btn btn-outline btn-square border-white  btn-sm  mx-1">
           <FontAwesomeIcon
             icon={faGear}
             fixedWidth
             size="lg"
-            className="text-white"
+            className="text-white "
           />
         </div>
       </div>
 
       <div className="title-bar  top-1 bg-transparent "></div>
 
-      <div className=" stats stats-horizontal  shadow my-9 rounded-none flex">
+      <div className=" stats stats-horizontal  shadow mt-9 mb-1 rounded-none flex">
         <div className="stat  items-center ">
           <div className="justify-center items-center">
             <div className="btn btn-circle btn-accent ">
@@ -115,7 +118,8 @@ const App = () => {
 
         <div className="stat">
           <div className="stat-title">Estimated Time</div>
-          <div className="text-neutral text-xl">1 Hr 40 Min</div>
+          <div className=" text-lg">1 Hr</div>
+          <div className=" text-lg">40 Min</div>
         </div>
         <div className="stat">
           <div className="stat-title">Network requests</div>
@@ -123,14 +127,24 @@ const App = () => {
         </div>
       </div>
       <div className="card bg-base-100 shadow-xl p-3 rounded-none ">
-        <div className="flex flex-row justify-start items-center">
+        <div className="flex flex-row justify-between items-center">
           <div
             className="radial-progress text-accent"
             style={{ "--value": 70, "--thickness": "10px", "--size": "5rem" }}
           >
             70%
           </div>
-          <div className="mx-10">Splitting Audio files ....</div>
+          TestFile.mp3
+          <div className="mr-5">
+            <ul class="steps steps-vertical">
+              <li class="step step-accent">
+                <div className="text-xl ">Split Audio files 5/320</div>
+              </li>
+              <li class="step step-neutral">
+                <div className="text-xl ">Upload to server</div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <MyDropzone />
