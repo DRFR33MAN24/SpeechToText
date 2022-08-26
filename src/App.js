@@ -79,9 +79,9 @@ function MyDropzone() {
 
 const App = () => {
   return (
-    <div className="App bg-neutral  p-3">
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-row justify-start items-center p-2 fixed top-0 left-0 z-10 bg-neutral">
+    <div className="App bg-neutral ">
+      <div className="flex flex-row justify-between items-center fixed  bg-neutral  z-10 w-full ">
+        <div className="flex flex-row justify-start items-center p-2  ">
           <button className="btn btn-outline btn-square btn-error btn-sm">
             <FontAwesomeIcon
               icon={faPowerOff}
@@ -99,10 +99,7 @@ const App = () => {
             />
           </div>
         </div>
-        <div className="title-bar  top-1 bg-primary mx-auto ">
-          {" "}
-          Speech to text...
-        </div>
+        <div className="title-bar  top-1 bg-primary  "> Speech to text...</div>
       </div>
 
       <div className=" stats stats-horizontal  shadow mt-9 mb-1 rounded-none flex">
