@@ -1,4 +1,4 @@
-import React, { useCallback, useState,CSSProperties } from "react";
+import React, { useCallback, useState, CSSProperties } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { useDropzone } from "react-dropzone";
@@ -8,29 +8,27 @@ import {
   faGear,
   faPlayCircle,
   faWindowClose,
-  faFile
+  faFile,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FileItem = ({ name, type, length }) => {
   return (
-<div class=" card bg-base-100 shadow-xl p-2 my-1">
-<div className="flex flex-row justify-between items-center">
-   <div>
-   <FontAwesomeIcon icon={faFile} fixedWidth size="lg" />
-    {name}
-  </div>
-  <div>
-    <div className="btn btn-circle btn-warning">
-      <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
+    <div class=" card bg-base-100 shadow-xl p-2 my-1">
+      <div className="flex flex-row justify-between items-center">
+        <div>
+          <FontAwesomeIcon icon={faFile} fixedWidth size="lg" />
+          {name}
+        </div>
+        <div className="flex flex-row items-center">
+          <span className="badge badge-accent mx-2 p-3">255</span>
+          <div className="btn btn-circle btn-error">
+            <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
+          </div>
+        </div>
+      </div>
     </div>
-
-  </div>
-
-</div>
- 
-</div>
-  )
+  );
 };
 
 function MyDropzone() {
@@ -48,11 +46,15 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className="  content-center items-center my-3 overflow-auto "
+      className="  content-center items-center my-3 overflow-auto bg-base-content rounded px-3 "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
         <div>
+          <div className="flex flex-row justify-evenly my-2">
+            <div className="btn btn-info ">Add more files</div>
+            <div className="btn btn-error ">Clear List</div>
+          </div>
           {filesToConvert.map((file, index) => (
             <FileItem key={index} name={file.name} />
           ))}
@@ -71,21 +73,35 @@ function MyDropzone() {
 }
 
 const App = () => {
- 
   return (
     <div className="App bg-neutral  p-3">
-      <div className=" bg-base-100  rounded-full p-2 fixed top-0 left-0">
-        <FontAwesomeIcon icon={faPowerOff} fixedWidth size="lg" />
-        <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
+      <div className="flex flex-row justify-start items-center p-2 fixed top-0 left-0">
+        <div className="btn btn-circle btn-error">
+          <FontAwesomeIcon
+            icon={faPowerOff}
+            fixedWidth
+            size="lg"
+            className="text-base"
+          />
+        </div>
+        <div className="btn btn-circle btn-info mx-1">
+          <FontAwesomeIcon
+            icon={faGear}
+            fixedWidth
+            size="lg"
+            className="text-base"
+          />
+        </div>
       </div>
 
       <div className="title-bar  top-1 bg-transparent "></div>
 
-      <div className=" stats stats-horizontal  shadow my-3">
+      <div className=" stats stats-horizontal  shadow my-9">
         <div className="stat content-center items-center">
           <div className="btn btn-circle btn-accent">
             <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
           </div>
+          <div className="mt-2 text-lg">Start</div>
         </div>
 
         <div className="stat">
@@ -95,16 +111,24 @@ const App = () => {
 
         <div className="stat">
           <div className="stat-title">Estimated Time</div>
-          <div className="">1 Hr 40 Min</div>
+          <div className="text-neutral text-xl">1 Hr 40 Min</div>
         </div>
         <div className="stat">
-          <div className="stat-title">Failed Network Requests</div>
+          <div className="stat-title">Network requests</div>
           <div className="stat-value">6</div>
         </div>
       </div>
-        <div className="card bg-base-100 shadow-xl">
-          <div className="radial-progress" >70%</div>
+      <div className="card bg-base-100 shadow-xl p-3 ">
+        <div className="flex flex-row justify-start items-center">
+          <div
+            className="radial-progress text-accent"
+            style={{ "--value": 70, "--thickness": "10px", "--size": "5rem" }}
+          >
+            70%
+          </div>
+          <div className="mx-10">Splitting Audio files ....</div>
         </div>
+      </div>
       <MyDropzone />
     </div>
   );
