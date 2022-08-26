@@ -23,7 +23,7 @@ const FileItem = ({ name, type, length }) => {
         <div className="flex flex-row items-center">
           <span className="badge badge-accent mx-2 p-3 ">255</span>
           <span className="badge badge-accent-content mx-2 p-3 ">15 min</span>
-          <div className="btn btn-square btn-sm btn-error rounded-none">
+          <div className="btn btn-square btn-outline btn-sm btn-error rounded-none">
             <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
           </div>
         </div>
