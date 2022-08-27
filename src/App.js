@@ -58,7 +58,7 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className="  content-center items-center mb-3 mt-1 overflow-auto bg-base-100  px-3 rounded-lg p-2 "
+      className=" card content-center items-center mb-3 mt-1 overflow-auto bg-base-100   rounded-lg p-2 "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
@@ -82,7 +82,7 @@ function MyDropzone() {
           ))}
         </div>
       ) : (
-        <div className="border-2 border-dashed h-72 flex flex-col justify-center items-center ">
+        <div className="border-2 border-dashed h-72 flex flex-col justify-center items-center w-full ">
           <img
             src={require("./Images/text-to-speech.png")}
             width="128px"
@@ -128,7 +128,7 @@ const App = () => {
         </div>
       </div>
 
-      <div className="mx-2 pt-16 ">
+      <div className="mx-5 pt-16 ">
         <div class="card">
           <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
             <div className="stat  items-center ">
