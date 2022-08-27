@@ -8,10 +8,7 @@ min-height: 800px;
   /* border-radius: 20px; */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+
 
 .app-title {
   font-family: arabic;
@@ -20,23 +17,7 @@ min-height: 800px;
 ::-webkit-scrollbar {
   display: none;
 }
-/* .nav-link {
-  color: black;
-} */
 
-.profile-image {
-  border-radius: 64px;
-  padding: 10px;
-}
-
-.fa-icon {
-  border-radius: 50%;
-}
-
-.login-form {
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
 .title-bar {
 
   -webkit-app-region: drag;
@@ -44,37 +25,7 @@ min-height: 800px;
   width: 100%;
 
 }
-.icon-container {
-  position: relative;
-  border-radius: 6px;
 
-  background-color: transparent;
-  -webkit-app-region: no-drag;
-}
-.icon-container:hover {
-  background-color: white;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
 
 @keyframes App-logo-spin {
   from {
