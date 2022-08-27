@@ -9,21 +9,32 @@ import {
   faPlayCircle,
   faWindowClose,
   faFile,
+  faTrashCan,
+  faAdd,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FileItem = ({ name, type, length }) => {
   return (
-    <div class=" card bg-base-100  p-2 my-1 rounded-none border-2">
+    <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
         <div>
-          <FontAwesomeIcon icon={faFile} fixedWidth size="lg" />
+          <FontAwesomeIcon
+            icon={faFile}
+            fixedWidth
+            size="lg"
+            className="text-neutral"
+          />
           {name}
         </div>
         <div className="flex flex-row items-center">
           <span className="badge badge-accent mx-2 p-3 ">255</span>
-          <span className="badge badge-accent-content mx-2 p-3 ">15 min</span>
-          <div className="btn btn-square btn-outline btn-sm btn-error rounded-none">
+          <span className="badge badge-accent-content mx-2 p-3 ">
+            <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
+            15 min
+          </span>
+          <div className="btn btn-square btn-outline btn-sm btn-error rounded-none ">
             <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
           </div>
         </div>
@@ -47,17 +58,23 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className="  content-center items-center mb-3 mt-1 overflow-auto bg-base-100  px-3 "
+      className="  content-center items-center mb-3 mt-1 overflow-auto bg-base-100  px-3 rounded-lg "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
         <div>
           <div className="flex flex-row justify-evenly my-2">
-            <button className="btn btn-accent rounded-none ">
-              Add more files
-            </button>
-            <div className="btn btn-error btn-outline rounded-none ">
-              Clear List
+            <div className="btn btn-accent rounded-none ">
+              <div class="flex flex-row   items-center justify-center ">
+                <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
+                <div>Add</div>
+              </div>
+            </div>
+            <div className="btn btn-error btn-outline rounded-none  ">
+              <div class="flex flex-row items-center justify-center ">
+                <FontAwesomeIcon icon={faTrashCan} fixedWidth size="lg" />
+                <div>Clear List</div>
+              </div>
             </div>
           </div>
           {filesToConvert.map((file, index) => (
@@ -103,7 +120,7 @@ const App = () => {
       </div>
 
       <div className="mx-1">
-        <div className=" stats stats-horizontal  shadow mt-9 mb-1  rounded-none flex">
+        <div className=" stats stats-horizontal  shadow mt-9 mb-1  rounded-lg flex">
           <div className="stat  items-center ">
             <div className="justify-center items-center">
               <div className="btn btn-circle btn-accent ">
@@ -126,11 +143,11 @@ const App = () => {
             <div className="stat-value">6</div>
           </div>
         </div>
-        <div className="card bg-base-100 shadow-xl p-3 rounded-none ">
+        <div className="card bg-base-100 shadow-xl p-3 rounded-lg   ">
           <div className="flex flex-row justify-between items-center">
             <div
               className="radial-progress text-accent"
-              style={{ "--value": 70, "--thickness": "10px", "--size": "5rem" }}
+              style={{ "--value": 70, "--thickness": "15px", "--size": "7rem" }}
             >
               70%
             </div>
