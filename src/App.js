@@ -58,13 +58,13 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className="  content-center items-center mb-3 mt-1 overflow-auto bg-base-100  px-3 rounded-lg "
+      className="  content-center items-center mb-3 mt-1 overflow-auto bg-base-100  px-3 rounded-lg p-2 "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
         <div>
           <div className="flex flex-row justify-evenly my-2">
-            <div className="btn btn-accent rounded-none ">
+            <div className="btn btn-accent btn-sm rounded-lg ">
               <div class="flex flex-row   items-center justify-center ">
                 <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
                 <div>Add</div>
@@ -82,7 +82,12 @@ function MyDropzone() {
           ))}
         </div>
       ) : (
-        <div className="border-2 border-dashed min-h-16">
+        <div
+          className="border-2 border-dashed h-72 flex justify-center items-center "
+          style={{
+            backgroundImage: `url(${require("./Images/text-to-speech.png")})`,
+          }}
+        >
           {isDragActive ? (
             <p>Drop the files here ...</p>
           ) : (
@@ -96,8 +101,8 @@ function MyDropzone() {
 
 const App = () => {
   return (
-    <div className="App bg-neutral ">
-      <div className="flex flex-row justify-between items-center fixed top-0  bg-neutral  z-10 w-full ">
+    <div className="App bg-slate-400 ">
+      <div className="flex flex-row justify-between items-center fixed top-0  bg-neutral  z-10 w-full  ">
         <div className="flex flex-row justify-start items-center p-2  ">
           <button className="btn btn-outline btn-square btn-error btn-sm">
             <FontAwesomeIcon
@@ -116,11 +121,11 @@ const App = () => {
             />
           </div>
         </div>
-        <div className="title-bar  top-1   "> Speech to text...</div>
+        <div className="title-bar  top-1  "> Speech to text...</div>
       </div>
 
-      <div className="mx-1">
-        <div className=" stats stats-horizontal  shadow mt-9 mb-1  rounded-lg flex">
+      <div className="mx-2 pt-16">
+        <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
           <div className="stat  items-center ">
             <div className="justify-center items-center">
               <div className="btn btn-circle btn-accent ">
