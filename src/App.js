@@ -84,6 +84,7 @@ function MyDropzone() {
       ) : (
         <div className="border-2 border-dashed h-72 flex flex-col justify-center items-center w-full ">
           <img
+            className="opacity-10"
             src={require("./Images/text-to-speech.png")}
             width="128px"
             height="128px"
