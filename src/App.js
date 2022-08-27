@@ -86,6 +86,9 @@ function MyDropzone() {
           className="border-2 border-dashed h-72 flex justify-center items-center "
           style={{
             backgroundImage: `url(${require("./Images/text-to-speech.png")})`,
+            backgroundSize: "128px",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
           }}
         >
           {isDragActive ? (
