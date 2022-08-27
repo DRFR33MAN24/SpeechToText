@@ -29,8 +29,8 @@ const FileItem = ({ name, type, length }) => {
           {name}
         </div>
         <div className="flex flex-row items-center">
-          <span className="badge badge-accent mx-2 p-3 ">255</span>
-          <span className="badge badge-accent-content mx-2 p-3 ">
+          <span className="badge badge-success mx-2 p-3 ">255</span>
+          <span className="badge badge-success-content mx-2 p-3 ">
             <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
             15 min
           </span>
@@ -64,7 +64,7 @@ function MyDropzone() {
       {filesToConvert.length !== 0 ? (
         <div>
           <div className="flex flex-row justify-evenly my-2">
-            <div className="btn btn-accent btn-sm rounded-lg ">
+            <div className="btn btn-success btn-sm rounded-lg ">
               <div class="flex flex-row   items-center justify-center ">
                 <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
                 <div>Add</div>
@@ -82,15 +82,12 @@ function MyDropzone() {
           ))}
         </div>
       ) : (
-        <div
-          className="border-2 border-dashed h-72 flex justify-center items-center "
-          style={{
-            backgroundImage: `url(${require("./Images/text-to-speech.png")})`,
-            backgroundSize: "128px",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-          }}
-        >
+        <div className="border-2 border-dashed h-72 flex flex-col justify-center items-center ">
+          <img
+            src={require("./Images/text-to-speech.png")}
+            width="128px"
+            height="128px"
+          />
           {isDragActive ? (
             <p>Drop the files here ...</p>
           ) : (
@@ -104,8 +101,9 @@ function MyDropzone() {
 
 const App = () => {
   return (
-    <div className="App bg-slate-400 ">
-      <div className="flex flex-row justify-between items-center fixed top-0  bg-neutral  z-10 w-full  ">
+    <div className="App bg-slate-200 ">
+      <section className="z-0 bg-success"></section>
+      <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
         <div className="flex flex-row justify-start items-center p-2  ">
           <button className="btn btn-outline btn-square btn-error btn-sm">
             <FontAwesomeIcon
@@ -124,49 +122,57 @@ const App = () => {
             />
           </div>
         </div>
-        <div className="title-bar  top-1  "> Speech to text...</div>
+        <div className="title-bar  top-1 text-base-100 ">
+          {" "}
+          Speech to text...
+        </div>
       </div>
 
-      <div className="mx-2 pt-16">
-        <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
-          <div className="stat  items-center ">
-            <div className="justify-center items-center">
-              <div className="btn btn-circle btn-accent ">
-                <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+      <div className="mx-2 pt-16 ">
+        <div class="card">
+          <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
+            <div className="stat  items-center ">
+              <div className="justify-center items-center">
+                <div className="btn btn-circle btn-success ">
+                  <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+                </div>
               </div>
+              <div className="mt-2 text-lg font-bold">Start</div>
             </div>
-            <div className="mt-2 text-lg">Start</div>
-          </div>
-          <div className="stat">
-            <div className="stat-title">Files</div>
-            <div className="stat-value">66</div>
-          </div>
-          <div className="stat">
-            <div className="stat-title">Estimated Time</div>
-            <div className=" text-lg">1 Hr</div>
-            <div className=" text-lg">40 Min</div>
-          </div>
-          <div className="stat">
-            <div className="stat-title">Network requests</div>
-            <div className="stat-value">6</div>
+            <div className="stat">
+              <div className="stat-title">Files</div>
+              <div className="text-lg font-bold">66</div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Estimated Time</div>
+              <div className=" text-lg font-bold">1 Hr</div>
+              <div className=" text-lg font-bold">40 Min</div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Network</div>
+              <div className="stat-title">Requests</div>
+              <div className="text-lg font-bold">6</div>
+            </div>
           </div>
         </div>
         <div className="card bg-base-100 shadow-xl p-3 rounded-lg   ">
           <div className="flex flex-row justify-between items-center">
             <div
-              className="radial-progress text-accent"
-              style={{ "--value": 70, "--thickness": "15px", "--size": "7rem" }}
+              className="radial-progress text-success font-bold"
+              style={{ "--value": 70, "--thickness": "15px", "--size": "5rem" }}
             >
               70%
             </div>
             TestFile.mp3
             <div className="mr-5">
               <ul class="steps steps-vertical">
-                <li class="step step-accent">
-                  <div className="text-xl ">Split Audio files 5/320</div>
+                <li class="step step-success">
+                  <div className="text-l ">
+                    Split Audio files <span className="font-bold"> 5/320</span>
+                  </div>
                 </li>
                 <li class="step step-neutral">
-                  <div className="text-xl ">Upload to server</div>
+                  <div className="text-l ">Upload to server</div>
                 </li>
               </ul>
             </div>

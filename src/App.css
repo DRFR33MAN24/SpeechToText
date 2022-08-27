@@ -3,7 +3,7 @@
   /* background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); */
   /* background-color: white; */
   /* font-family: shamel, Helvetica, Arial, sans-serif; */
-min-width: 640px;
+min-width: 480px;
 min-height: 800px;
   /* border-radius: 20px; */
 }
@@ -22,6 +22,19 @@ min-height: 800px;
 
   -webkit-app-region: drag;
   height: 20px;
+  width: 100%;
+
+}
+
+section
+{
+  border-radius: 0 0 50% 50%;
+  min-height: 200px;
+
+
+  position: absolute;
+  top:0;
+  left: 0;
   width: 100%;
 
 }

@@ -13,7 +13,7 @@ const {
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 640,
+    width: 480,
     height: 800,
     titleBarStyle: "hidden",
     frame: false,
