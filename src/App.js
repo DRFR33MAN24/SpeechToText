@@ -12,6 +12,7 @@ import {
   faTrashCan,
   faAdd,
   faClock,
+  faClose,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -34,7 +35,7 @@ const FileItem = ({ name, type, length }) => {
             <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
             15 min
           </span>
-          <div className="btn btn-square btn-outline btn-sm btn-error rounded-none ">
+          <div className="btn btn-square btn-outline btn-sm btn-error rounded-lg ">
             <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
           </div>
         </div>
@@ -43,6 +44,60 @@ const FileItem = ({ name, type, length }) => {
   );
 };
 
+const SettingsModal = ({ toggleModal }) => {
+  return (
+    <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
+      <div className="card bg-base-100 shadow p-10 w-96">
+        <div className="absolute top-2 right-2">
+          <button
+            className="btn btn-outline btn-square   btn-sm  mx-1"
+            onClick={toggleModal}
+          >
+            <FontAwesomeIcon icon={faClose} fixedWidth size="lg" />
+          </button>
+        </div>
+        <div className="mb-2">
+          <select class="select w-full max-w-xs">
+            <option disabled selected>
+              Speech language
+            </option>
+            <option>Arabic</option>
+            <option>English</option>
+          </select>
+          <hr></hr>
+        </div>
+        <div className="mb-2">
+          <select class="select w-full max-w-xs">
+            <option disabled selected>
+              Conversion engine
+            </option>
+            <option>Google</option>
+            <option>Wit.ai</option>
+          </select>
+          <hr></hr>
+        </div>
+        <div className="mb-2">
+          <select class="select w-full max-w-xs">
+            <option disabled selected>
+              Interface language
+            </option>
+            <option>Arabic</option>
+            <option>English</option>
+          </select>
+          <hr></hr>
+        </div>
+        <div className="mb-2">
+          <input
+            type="text"
+            placeholder="Output directory"
+            class="input input-bordered w-full max-w-xs"
+          />
+          <hr></hr>
+        </div>
+      </div>
+    </div>
+  );
+};
 function MyDropzone() {
   const [filesToConvert, setFilesToConvert] = useState([]);
   const onDrop = useCallback((acceptedFiles) => {
@@ -70,10 +125,10 @@ function MyDropzone() {
                 <div>Add</div>
               </div>
             </div>
-            <div className="btn btn-error btn-outline rounded-none  ">
+            <div className="btn btn-error btn-sm btn-outline rounded-lg  ">
               <div class="flex flex-row items-center justify-center ">
                 <FontAwesomeIcon icon={faTrashCan} fixedWidth size="lg" />
-                <div>Clear List</div>
+                <div>Clear</div>
               </div>
             </div>
           </div>
@@ -101,9 +156,15 @@ function MyDropzone() {
 }
 
 const App = () => {
+  const [modal, setModal] = useState(true);
+  const toggleModal = () => {
+    setModal(!modal);
+  };
   return (
     <div className="App bg-slate-200 ">
+      {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       <section className="z-0 bg-success"></section>
+
       <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
         <div className="flex flex-row justify-start items-center p-2  ">
           <button className="btn btn-outline btn-square btn-error btn-sm">
@@ -114,19 +175,14 @@ const App = () => {
               className="text-base"
             />
           </button>
-          <div className="btn btn-outline btn-square border-white  btn-sm  mx-1">
-            <FontAwesomeIcon
-              icon={faGear}
-              fixedWidth
-              size="lg"
-              className="text-white "
-            />
-          </div>
+          <button
+            className="btn btn-outline btn-square   btn-sm  mx-1"
+            onClick={toggleModal}
+          >
+            <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
+          </button>
         </div>
-        <div className="title-bar  top-1 text-base-100 ">
-          {" "}
-          Speech to text...
-        </div>
+        <div className="title-bar  top-1 text-base-100 "> Speech to text..</div>
       </div>
 
       <div className="mx-5 pt-16 ">
