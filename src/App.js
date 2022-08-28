@@ -46,7 +46,7 @@ const FileItem = ({ name, type, length }) => {
 
 const SettingsModal = ({ toggleModal }) => {
   return (
-    <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
+    <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
       <div className="card bg-base-100 shadow p-10 w-96">
         <div className="absolute top-2 right-2">
           <button
@@ -156,7 +156,7 @@ function MyDropzone() {
 }
 
 const App = () => {
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   const toggleModal = () => {
     setModal(!modal);
   };
