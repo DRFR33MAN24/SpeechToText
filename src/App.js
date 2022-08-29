@@ -165,11 +165,11 @@ function MyDropzone() {
   return (
     <div
       {...getRootProps()}
-      className=" card content-center items-center mb-3 mt-1 overflow-auto bg-base-100   rounded-lg p-2 "
+      className=" card content-center items-center mb-3 mt-1  bg-base-100   rounded-lg p-2 "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
-        <div>
+        <div className="overflow-auto">
           <div className="flex flex-row justify-evenly my-2">
             <div className="btn btn-success btn-sm rounded-lg ">
               <div class="flex flex-row   items-center justify-center ">
