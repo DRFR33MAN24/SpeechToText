@@ -57,6 +57,9 @@ const SettingsModal = ({ toggleModal }) => {
         directory=""
         webkitdirectory=""
         ref={inputFile}
+        onInput={(event) => {
+          console.log("input", event);
+        }}
         style={{ display: "none" }}
       />
       <div className="card bg-base-100 shadow p-10 w-96">
