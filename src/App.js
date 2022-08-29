@@ -19,8 +19,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { ipcRenderer } = window.require("electron");
 
-const FileItem = ({ name,index,deleteFile}) => {
-  
+const FileItem = ({ name, index, deleteFile }) => {
   return (
     <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
@@ -39,7 +38,12 @@ const FileItem = ({ name,index,deleteFile}) => {
             <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
             15 min
           </span>
-          <button className="btn btn-square btn-outline btn-sm btn-error rounded-lg " onClick={()=>{deleteFile(index)}}>
+          <button
+            className="btn btn-square btn-outline btn-sm btn-error rounded-lg "
+            onClick={() => {
+              deleteFile(index);
+            }}
+          >
             <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
           </button>
         </div>
@@ -163,32 +167,28 @@ function MyDropzone() {
     noClick: true,
   });
 
-
-const clearFiles = ()=>{
-  setFilesToConvert([]);
-}
-const addFiles = (files)=>{
-const  newList = files.concat(filesToConvert);
-setFilesToConvert(newList);
-}
-
-  const deleteFile = (idx)=>{
-  
-    if (idx !== -1) {
-
-          const newList = [...filesToConvert];
-          
-          newList.splice(idx,1);
-
+  const clearFiles = () => {
+    setFilesToConvert([]);
+  };
+  const addFiles = (files) => {
+    const newList = files.concat(filesToConvert);
     setFilesToConvert(newList);
-    }
+  };
 
-  }
+  const deleteFile = (idx) => {
+    if (idx !== -1) {
+      const newList = [...filesToConvert];
+
+      newList.splice(idx, 1);
+
+      setFilesToConvert(newList);
+    }
+  };
 
   return (
     <div
       {...getRootProps()}
-      className=" card content-center items-center mb-3 mt-1  bg-base-100   rounded-lg p-2 overflow-auto"
+      className=" card content-center items-center mb-3 mt-1  bg-base-100   rounded-lg p-2   "
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
@@ -201,15 +201,27 @@ setFilesToConvert(newList);
               </div>
             </div>
             <button className="btn btn-error btn-sm btn-outline rounded-lg  ">
-              <div class="flex flex-row items-center justify-center " onClick={()=>{clearFiles()}}>
+              <div
+                class="flex flex-row items-center justify-center "
+                onClick={() => {
+                  clearFiles();
+                }}
+              >
                 <FontAwesomeIcon icon={faTrashCan} fixedWidth size="lg" />
                 <div>Clear</div>
               </div>
             </button>
           </div>
-          {filesToConvert.map((file, index) => (
-            <FileItem key={index} index={index} name={file.name} deleteFile={deleteFile}/>
-          ))}
+          <div className="overflow-scroll h-96">
+            {filesToConvert.map((file, index) => (
+              <FileItem
+                key={index}
+                index={index}
+                name={file.name}
+                deleteFile={deleteFile}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="border-2 border-dashed h-72 flex flex-col justify-center items-center w-full ">
@@ -277,8 +289,8 @@ const App = () => {
         <div className="title-bar  top-1 text-base-100 "> Speech to text..</div>
       </div>
 
-      <div className="mx-5 pt-16 ">
-        <div class="card">
+      <div className="mx-5 pt-16  ">
+        <div class="card ">
           <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
             <div className="stat  items-center ">
               <div className="justify-center items-center">
@@ -304,7 +316,7 @@ const App = () => {
             </div>
           </div>
         </div>
-        <div className="card bg-base-100 shadow-xl p-3 rounded-lg   ">
+        <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
           <div className="flex flex-row justify-between items-center">
             <div
               className="radial-progress text-success font-bold"
@@ -327,6 +339,7 @@ const App = () => {
             </div>
           </div>
         </div>
+
         <MyDropzone />
       </div>
     </div>
