@@ -1,4 +1,4 @@
-import React, { useCallback, useState, CSSProperties } from "react";
+import React, { useCallback, useState, CSSProperties, useRef } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { useDropzone } from "react-dropzone";
@@ -48,8 +48,17 @@ const FileItem = ({ name, type, length }) => {
 };
 
 const SettingsModal = ({ toggleModal }) => {
+  const inputFile = useRef(null);
   return (
     <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
+      <input
+        type="file"
+        id="file"
+        directory=""
+        webkitdirectory=""
+        ref={inputFile}
+        style={{ display: "none" }}
+      />
       <div className="card bg-base-100 shadow p-10 w-96">
         <div className="absolute top-2 right-2">
           <button
@@ -92,8 +101,13 @@ const SettingsModal = ({ toggleModal }) => {
         <div className="mb-2">
           <div className="text-start my-1">
             <span className="mx-1">
-              Choose output directory{" "}
-              <button className="btn  btn-ghost btn-xs mx-2 rounded-lg">
+              Choose output directory
+              <button
+                className="btn  btn-ghost btn-xs mx-2 rounded-lg"
+                onClick={() => {
+                  inputFile.current.click();
+                }}
+              >
                 <FontAwesomeIcon
                   icon={faFolder}
                   fixedWidth
