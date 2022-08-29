@@ -14,9 +14,10 @@ import {
   faClock,
   faClose,
   faKey,
-  faFolder
+  faFolder,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+const { ipcRenderer } = window.require("electron");
 
 const FileItem = ({ name, type, length }) => {
   return (
@@ -63,11 +64,7 @@ const SettingsModal = ({ toggleModal }) => {
             <option disabled selected>
               Speech language
             </option>
-            <option>
-            
-              Arabic
-            
-            </option>
+            <option>Arabic</option>
             <option>English</option>
           </select>
           <hr></hr>
@@ -93,28 +90,37 @@ const SettingsModal = ({ toggleModal }) => {
           <hr></hr>
         </div>
         <div className="mb-2">
-                        <div className="text-start my-1">
-                <FontAwesomeIcon icon={faFolder} fixedWidth size="l" className=
-                "text-warning" />
-                <span className="mx-1">
-                  Choose output directory
-                </span>
-                </div>
+          <div className="text-start my-1">
+            <span className="mx-1">
+              Choose output directory{" "}
+              <button className="btn  btn-ghost btn-xs mx-2 rounded-lg">
+                <FontAwesomeIcon
+                  icon={faFolder}
+                  fixedWidth
+                  size="l"
+                  className="text-warning"
+                />
+              </button>
+            </span>
+          </div>
           <input
             type="text"
-            placeholder="Output directory"
+            disabled
+            placeholder="/output"
             class="input input-bordered w-full max-w-xs"
           />
           <hr></hr>
         </div>
-                <div className="mb-2">
-                <div className="text-start my-1">
-                <FontAwesomeIcon icon={faKey} fixedWidth size="l" className=
-                "text-warning" />
-                <span className="mx-1">
-                  Enter Wit.ai client key
-                </span>
-                </div>
+        <div className="mb-2">
+          <div className="text-start my-1">
+            <span className="mx-1">Enter Wit.ai client key</span>
+            <FontAwesomeIcon
+              icon={faKey}
+              fixedWidth
+              size="l"
+              className="text-warning mx-2"
+            />
+          </div>
           <input
             type="text"
             placeholder="API Key"
@@ -122,9 +128,7 @@ const SettingsModal = ({ toggleModal }) => {
           />
           <hr></hr>
         </div>
-        <button className="btn btn-sm btn-success rounded-lg">
-          Save
-        </button>
+        <button className="btn btn-sm btn-success rounded-lg">Save</button>
       </div>
     </div>
   );
@@ -135,7 +139,7 @@ function MyDropzone() {
     console.log(acceptedFiles);
     setFilesToConvert(acceptedFiles);
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     onDrop,
     useFsAccessApi: false,
     noClick: true,
@@ -178,7 +182,18 @@ function MyDropzone() {
           {isDragActive ? (
             <p>Drop the files here ...</p>
           ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <div>
+              <p>Drag 'n' drop some files here, or click to select files</p>
+              <button
+                className="btn btn-success btn-sm rounded-lg "
+                onClick={open}
+              >
+                <div class="flex flex-row   items-center justify-center ">
+                  <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
+                  <div>Add</div>
+                </div>
+              </button>
+            </div>
           )}
         </div>
       )}
@@ -191,6 +206,9 @@ const App = () => {
   const toggleModal = () => {
     setModal(!modal);
   };
+  const closeApp = () => {
+    ipcRenderer.send("quit");
+  };
   return (
     <div className="App bg-slate-200  ">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
@@ -198,7 +216,10 @@ const App = () => {
 
       <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
         <div className="flex flex-row justify-start items-center p-2  ">
-          <button className="btn btn-ghost btn-square btn-error btn-sm">
+          <button
+            className="btn btn-ghost btn-square btn-error btn-sm"
+            onClick={closeApp}
+          >
             <FontAwesomeIcon
               icon={faPowerOff}
               fixedWidth
