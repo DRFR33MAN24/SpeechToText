@@ -19,7 +19,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { ipcRenderer } = window.require("electron");
 
-const FileItem = ({ name, type, length }) => {
+const FileItem = ({ name,index,deleteFile}) => {
+  
   return (
     <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
@@ -38,9 +39,9 @@ const FileItem = ({ name, type, length }) => {
             <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
             15 min
           </span>
-          <div className="btn btn-square btn-outline btn-sm btn-error rounded-lg ">
+          <button className="btn btn-square btn-outline btn-sm btn-error rounded-lg " onClick={()=>{deleteFile(index)}}>
             <FontAwesomeIcon icon={faWindowClose} fixedWidth size="lg" />
-          </div>
+          </button>
         </div>
       </div>
     </div>
@@ -154,7 +155,7 @@ function MyDropzone() {
   const [filesToConvert, setFilesToConvert] = useState([]);
   const onDrop = useCallback((acceptedFiles) => {
     console.log(acceptedFiles);
-    setFilesToConvert(acceptedFiles);
+    addFiles(acceptedFiles);
   }, []);
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     onDrop,
@@ -162,14 +163,36 @@ function MyDropzone() {
     noClick: true,
   });
 
+
+const clearFiles = ()=>{
+  setFilesToConvert([]);
+}
+const addFiles = (files)=>{
+const  newList = files.concat(filesToConvert);
+setFilesToConvert(newList);
+}
+
+  const deleteFile = (idx)=>{
+  
+    if (idx !== -1) {
+
+          const newList = [...filesToConvert];
+          
+          newList.splice(idx,1);
+
+    setFilesToConvert(newList);
+    }
+
+  }
+
   return (
     <div
       {...getRootProps()}
-      className=" card content-center items-center mb-3 mt-1  bg-base-100   rounded-lg p-2 "
+      className=" card content-center items-center mb-3 mt-1  bg-base-100   rounded-lg p-2 overflow-auto"
     >
       <input {...getInputProps()} />
       {filesToConvert.length !== 0 ? (
-        <div className="overflow-auto">
+        <div className="">
           <div className="flex flex-row justify-evenly my-2">
             <div className="btn btn-success btn-sm rounded-lg ">
               <div class="flex flex-row   items-center justify-center ">
@@ -177,15 +200,15 @@ function MyDropzone() {
                 <div>Add</div>
               </div>
             </div>
-            <div className="btn btn-error btn-sm btn-outline rounded-lg  ">
-              <div class="flex flex-row items-center justify-center ">
+            <button className="btn btn-error btn-sm btn-outline rounded-lg  ">
+              <div class="flex flex-row items-center justify-center " onClick={()=>{clearFiles()}}>
                 <FontAwesomeIcon icon={faTrashCan} fixedWidth size="lg" />
                 <div>Clear</div>
               </div>
-            </div>
+            </button>
           </div>
           {filesToConvert.map((file, index) => (
-            <FileItem key={index} name={file.name} />
+            <FileItem key={index} index={index} name={file.name} deleteFile={deleteFile}/>
           ))}
         </div>
       ) : (
