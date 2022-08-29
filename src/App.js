@@ -13,6 +13,8 @@ import {
   faAdd,
   faClock,
   faClose,
+  faKey,
+  faFolder
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -50,7 +52,7 @@ const SettingsModal = ({ toggleModal }) => {
       <div className="card bg-base-100 shadow p-10 w-96">
         <div className="absolute top-2 right-2">
           <button
-            className="btn btn-outline btn-square   btn-sm  mx-1"
+            className="btn btn-ghost btn-square   btn-sm  mx-1"
             onClick={toggleModal}
           >
             <FontAwesomeIcon icon={faClose} fixedWidth size="lg" />
@@ -61,7 +63,11 @@ const SettingsModal = ({ toggleModal }) => {
             <option disabled selected>
               Speech language
             </option>
-            <option>Arabic</option>
+            <option>
+            
+              Arabic
+            
+            </option>
             <option>English</option>
           </select>
           <hr></hr>
@@ -87,6 +93,13 @@ const SettingsModal = ({ toggleModal }) => {
           <hr></hr>
         </div>
         <div className="mb-2">
+                        <div className="text-start my-1">
+                <FontAwesomeIcon icon={faFolder} fixedWidth size="l" className=
+                "text-warning" />
+                <span className="mx-1">
+                  Choose output directory
+                </span>
+                </div>
           <input
             type="text"
             placeholder="Output directory"
@@ -94,6 +107,24 @@ const SettingsModal = ({ toggleModal }) => {
           />
           <hr></hr>
         </div>
+                <div className="mb-2">
+                <div className="text-start my-1">
+                <FontAwesomeIcon icon={faKey} fixedWidth size="l" className=
+                "text-warning" />
+                <span className="mx-1">
+                  Enter Wit.ai client key
+                </span>
+                </div>
+          <input
+            type="text"
+            placeholder="API Key"
+            class="input input-bordered w-full max-w-xs"
+          />
+          <hr></hr>
+        </div>
+        <button className="btn btn-sm btn-success rounded-lg">
+          Save
+        </button>
       </div>
     </div>
   );
@@ -161,13 +192,13 @@ const App = () => {
     setModal(!modal);
   };
   return (
-    <div className="App bg-slate-200 ">
+    <div className="App bg-slate-200  ">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       <section className="z-0 bg-success"></section>
 
       <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
         <div className="flex flex-row justify-start items-center p-2  ">
-          <button className="btn btn-outline btn-square btn-error btn-sm">
+          <button className="btn btn-ghost btn-square btn-error btn-sm">
             <FontAwesomeIcon
               icon={faPowerOff}
               fixedWidth
@@ -176,7 +207,7 @@ const App = () => {
             />
           </button>
           <button
-            className="btn btn-outline btn-square   btn-sm  mx-1"
+            className="btn btn-ghost btn-square   btn-sm  mx-1"
             onClick={toggleModal}
           >
             <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
