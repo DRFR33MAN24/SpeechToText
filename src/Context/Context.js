@@ -1,7 +1,7 @@
 import React from "react";
 
 const GlobalContext = React.createContext({
-  currentFile: 0,
+  currentFile: "",
   currentClip: 0,
   numApiRequests: 0,
   totalFiles: 0,
