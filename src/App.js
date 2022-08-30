@@ -24,6 +24,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { secondsToHHMMSS } from "./util";
+import ContextWrapper from "./context/ContextWrapper";
+import Context from "./context/Context";
 const { ipcRenderer } = window.require("electron");
 const FileItem = ({ name, index, duration, deleteFile }) => {
   return (
@@ -287,7 +289,7 @@ function MyDropzone() {
   );
 }
 
-const Stats = ()=>{
+const ProcessStats = ()=>{
   return(
             <div class="card ">
           <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
@@ -344,16 +346,39 @@ const TitleBar = ()=>{
       </div>
     )
 }
-const Progress = ()=>{
+const Progress = ({value})=>{
   return(
                   <div
               className="radial-progress text-success font-bold"
-              style={{ "--value": 70, "--thickness": "15px", "--size": "5rem" }}
+              style={{ "--value": value, "--thickness": "15px", "--size": "5rem" }}
             >
-              70%
+              {value}%
             </div>
     )
 
+}
+const FileStats = ()=>{
+  return(
+            <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
+          <div className="flex flex-row justify-between items-center">
+          <Progress value={70}/>
+
+            {currentFile}
+            <div className="mr-5">
+              <ul class="steps steps-vertical">
+                <li class="step step-success">
+                  <div className="text-l ">
+                    Split Audio files <span className="font-bold"> {currentChunk} / {totalChunks}</span>
+                  </div>
+                </li>
+                <li class="step step-neutral">
+                  <div className="text-l ">Upload to server</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    )
 }
 const App = () => {
   const [modal, setModal] = useState(false);
@@ -364,37 +389,23 @@ const App = () => {
     ipcRenderer.send("quit");
   };
   return (
-    <div className="App bg-slate-200  ">
+    <ContextWrapper>
+          <div className="App bg-slate-200  ">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       <section className="z-0 bg-success"></section>
       <TitleBar/>
 
 
       <div className="mx-5 pt-16  ">
-        <Stats/>
-        <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
-          <div className="flex flex-row justify-between items-center">
-          <Progress/>
+        <ProcessStats/>
+        <FileStats/>
 
-            TestFile.mp3
-            <div className="mr-5">
-              <ul class="steps steps-vertical">
-                <li class="step step-success">
-                  <div className="text-l ">
-                    Split Audio files <span className="font-bold"> 5/320</span>
-                  </div>
-                </li>
-                <li class="step step-neutral">
-                  <div className="text-l ">Upload to server</div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
 
         <MyDropzone />
       </div>
     </div>
+    </ContextWrapper>
+
   );
 };
 
