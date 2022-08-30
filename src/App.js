@@ -4,6 +4,7 @@ import React, {
   CSSProperties,
   useRef,
   useEffect,
+  useContext,
 } from "react";
 import logo from "./logo.svg";
 import "./App.css";
@@ -24,7 +25,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { secondsToHHMMSS } from "./util";
-import ContextWrapper from "./context/ContextWrapper";
+
 import Context from "./context/Context";
 const { ipcRenderer } = window.require("electron");
 const FileItem = ({ name, index, duration, deleteFile }) => {
@@ -165,7 +166,8 @@ const SettingsModal = ({ toggleModal }) => {
   );
 };
 function MyDropzone() {
-  const [filesToConvert, setFilesToConvert] = useState([]);
+  //const [filesToConvert, setFilesToConvert] = useState([]);
+  const { filesToProcess, setFilesToProcess } = useContext(Context);
 
   const onDrop = useCallback((acceptedFiles) => {
     const files = [];
@@ -188,43 +190,22 @@ function MyDropzone() {
   });
 
   useEffect(() => {
-
     ipcRenderer.on("getDurations-reply", (event, files) => {
       console.log(files);
       addFiles(files);
     });
-
-        ipcRenderer.on("numberOfClips", (event, num) => {
-      console.log(num);
-    });
-                ipcRenderer.on("APIHit", (event) => {
-      console.log('hit');
-    });
-  ipcRenderer.on("currentClip", (event,clip) => {
-      console.log(clip);
-    });
-    ipcRenderer.on("fileComplete", (event,file) => {
-      console.log(clip);
-    });
-
-
-
 
     return () => {
       ipcRenderer.removeAllListeners("getDurations-reply");
     };
   }, []);
 
-  // useEffect(() => {
-  //   ipcRenderer.send("getDurations", filesToConvert);
-  // }, [filesToConvert]);
-
   const clearFiles = () => {
-    setFilesToConvert([]);
+    setFilesToProcess([]);
   };
   const addFiles = (files) => {
     const newList = files.concat(filesToConvert);
-    setFilesToConvert(newList);
+    setFilesToProcess(newList);
   };
 
   const deleteFile = (idx) => {
@@ -233,7 +214,7 @@ function MyDropzone() {
 
       newList.splice(idx, 1);
 
-      setFilesToConvert(newList);
+      setFilesToProcess(newList);
     }
   };
 
@@ -243,7 +224,7 @@ function MyDropzone() {
       className=" card content-center items-center mb-3 mt-1  bg-base-100   rounded-lg p-2   "
     >
       <input {...getInputProps()} />
-      {filesToConvert.length !== 0 ? (
+      {filesToProcess.length !== 0 ? (
         <div className="">
           <div className="flex flex-row justify-evenly my-2">
             <div className="btn btn-success btn-sm rounded-lg ">
@@ -306,99 +287,137 @@ function MyDropzone() {
   );
 }
 
-const ProcessStats = ()=>{
-  return(
-            <div class="card ">
-          <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
-            <div className="stat  items-center ">
-              <div className="justify-center items-center">
-                <div className="btn btn-circle btn-success ">
-                  <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
-                </div>
-              </div>
-              <div className="mt-2 text-lg font-bold">Start</div>
-            </div>
-            <div className="stat">
-              <div className="stat-title">Files</div>
-              <div className="text-lg font-bold">66</div>
-            </div>
-            <div className="stat">
-              <div className="stat-title">Estimated Time</div>
-              <div className=" text-lg font-bold">1 Hr</div>
-              <div className=" text-lg font-bold">40 Min</div>
-            </div>
-            <div className="stat">
-              <div className="stat-title">Network</div>
-              <div className="stat-title">Requests</div>
-              <div className="text-lg font-bold">6</div>
+const ProcessStats = () => {
+  return (
+    <div class="card ">
+      <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
+        <div className="stat  items-center ">
+          <div className="justify-center items-center">
+            <div className="btn btn-circle btn-success ">
+              <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
             </div>
           </div>
+          <div className="mt-2 text-lg font-bold">Start</div>
         </div>
-    )
-}
-
-const TitleBar = ()=>{
-  return(
-          <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
-        <div className="flex flex-row justify-start items-center p-2  ">
-          <button
-            className="btn btn-ghost btn-square btn-error btn-sm"
-            onClick={closeApp}
-          >
-            <FontAwesomeIcon
-              icon={faPowerOff}
-              fixedWidth
-              size="lg"
-              className="text-base"
-            />
-          </button>
-          <button
-            className="btn btn-ghost btn-square   btn-sm  mx-1"
-            onClick={toggleModal}
-          >
-            <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
-          </button>
+        <div className="stat">
+          <div className="stat-title">Files</div>
+          <div className="text-lg font-bold">66</div>
         </div>
-        <div className="title-bar  top-1 text-base-100 "> Speech to text..</div>
+        <div className="stat">
+          <div className="stat-title">Estimated Time</div>
+          <div className=" text-lg font-bold">1 Hr</div>
+          <div className=" text-lg font-bold">40 Min</div>
+        </div>
+        <div className="stat">
+          <div className="stat-title">Network</div>
+          <div className="stat-title">Requests</div>
+          <div className="text-lg font-bold">6</div>
+        </div>
       </div>
-    )
-}
-const Progress = ({value})=>{
-  return(
-                  <div
-              className="radial-progress text-success font-bold"
-              style={{ "--value": value, "--thickness": "15px", "--size": "5rem" }}
-            >
-              {value}%
-            </div>
-    )
+    </div>
+  );
+};
 
-}
-const FileStats = ()=>{
-  return(
-            <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
-          <div className="flex flex-row justify-between items-center">
-          <Progress value={70}/>
+const TitleBar = ({ closeApp }) => {
+  return (
+    <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
+      <div className="flex flex-row justify-start items-center p-2  ">
+        <button
+          className="btn btn-ghost btn-square btn-error btn-sm"
+          onClick={closeApp}
+        >
+          <FontAwesomeIcon
+            icon={faPowerOff}
+            fixedWidth
+            size="lg"
+            className="text-base"
+          />
+        </button>
+        <button
+          className="btn btn-ghost btn-square   btn-sm  mx-1"
+          onClick={toggleModal}
+        >
+          <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
+        </button>
+      </div>
+      <div className="title-bar  top-1 text-base-100 "> Speech to text..</div>
+    </div>
+  );
+};
+const Progress = ({ value }) => {
+  return (
+    <div
+      className="radial-progress text-success font-bold"
+      style={{ "--value": value, "--thickness": "15px", "--size": "5rem" }}
+    >
+      {value}%
+    </div>
+  );
+};
+const FileStats = () => {
+  return (
+    <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
+      <div className="flex flex-row justify-between items-center">
+        <Progress value={70} />
 
-            {currentFile}
-            <div className="mr-5">
-              <ul class="steps steps-vertical">
-                <li class="step step-success">
-                  <div className="text-l ">
-                    Split Audio files <span className="font-bold"> {currentChunk} / {totalChunks}</span>
-                  </div>
-                </li>
-                <li class="step step-neutral">
-                  <div className="text-l ">Upload to server</div>
-                </li>
-              </ul>
-            </div>
-          </div>
+        {currentFile}
+        <div className="mr-5">
+          <ul class="steps steps-vertical">
+            <li class="step step-success">
+              <div className="text-l ">
+                Split Audio files{" "}
+                <span className="font-bold">
+                  {" "}
+                  {currentChunk} / {totalChunks}
+                </span>
+              </div>
+            </li>
+            <li class="step step-neutral">
+              <div className="text-l ">Upload to server</div>
+            </li>
+          </ul>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 const App = () => {
   const [modal, setModal] = useState(false);
+  const {
+    setCurrentFile,
+    setCurrentClip,
+    setNumApiRequests,
+    setTotalFiles,
+    setTotalClipsInFile,
+    setProcessStarted,
+    numApiRequests,
+  } = useContext(Context);
+
+  useEffect(() => {
+    ipcRenderer.on("numberOfClips", (event, num) => {
+      console.log(num);
+      setTotalClipsInFile(num);
+    });
+    ipcRenderer.on("APIHit", (event) => {
+      console.log("API hit");
+      setNumApiRequests(numApiRequests + 1);
+    });
+    ipcRenderer.on("currentClip", (event, clip) => {
+      console.log(clip);
+      setCurrentClip(clip);
+    });
+    ipcRenderer.on("fileComplete", (event, file) => {
+      console.log(clip);
+    });
+
+    return () => {
+      ipcRenderer.removeAllListeners("numberOfClips");
+      ipcRenderer.removeAllListeners("APIHit");
+      ipcRenderer.removeAllListeners("currentClip");
+      ipcRenderer.removeAllListeners("fileComplete");
+    };
+  }, []);
+
   const toggleModal = () => {
     setModal(!modal);
   };
@@ -406,23 +425,18 @@ const App = () => {
     ipcRenderer.send("quit");
   };
   return (
-    <ContextWrapper>
-          <div className="App bg-slate-200  ">
+    <div className="App bg-slate-200  ">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       <section className="z-0 bg-success"></section>
-      <TitleBar/>
-
+      <TitleBar closeApp={closeApp} />
 
       <div className="mx-5 pt-16  ">
-        <ProcessStats/>
-        <FileStats/>
-
+        <ProcessStats />
+        <FileStats />
 
         <MyDropzone />
       </div>
     </div>
-    </ContextWrapper>
-
   );
 };
 

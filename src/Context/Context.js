@@ -1,6 +1,5 @@
 import React from "react";
 
-
 const GlobalContext = React.createContext({
   currentFile,
   currentClip,
@@ -8,13 +7,15 @@ const GlobalContext = React.createContext({
   totalFiles,
   totalClipsInFile,
   processStarted,
-  setProcessStarted: ()=>{},
-    setCurrentFile: () => {},
-  
+  filesToProcess,
+  setProcessStarted: () => {},
+  setCurrentFile: () => {},
+
   setCurrentClip: () => {},
   setNumApiRequests: () => {},
   setTotalFiles: () => {},
-  setTotalClipsInFile: () => {}
+  setTotalClipsInFile: () => {},
+  setFilesToProcess: () => {},
 });
 
 export default GlobalContext;

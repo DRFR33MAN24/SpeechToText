@@ -12,6 +12,7 @@ import store from "./store";
 import "./index.css";
 
 import App from "./App";
+import ContextWrapper from "./context/ContextWrapper";
 import LoginPage from "./Pages/LoginPage";
 import MainPage from "./Pages/MainPage";
 import SystemSettingsPage from "./Pages/SystemSettingsPage";
@@ -23,9 +24,10 @@ import { Routes, Route, HashRouter } from "react-router-dom";
 
 ReactDOM.render(
   // <Provider store={store}>
-  <React.StrictMode>
-    <App />
-    {/* <HashRouter>
+  <ContextWrapper>
+    <React.StrictMode>
+      <App />
+      {/* <HashRouter>
         <Routes>
           <Route path="/" element={<App />}>
             <Route path="/Login" element={<LoginPage />} />
@@ -42,7 +44,8 @@ ReactDOM.render(
           </Route>
         </Routes>
       </HashRouter> */}
-  </React.StrictMode>,
+    </React.StrictMode>
+  </ContextWrapper>,
   // {/* </Provider> */}
   document.getElementById("root")
 );
