@@ -1,13 +1,13 @@
 import React from "react";
 
 const GlobalContext = React.createContext({
-  currentFile,
-  currentClip,
-  numApiRequests,
-  totalFiles,
-  totalClipsInFile,
-  processStarted,
-  filesToProcess,
+  currentFile: 0,
+  currentClip: 0,
+  numApiRequests: 0,
+  totalFiles: 0,
+  totalClipsInFile: 0,
+  processStarted: false,
+  filesToProcess: [],
   setProcessStarted: () => {},
   setCurrentFile: () => {},
 

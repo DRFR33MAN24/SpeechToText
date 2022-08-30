@@ -12,7 +12,7 @@ import store from "./store";
 import "./index.css";
 
 import App from "./App";
-import ContextWrapper from "./context/ContextWrapper";
+import ContextWrapper from "./Context/ContextWrapper";
 import LoginPage from "./Pages/LoginPage";
 import MainPage from "./Pages/MainPage";
 import SystemSettingsPage from "./Pages/SystemSettingsPage";

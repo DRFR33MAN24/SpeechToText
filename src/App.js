@@ -26,7 +26,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { secondsToHHMMSS } from "./util";
 
-import Context from "./context/Context";
+import Context from "./Context/Context";
 const { ipcRenderer } = window.require("electron");
 const FileItem = ({ name, index, duration, deleteFile }) => {
   return (
@@ -204,13 +204,13 @@ function MyDropzone() {
     setFilesToProcess([]);
   };
   const addFiles = (files) => {
-    const newList = files.concat(filesToConvert);
+    const newList = files.concat(filesToProcess);
     setFilesToProcess(newList);
   };
 
   const deleteFile = (idx) => {
     if (idx !== -1) {
-      const newList = [...filesToConvert];
+      const newList = [...filesToProcess];
 
       newList.splice(idx, 1);
 
@@ -246,7 +246,7 @@ function MyDropzone() {
             </button>
           </div>
           <div className="overflow-scroll h-96">
-            {filesToConvert.map((file, index) => (
+            {filesToProcess.map((file, index) => (
               <FileItem
                 key={index}
                 index={index}
@@ -318,7 +318,7 @@ const ProcessStats = () => {
   );
 };
 
-const TitleBar = ({ closeApp }) => {
+const TitleBar = ({ closeApp, toggleModal }) => {
   return (
     <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
       <div className="flex flex-row justify-start items-center p-2  ">
@@ -355,6 +355,7 @@ const Progress = ({ value }) => {
   );
 };
 const FileStats = () => {
+  const { currentFile, currentClip, totalClipsInFile } = useContext(Context);
   return (
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="flex flex-row justify-between items-center">
@@ -368,7 +369,7 @@ const FileStats = () => {
                 Split Audio files{" "}
                 <span className="font-bold">
                   {" "}
-                  {currentChunk} / {totalChunks}
+                  {currentClip} / {totalClipsInFile}
                 </span>
               </div>
             </li>
@@ -407,7 +408,7 @@ const App = () => {
       setCurrentClip(clip);
     });
     ipcRenderer.on("fileComplete", (event, file) => {
-      console.log(clip);
+      console.log(file);
     });
 
     return () => {
@@ -428,7 +429,7 @@ const App = () => {
     <div className="App bg-slate-200  ">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       <section className="z-0 bg-success"></section>
-      <TitleBar closeApp={closeApp} />
+      <TitleBar closeApp={closeApp} toggleModal={toggleModal} />
 
       <div className="mx-5 pt-16  ">
         <ProcessStats />
