@@ -7,7 +7,10 @@ const GlobalContext = React.createContext({
   numApiRequests,
   totalFiles,
   totalClipsInFile,
+  processStarted,
+  setProcessStarted: ()=>{},
     setCurrentFile: () => {},
+  
   setCurrentClip: () => {},
   setNumApiRequests: () => {},
   setTotalFiles: () => {},

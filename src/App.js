@@ -188,10 +188,27 @@ function MyDropzone() {
   });
 
   useEffect(() => {
+
     ipcRenderer.on("getDurations-reply", (event, files) => {
       console.log(files);
       addFiles(files);
     });
+
+        ipcRenderer.on("numberOfClips", (event, num) => {
+      console.log(num);
+    });
+                ipcRenderer.on("APIHit", (event) => {
+      console.log('hit');
+    });
+  ipcRenderer.on("currentClip", (event,clip) => {
+      console.log(clip);
+    });
+    ipcRenderer.on("fileComplete", (event,file) => {
+      console.log(clip);
+    });
+
+
+
 
     return () => {
       ipcRenderer.removeAllListeners("getDurations-reply");
