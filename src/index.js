@@ -22,10 +22,10 @@ import reportWebVitals from "./reportWebVitals";
 import { Routes, Route, HashRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <Provider store={store}>
-    <React.StrictMode>
-      <App />
-      {/* <HashRouter>
+  // <Provider store={store}>
+  <React.StrictMode>
+    <App />
+    {/* <HashRouter>
         <Routes>
           <Route path="/" element={<App />}>
             <Route path="/Login" element={<LoginPage />} />
@@ -42,8 +42,8 @@ ReactDOM.render(
           </Route>
         </Routes>
       </HashRouter> */}
-    </React.StrictMode>
-  </Provider>,
+  </React.StrictMode>,
+  // {/* </Provider> */}
   document.getElementById("root")
 );
 
