@@ -1,4 +1,10 @@
-import React, { useCallback, useState, CSSProperties, useRef,useEffect } from "react";
+import React, {
+  useCallback,
+  useState,
+  CSSProperties,
+  useRef,
+  useEffect,
+} from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { useDropzone } from "react-dropzone";
@@ -17,9 +23,9 @@ import {
   faFolder,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { secondsToHHMMSS } from "./util";
 const { ipcRenderer } = window.require("electron");
-
-const FileItem = ({ name, index, deleteFile }) => {
+const FileItem = ({ name, index, duration, deleteFile }) => {
   return (
     <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
@@ -36,7 +42,7 @@ const FileItem = ({ name, index, deleteFile }) => {
           <span className="badge badge-success mx-2 p-3 ">255</span>
           <span className="badge badge-success-content mx-2 p-3 ">
             <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
-            15 min
+            {secondsToHHMMSS(duration)}
           </span>
           <button
             className="btn btn-square btn-outline btn-sm btn-error rounded-lg "
@@ -158,33 +164,42 @@ const SettingsModal = ({ toggleModal }) => {
 };
 function MyDropzone() {
   const [filesToConvert, setFilesToConvert] = useState([]);
+
   const onDrop = useCallback((acceptedFiles) => {
-    const files =[];
-    acceptedFiles.map((file,index)=>{
-      files.push({id:index,name:file.name,path:file.path})
+    const files = [];
+    acceptedFiles.map((file, index) => {
+      files.push({
+        id: index,
+        name: file.name,
+        path: file.path,
+        duration: 0.0,
+      });
     });
 
-    addFiles(files);
+    ipcRenderer.send("getDurations", files);
   }, []);
+
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     onDrop,
     useFsAccessApi: false,
     noClick: true,
   });
 
-useEffect(()=>{
-ipcRenderer.on('getDurations-reply', (event, arg) => {
-  console.log(arg) 
-})
-  return () => {
-    ipcRenderer.removeAllListeners('getDurations-reply');
-  };
-},[]);
+  useEffect(() => {
+    ipcRenderer.on("getDurations-reply", (event, files) => {
+      console.log(files);
+      addFiles(files);
+    });
 
+    return () => {
+      ipcRenderer.removeAllListeners("getDurations-reply");
+    };
+  }, []);
 
-useEffect(()=>{
-  ipcRenderer.send('getDurations',filesToConvert);
-},[filesToConvert])
+  // useEffect(() => {
+  //   ipcRenderer.send("getDurations", filesToConvert);
+  // }, [filesToConvert]);
+
   const clearFiles = () => {
     setFilesToConvert([]);
   };
@@ -236,6 +251,7 @@ useEffect(()=>{
                 key={index}
                 index={index}
                 name={file.name}
+                duration={file.duration}
                 deleteFile={deleteFile}
               />
             ))}

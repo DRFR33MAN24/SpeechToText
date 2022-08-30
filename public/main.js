@@ -62,17 +62,11 @@ if (process.platform === "linux") {
 }
 
 const getFilesDurations = async (files) => {
-
-
-    let durations = [];
-      for (let file of files) {
-            const time = await getAudioDurationInSeconds(file.path);
-    durations.push({ id: file.index, duration: time });
-      }
-return durations;
-
-      
-
+  for (let file of files) {
+    const time = await getAudioDurationInSeconds(file.path);
+    file.duration = time;
+  }
+  return files;
 };
 
 const proccessFile = (file, token) => {
@@ -138,13 +132,10 @@ ipcMain.on("quit", () => {
   app.quit();
 });
 
-ipcMain.on("getDurations", async (e,files) => {
-  console.log(files);
+ipcMain.on("getDurations", async (e, files) => {
   const durations = await getFilesDurations(files);
-  e.reply('getDurations-reply',durations);
+  e.reply("getDurations-reply", durations);
 });
-
-
 
 ipcMain.on("chooseDir", (event) => {
   // If the platform is 'win32' or 'Linux'
