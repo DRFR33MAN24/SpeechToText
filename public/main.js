@@ -1,6 +1,6 @@
 const path = require("path");
-const axios = require('axios');
-const glob = require('glob');
+const axios = require("axios");
+const glob = require("glob");
 const {
   app,
   BrowserWindow,
@@ -15,15 +15,11 @@ const {
   attachTitlebarToWindow,
 } = require("custom-electron-titlebar/main");
 
-const { getAudioDurationInSeconds } = require('get-audio-duration')
+const { getAudioDurationInSeconds } = require("get-audio-duration");
 const split = require("audio-split");
 const fs = require("fs");
 
-
 const clipLength = 10;
-
-
-
 
 //setupTitlebar();
 function createWindow() {
@@ -59,66 +55,63 @@ function createWindow() {
   }
 }
 
-
 if (process.platform === "linux") {
   // app.commandLine.appendSwitch('enable-transparent-visuals');
   // app.disableHardwareAcceleration();
   //app.on('ready', () => setTimeout(createWindow, 600));
 }
 
-const getFilesDuration = (files)=>{
-  const durations =[];
-  files.map(async (file,index)=>{
-   const time =await getAudioDurationInSeconds(file.path);
-   durations.push({id:index,duration:time});
-  })
+const getFilesDuration = (files) => {
+  const durations = [];
+  files.map(async (file, index) => {
+    const time = await getAudioDurationInSeconds(file.path);
+    durations.push({ id: index, duration: time });
+  });
   return durations;
-}
+};
 
-const proccessFile = (file,token)=>{
-
+const proccessFile = (file, token) => {
   // create a tmp folder for the file in tmp folder
   split({
-  filepath: file.path,
-  minClipLength: clipLength,
-  maxClipLength: clipLength,
-  outputPath: 'tmp/'
-});
+    filepath: file.path,
+    minClipLength: clipLength,
+    maxClipLength: clipLength,
+    outputPath: "tmp/",
+  });
   const txtStream = fs.createWriteStream(`output/${file.name}.txt`);
   const srtStream = fs.createWriteStream(`output/${file.name}.srt`);
-  const audioClips = glob.sync('tmp/*.*');
+  const audioClips = glob.sync("tmp/*.*");
 
   if (audioClips.length) {
-    audioClips.map((clip,index)=>{
+    audioClips.map((clip, index) => {
       //notify current clip
-      const txt = transcribeFile(clip,token);
+      const txt = transcribeFile(clip, token);
       txtStream.write(txt);
       srtStream.write(`00:33:33 => 33:44:44${txt}`);
-
-    })
+    });
   }
 
   txtStream.end();
   srtStream.end();
 
-    if (audioClips.length) {
-    audioClips.map((clip,index)=>{
+  if (audioClips.length) {
+    audioClips.map((clip, index) => {
       fs.unlink(clip);
-
-    })
+    });
   }
-//notify file procced
+  //notify file procced
+};
 
-}
-
-const transcribeFile = (clip,token)=>{
-
-  let res = await axios.post('http://httpbin.org/post', clip,{headers: {   'Content-Type': 'application/json',
-  'Authorization': `Bearer ${token}` }});
+const transcribeFile = async (clip, token) => {
+  let res = await axios.post("http://httpbin.org/post", clip, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
   // noftify network request
   return res.txt;
-
-}
+};
 app.on("ready", createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
