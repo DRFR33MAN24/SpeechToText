@@ -7,6 +7,7 @@ const GlobalContext = React.createContext({
   totalFiles: 0,
   totalClipsInFile: 0,
   step: -1,
+  timePerClip: 0,
   processStarted: false,
   filesToProcess: [],
   setProcessStarted: () => {},
@@ -18,6 +19,7 @@ const GlobalContext = React.createContext({
   setTotalClipsInFile: () => {},
   setFilesToProcess: () => {},
   setStep: () => {},
+  setTimePerClip: () => {},
 });
 
 export default GlobalContext;

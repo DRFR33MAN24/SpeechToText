@@ -430,12 +430,16 @@ const App = () => {
     ipcRenderer.on("fileComplete", (event, file) => {
       console.log(file);
     });
+    ipcRenderer.on("timePerClip", (event, time) => {
+      console.log(time);
+    });
 
     return () => {
       ipcRenderer.removeAllListeners("numberOfClips");
       ipcRenderer.removeAllListeners("APIHit");
       ipcRenderer.removeAllListeners("currentClip");
       ipcRenderer.removeAllListeners("fileComplete");
+      ipcRenderer.removeAllListeners("timePerClip");
     };
   }, []);
 

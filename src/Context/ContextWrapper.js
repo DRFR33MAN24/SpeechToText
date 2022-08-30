@@ -8,6 +8,7 @@ export default function ContextWrapper(props) {
   const [totalFiles, setTotalFiles] = useState(0);
   const [totalClipsInFile, setTotalClipsInFile] = useState(0);
   const [step, setStep] = useState(-1);
+  const [timePerClip, setTimePerClip] = useState(0);
   const [filesToProcess, setFilesToProcess] = useState([]);
 
   useEffect(() => {
@@ -31,6 +32,8 @@ export default function ContextWrapper(props) {
         setFilesToProcess,
         step,
         setStep,
+        timePerClip,
+        setTimePerClip,
       }}
     >
       {props.children}
