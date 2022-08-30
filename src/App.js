@@ -368,8 +368,10 @@ const Progress = ({ value }) => {
   );
 };
 const FileStats = () => {
-  const { currentFile, currentClip, totalClipsInFile } = useContext(Context);
+  const { currentFile, currentClip, totalClipsInFile, step } =
+    useContext(Context);
   const progressPercent = (currentClip / totalClipsInFile) * 100;
+
   return (
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="flex flex-row justify-between items-center">
@@ -378,7 +380,7 @@ const FileStats = () => {
         {currentFile}
         <div className="mr-5">
           <ul class="steps steps-vertical">
-            <li class="step step-success">
+            <li class={`step step-${step === 0 ? "success" : "neutral"}`}>
               <div className="text-l ">
                 Split Audio files{" "}
                 <span className="font-bold">
@@ -387,7 +389,7 @@ const FileStats = () => {
                 </span>
               </div>
             </li>
-            <li class="step step-neutral">
+            <li class={`step step-${step === 1 ? "success" : "neutral"}`}>
               <div className="text-l ">Upload to server</div>
             </li>
           </ul>
