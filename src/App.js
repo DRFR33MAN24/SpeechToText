@@ -224,7 +224,7 @@ function MyDropzone() {
       className=" card content-center items-center mb-3 mt-1  bg-base-100   rounded-lg p-2   "
     >
       <input {...getInputProps()} />
-      {filesToProcess.length !== 0 ? (
+      {filesToProcess?.length !== 0 ? (
         <div className="">
           <div className="flex flex-row justify-evenly my-2">
             <div className="btn btn-success btn-sm rounded-lg ">

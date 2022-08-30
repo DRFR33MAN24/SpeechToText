@@ -21,6 +21,8 @@ export default function ContextWrapper(props) {
         setTotalFiles,
         totalClipsInFile,
         setTotalClipsInFile,
+        filesToProcess,
+        setFilesToProcess,
       }}
     >
       {props.children}
