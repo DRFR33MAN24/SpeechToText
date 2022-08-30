@@ -24,7 +24,8 @@ import { Routes, Route, HashRouter } from "react-router-dom";
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <HashRouter>
+      <App />
+      {/* <HashRouter>
         <Routes>
           <Route path="/" element={<App />}>
             <Route path="/Login" element={<LoginPage />} />
@@ -40,7 +41,7 @@ ReactDOM.render(
             </Route>
           </Route>
         </Routes>
-      </HashRouter>
+      </HashRouter> */}
     </React.StrictMode>
   </Provider>,
   document.getElementById("root")
