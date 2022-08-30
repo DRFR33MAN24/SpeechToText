@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Context from "./Context";
 
 export default function ContextWrapper(props) {
   const [numApiRequests, setNumApiRequests] = useState(0);
-  const [currentFile, setCurrentFile] = useState("");
+  const [currentFile, setCurrentFile] = useState("____.mp3");
   const [currentClip, setCurrentClip] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
   const [totalClipsInFile, setTotalClipsInFile] = useState(0);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1);
   const [filesToProcess, setFilesToProcess] = useState([]);
+
+  useEffect(() => {
+    setTotalFiles(filesToProcess.length);
+  }, [filesToProcess]);
+
   return (
     <Context.Provider
       value={{

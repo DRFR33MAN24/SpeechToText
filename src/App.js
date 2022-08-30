@@ -289,7 +289,8 @@ function MyDropzone() {
 }
 
 const ProcessStats = () => {
-  const { setProcessStarted, processStarted } = useContext(Context);
+  const { setProcessStarted, processStarted, totalFiles, numApiRequests } =
+    useContext(Context);
   return (
     <div class="card ">
       <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
@@ -314,7 +315,7 @@ const ProcessStats = () => {
         )}
         <div className="stat">
           <div className="stat-title">Files</div>
-          <div className="text-lg font-bold">66</div>
+          <div className="text-lg font-bold">{totalFiles}</div>
         </div>
         <div className="stat">
           <div className="stat-title">Estimated Time</div>
@@ -324,7 +325,7 @@ const ProcessStats = () => {
         <div className="stat">
           <div className="stat-title">Network</div>
           <div className="stat-title">Requests</div>
-          <div className="text-lg font-bold">6</div>
+          <div className="text-lg font-bold">{numApiRequests}</div>
         </div>
       </div>
     </div>
@@ -358,6 +359,9 @@ const TitleBar = ({ closeApp, toggleModal }) => {
   );
 };
 const Progress = ({ value }) => {
+  if (!value) {
+    value = 0;
+  }
   return (
     <div
       className="radial-progress text-success font-bold"
