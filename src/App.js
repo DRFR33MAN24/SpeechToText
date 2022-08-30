@@ -287,44 +287,9 @@ function MyDropzone() {
   );
 }
 
-const App = () => {
-  const [modal, setModal] = useState(false);
-  const toggleModal = () => {
-    setModal(!modal);
-  };
-  const closeApp = () => {
-    ipcRenderer.send("quit");
-  };
-  return (
-    <div className="App bg-slate-200  ">
-      {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
-      <section className="z-0 bg-success"></section>
-
-      <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
-        <div className="flex flex-row justify-start items-center p-2  ">
-          <button
-            className="btn btn-ghost btn-square btn-error btn-sm"
-            onClick={closeApp}
-          >
-            <FontAwesomeIcon
-              icon={faPowerOff}
-              fixedWidth
-              size="lg"
-              className="text-base"
-            />
-          </button>
-          <button
-            className="btn btn-ghost btn-square   btn-sm  mx-1"
-            onClick={toggleModal}
-          >
-            <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
-          </button>
-        </div>
-        <div className="title-bar  top-1 text-base-100 "> Speech to text..</div>
-      </div>
-
-      <div className="mx-5 pt-16  ">
-        <div class="card ">
+const Stats = ()=>{
+  return(
+            <div class="card ">
           <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
             <div className="stat  items-center ">
               <div className="justify-center items-center">
@@ -350,14 +315,67 @@ const App = () => {
             </div>
           </div>
         </div>
-        <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
-          <div className="flex flex-row justify-between items-center">
-            <div
+    )
+}
+
+const TitleBar = ()=>{
+  return(
+          <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
+        <div className="flex flex-row justify-start items-center p-2  ">
+          <button
+            className="btn btn-ghost btn-square btn-error btn-sm"
+            onClick={closeApp}
+          >
+            <FontAwesomeIcon
+              icon={faPowerOff}
+              fixedWidth
+              size="lg"
+              className="text-base"
+            />
+          </button>
+          <button
+            className="btn btn-ghost btn-square   btn-sm  mx-1"
+            onClick={toggleModal}
+          >
+            <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
+          </button>
+        </div>
+        <div className="title-bar  top-1 text-base-100 "> Speech to text..</div>
+      </div>
+    )
+}
+const Progress = ()=>{
+  return(
+                  <div
               className="radial-progress text-success font-bold"
               style={{ "--value": 70, "--thickness": "15px", "--size": "5rem" }}
             >
               70%
             </div>
+    )
+
+}
+const App = () => {
+  const [modal, setModal] = useState(false);
+  const toggleModal = () => {
+    setModal(!modal);
+  };
+  const closeApp = () => {
+    ipcRenderer.send("quit");
+  };
+  return (
+    <div className="App bg-slate-200  ">
+      {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
+      <section className="z-0 bg-success"></section>
+      <TitleBar/>
+
+
+      <div className="mx-5 pt-16  ">
+        <Stats/>
+        <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
+          <div className="flex flex-row justify-between items-center">
+          <Progress/>
+
             TestFile.mp3
             <div className="mr-5">
               <ul class="steps steps-vertical">
