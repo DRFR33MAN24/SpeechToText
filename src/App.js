@@ -369,10 +369,11 @@ const Progress = ({ value }) => {
 };
 const FileStats = () => {
   const { currentFile, currentClip, totalClipsInFile } = useContext(Context);
+  const progressPercent = (currentClip / totalClipsInFile) * 100;
   return (
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="flex flex-row justify-between items-center">
-        <Progress value={70} />
+        <Progress value={progressPercent} />
 
         {currentFile}
         <div className="mr-5">
