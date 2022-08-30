@@ -113,7 +113,8 @@ const SettingsModal = ({ toggleModal }) => {
               <button
                 className="btn  btn-ghost btn-xs mx-2 rounded-lg"
                 onClick={() => {
-                  inputFile.current.click();
+                  ipcRenderer.send("chooseDir");
+                  //inputFile.current.click();
                 }}
               >
                 <FontAwesomeIcon

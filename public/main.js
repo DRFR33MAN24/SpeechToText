@@ -1,15 +1,30 @@
 const path = require("path");
 
-const { app, BrowserWindow, webContents, ipcMain } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  webContents,
+  ipcMain,
+  dialog,
+} = require("electron");
 
 const isDev = require("electron-is-dev");
 const {
   setupTitlebar,
   attachTitlebarToWindow,
 } = require("custom-electron-titlebar/main");
-// setup the titlebar main process
-//setupTitlebar();
 
+const { getAudioDurationInSeconds } = require('get-audio-duration')
+const split = require("audio-split");
+const fs = require("fs");
+
+
+const clipLength = 10;
+
+
+
+
+//setupTitlebar();
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -43,10 +58,65 @@ function createWindow() {
   }
 }
 
+
 if (process.platform === "linux") {
   // app.commandLine.appendSwitch('enable-transparent-visuals');
   // app.disableHardwareAcceleration();
   //app.on('ready', () => setTimeout(createWindow, 600));
+}
+
+const getFilesDuration = (files)=>{
+  const durations =[];
+  files.map(async (file,index)=>{
+   const time =await getAudioDurationInSeconds(file.path);
+   durations.push({id:index,duration:time});
+  })
+  return durations;
+}
+
+const proccessFile = (file,token)=>{
+
+  // create a tmp folder for the file in tmp folder
+  split({
+  filepath: file.path,
+  minClipLength: clipLength,
+  maxClipLength: clipLength,
+  outputPath: 'tmp/'
+});
+  const txtStream = fs.createWriteStream(`output/${file.name}.txt`);
+  const srtStream = fs.createWriteStream(`output/${file.name}.srt`);
+  const audioClips = glob.sync('tmp/*.*');
+
+  if (audioClips.length) {
+    audioClips.map((clip,index)=>{
+      //notify current clip
+      const txt = transcribeFile(clip,token);
+      txtStream.write(txt);
+      srtStream.write(`00:33:33 => 33:44:44${txt}`);
+
+    })
+  }
+
+  txtStream.end();
+  srtStream.end();
+
+    if (audioClips.length) {
+    audioClips.map((clip,index)=>{
+      fs.unlink(clip);
+
+    })
+  }
+//notify file procced
+
+}
+
+const transcribeFile = (clip,token)=>{
+
+  let res = await axios.post('http://httpbin.org/post', clip,headers: {   'Content-Type': 'application/json',
+  'Authorization': 'JWT fefege...' });
+  // noftify network request
+  return res.txt;
+
 }
 app.on("ready", createWindow);
 
@@ -67,6 +137,41 @@ app.on("activate", () => {
 
 ipcMain.on("quit", () => {
   app.quit();
+});
+
+ipcMain.on("chooseDir", (event) => {
+  // If the platform is 'win32' or 'Linux'
+  if (process.platform !== "darwin") {
+    // Resolves to a Promise<Object>
+    dialog
+      .showOpenDialog({
+        title: "Select the File to be uploaded",
+        defaultPath: path.join(__dirname, "../assets/"),
+        buttonLabel: "Upload",
+        // Restricting the user to only Text Files.
+        filters: [
+          {
+            name: "Text Files",
+            extensions: ["txt", "docx"],
+          },
+        ],
+        // Specifying the File Selector Property
+        properties: ["openFile"],
+      })
+      .then((file) => {
+        // Stating whether dialog operation was
+        // cancelled or not.
+        console.log(file.canceled);
+        if (!file.canceled) {
+          const filepath = file.filePaths[0].toString();
+          console.log(filepath);
+          event.reply("file", filepath);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 });
 ipcMain.on("changeWindowSize", (e, width, height, isMaximizable) => {
   let win = BrowserWindow.fromWebContents(e.sender);
