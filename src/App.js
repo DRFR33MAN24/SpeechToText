@@ -156,7 +156,12 @@ const SettingsModal = ({ toggleModal }) => {
           />
           <hr></hr>
         </div>
-        <button className="btn btn-sm btn-success rounded-lg">Save</button>
+        <button
+          className="btn btn-sm btn-success rounded-lg"
+          onClick={toggleModal}
+        >
+          Save
+        </button>
       </div>
     </div>
   );
@@ -335,12 +340,7 @@ const TitleBar = ({ closeApp, toggleModal }) => {
           className="btn btn-ghost btn-square btn-error btn-sm"
           onClick={closeApp}
         >
-          <FontAwesomeIcon
-            icon={faPowerOff}
-            fixedWidth
-            size="lg"
-            className="text-base"
-          />
+          <FontAwesomeIcon icon={faPowerOff} fixedWidth size="lg" />
         </button>
         <button
           className="btn btn-ghost btn-square   btn-sm  mx-1"

@@ -145,16 +145,16 @@ ipcMain.on("chooseDir", (event) => {
       .showOpenDialog({
         title: "Select the File to be uploaded",
         defaultPath: path.join(__dirname, "../assets/"),
-        buttonLabel: "Upload",
+        buttonLabel: "Select",
         // Restricting the user to only Text Files.
-        filters: [
-          {
-            name: "Text Files",
-            extensions: ["txt", "docx"],
-          },
-        ],
+        // filters: [
+        //   {
+        //     name: "Text Files",
+        //     extensions: ["txt", "docx"],
+        //   },
+        // ],
         // Specifying the File Selector Property
-        properties: ["openFile"],
+        properties: ["openFile", "openDirectory"],
       })
       .then((file) => {
         // Stating whether dialog operation was
