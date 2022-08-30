@@ -63,20 +63,16 @@ const FileItem = ({ name, index, duration, deleteFile }) => {
 };
 
 const SettingsModal = ({ toggleModal }) => {
-  const inputFile = useRef(null);
+  useEffect(() => {
+    const speechLanguage = localStorage.getItem("speechLanguage");
+    const conversionEnginge = localStorage.getItem("conversionEnginge");
+    const apiKey = localStorage.getItem("apiKey");
+    const interfaceLanguage = localStorage.getItem("interfaceLanguage");
+    const outputDirectory = localStorage.getItem("outputDirectory");
+  }, []);
+
   return (
     <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
-      <input
-        type="file"
-        id="file"
-        directory=""
-        webkitdirectory=""
-        ref={inputFile}
-        onInput={(event) => {
-          console.log("input", event);
-        }}
-        style={{ display: "none" }}
-      />
       <div className="card bg-base-100 shadow p-10 w-96">
         <div className="absolute top-2 right-2">
           <button
@@ -124,7 +120,6 @@ const SettingsModal = ({ toggleModal }) => {
                 className="btn  btn-ghost btn-xs mx-2 rounded-lg"
                 onClick={() => {
                   ipcRenderer.send("chooseDir");
-                  //inputFile.current.click();
                 }}
               >
                 <FontAwesomeIcon
