@@ -22,6 +22,7 @@ import {
   faClose,
   faKey,
   faFolder,
+  faStop,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { secondsToHHMMSS } from "./util";
@@ -288,17 +289,29 @@ function MyDropzone() {
 }
 
 const ProcessStats = () => {
+  const { setProcessStarted, processStarted } = useContext(Context);
   return (
     <div class="card ">
       <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
-        <div className="stat  items-center ">
-          <div className="justify-center items-center">
-            <div className="btn btn-circle btn-success ">
-              <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+        {!processStarted ? (
+          <div className="stat  items-center ">
+            <div className="justify-center items-center">
+              <div className="btn btn-circle btn-success ">
+                <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+              </div>
             </div>
+            <div className="mt-2 text-lg font-bold">Start</div>
           </div>
-          <div className="mt-2 text-lg font-bold">Start</div>
-        </div>
+        ) : (
+          <div className="stat  items-center ">
+            <div className="justify-center items-center">
+              <div className="btn btn-circle btn-error ">
+                <FontAwesomeIcon icon={faStop} fixedWidth size="lg" />
+              </div>
+            </div>
+            <div className="mt-2 text-lg font-bold">Stop</div>
+          </div>
+        )}
         <div className="stat">
           <div className="stat-title">Files</div>
           <div className="text-lg font-bold">66</div>
