@@ -23,7 +23,7 @@ const FileItem = ({ name, index, deleteFile }) => {
   return (
     <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
-        <div>
+        <div className=" text-ellipsis">
           <FontAwesomeIcon
             icon={faFile}
             fixedWidth

@@ -1,5 +1,6 @@
 const path = require("path");
-
+const axios = require('axios');
+const glob = require('glob');
 const {
   app,
   BrowserWindow,
@@ -112,8 +113,8 @@ const proccessFile = (file,token)=>{
 
 const transcribeFile = (clip,token)=>{
 
-  let res = await axios.post('http://httpbin.org/post', clip,headers: {   'Content-Type': 'application/json',
-  'Authorization': 'JWT fefege...' });
+  let res = await axios.post('http://httpbin.org/post', clip,{headers: {   'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}` }});
   // noftify network request
   return res.txt;
 
