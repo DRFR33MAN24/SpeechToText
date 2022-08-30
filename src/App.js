@@ -1,4 +1,4 @@
-import React, { useCallback, useState, CSSProperties, useRef } from "react";
+import React, { useCallback, useState, CSSProperties, useRef,useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { useDropzone } from "react-dropzone";
@@ -159,8 +159,12 @@ const SettingsModal = ({ toggleModal }) => {
 function MyDropzone() {
   const [filesToConvert, setFilesToConvert] = useState([]);
   const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles);
-    addFiles(acceptedFiles);
+    const files =[];
+    acceptedFiles.map((file,index)=>{
+      files.push({id:index,name:file.name,path:file.path})
+    });
+
+    addFiles(files);
   }, []);
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     onDrop,
@@ -168,6 +172,19 @@ function MyDropzone() {
     noClick: true,
   });
 
+useEffect(()=>{
+ipcRenderer.on('getDurations-reply', (event, arg) => {
+  console.log(arg) 
+})
+  return () => {
+    ipcRenderer.removeAllListeners('getDurations-reply');
+  };
+},[]);
+
+
+useEffect(()=>{
+  ipcRenderer.send('getDurations',filesToConvert);
+},[filesToConvert])
   const clearFiles = () => {
     setFilesToConvert([]);
   };
