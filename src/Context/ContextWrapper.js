@@ -7,6 +7,7 @@ export default function ContextWrapper(props) {
   const [currentClip, setCurrentClip] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
   const [totalClipsInFile, setTotalClipsInFile] = useState(0);
+  const [step, setStep] = useState(0);
   const [filesToProcess, setFilesToProcess] = useState([]);
   return (
     <Context.Provider
@@ -23,6 +24,8 @@ export default function ContextWrapper(props) {
         setTotalClipsInFile,
         filesToProcess,
         setFilesToProcess,
+        step,
+        setStep,
       }}
     >
       {props.children}
