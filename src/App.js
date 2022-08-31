@@ -63,6 +63,18 @@ const FileItem = ({ name, index, duration, deleteFile }) => {
 };
 
 const SettingsModal = ({ toggleModal }) => {
+  const {
+    speechLanguage,
+    setSpeechLanguage,
+    apiKey,
+    setApiKey,
+    interfaceLanguage,
+    setInterfaceLanguage,
+    outputDirectory,
+    setOutputDirectory,
+    conversionEngine,
+    setConversionEngine,
+  } = useContext(Context);
   return (
     <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
       <div className="card bg-base-100 shadow p-10 w-96">
@@ -75,7 +87,12 @@ const SettingsModal = ({ toggleModal }) => {
           </button>
         </div>
         <div className="mb-2">
-          <select class="select w-full max-w-xs">
+          <select
+            class="select w-full max-w-xs"
+            onChange={(event) => {
+              console.log(event);
+            }}
+          >
             <option disabled selected>
               {loc.speech_language}
             </option>
@@ -446,7 +463,7 @@ const App = () => {
     ipcRenderer.send("quit");
   };
   return (
-    <div className="App bg-slate-200  ">
+    <div className="App bg-slate-200" dir="rtl">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       <section className="z-0 bg-success"></section>
       <TitleBar closeApp={closeApp} toggleModal={toggleModal} />

@@ -27,7 +27,7 @@ export default function ContextWrapper(props) {
 
   useEffect(() => {
     localStorage.setItem("speechLanguage", speechLanguage);
-    localStorage.setItem("conversionEnginge", conversionEnginge);
+    localStorage.setItem("conversionEngine", conversionEngine);
     localStorage.setItem("interfaceLanguage", interfaceLanguage);
     localStorage.setItem("outputDirectory", outputDirectory);
     localStorage.setItem("apiKey", apiKey);
@@ -62,6 +62,16 @@ export default function ContextWrapper(props) {
         setStep,
         timePerClip,
         setTimePerClip,
+        speechLanguage,
+        setSpeechLanguage,
+        apiKey,
+        setApiKey,
+        interfaceLanguage,
+        setInterfaceLanguage,
+        outputDirectory,
+        setOutputDirectory,
+        conversionEngine,
+        setConversionEngine,
       }}
     >
       {props.children}
