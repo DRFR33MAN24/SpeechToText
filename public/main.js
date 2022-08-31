@@ -113,14 +113,16 @@ const proccessFile = (file, index, token) => {
 };
 
 const transcribeFile = async (clip, token) => {
-  let res = await axios.post("http://httpbin.org/post", clip, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  // noftify network request
-  return res.txt;
+  // let res = await axios.post("http://httpbin.org/post", clip, {
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
+
+  ipcMain.send("APIHit");
+  return "done";
+  //return res.txt;
 };
 app.on("ready", createWindow);
 
