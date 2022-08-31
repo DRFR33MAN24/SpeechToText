@@ -19,7 +19,12 @@ const { getAudioDurationInSeconds } = require("get-audio-duration");
 const split = require("audio-split");
 const fs = require("fs");
 
-const clipLength = 10;
+let clipLength = 10;
+let token = "";
+
+let speechLanguage = "ar";
+
+let outputDirectory = "output/";
 
 //setupTitlebar();
 function createWindow() {
@@ -69,21 +74,26 @@ const getFilesDurations = async (files) => {
   return files;
 };
 
-const proccessFile = (file, token) => {
+const proccessFile = (file, index, token) => {
   // create a tmp folder for the file in tmp folder
+  ipcMain.send("step", 0);
   split({
     filepath: file.path,
     minClipLength: clipLength,
     maxClipLength: clipLength,
     outputPath: "tmp/",
   });
+
   const txtStream = fs.createWriteStream(`output/${file.name}.txt`);
   const srtStream = fs.createWriteStream(`output/${file.name}.srt`);
   const audioClips = glob.sync("tmp/*.*");
 
+  ipcMain.send("numberOfClips", audioClips.length);
+  ipcMain.send("step", 1);
   if (audioClips.length) {
     audioClips.map((clip, index) => {
       //notify current clip
+      ipcMain.send("currentClip", index);
       const txt = transcribeFile(clip, token);
       txtStream.write(txt);
       srtStream.write(`00:33:33 => 33:44:44${txt}`);
@@ -99,6 +109,7 @@ const proccessFile = (file, token) => {
     });
   }
   //notify file procced
+  ipcMain.send("fileComplete", index);
 };
 
 const transcribeFile = async (clip, token) => {
@@ -135,6 +146,15 @@ ipcMain.on("quit", () => {
 ipcMain.on("getDurations", async (e, files) => {
   const durations = await getFilesDurations(files);
   e.reply("getDurations-reply", durations);
+});
+
+ipcMain.on("start", (files, token, speechLanguage, outputDirectory) => {
+  token = token;
+  speechLanguage = speechLanguage;
+  outputDirectory = outputDirectory;
+  files.map((file, index) => {
+    proccessFile(file);
+  });
 });
 
 ipcMain.on("chooseDir", (event) => {

@@ -350,26 +350,40 @@ function MyDropzone() {
 }
 
 const ProcessStats = () => {
-  const { setProcessStarted, processStarted, totalFiles, numApiRequests } =
-    useContext(Context);
+  const {
+    setProcessStarted,
+    processStarted,
+    totalFiles,
+    numApiRequests,
+    filesToProcess,
+  } = useContext(Context);
+
+  const start = () => {
+    setProcessStarted(true);
+    ipcRenderer.send("start", filesToProcess);
+  };
+  const stop = () => {
+    setProcessStarted(false);
+    ipcRenderer.send("stop");
+  };
   return (
     <div class="card ">
       <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
         {!processStarted ? (
           <div className="stat  items-center ">
             <div className="justify-center items-center">
-              <div className="btn btn-circle btn-success ">
+              <button className="btn btn-circle btn-success " onClick={start}>
                 <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
-              </div>
+              </button>
             </div>
             <div className="mt-2 text-lg font-bold">{loc.start}</div>
           </div>
         ) : (
           <div className="stat  items-center ">
             <div className="justify-center items-center">
-              <div className="btn btn-circle btn-error ">
+              <button className="btn btn-circle btn-error " onClick={stop}>
                 <FontAwesomeIcon icon={faStop} fixedWidth size="lg" />
-              </div>
+              </button>
             </div>
             <div className="mt-2 text-lg font-bold">{loc.stop}</div>
           </div>
@@ -468,6 +482,8 @@ const App = () => {
     setTotalClipsInFile,
     setProcessStarted,
     numApiRequests,
+    setStep,
+    step,
   } = useContext(Context);
 
   useEffect(() => {
@@ -489,6 +505,9 @@ const App = () => {
     ipcRenderer.on("timePerClip", (event, time) => {
       console.log(time);
     });
+    ipcRenderer.on("step", (event, num) => {
+      setStep(num);
+    });
 
     return () => {
       ipcRenderer.removeAllListeners("numberOfClips");
@@ -496,6 +515,7 @@ const App = () => {
       ipcRenderer.removeAllListeners("currentClip");
       ipcRenderer.removeAllListeners("fileComplete");
       ipcRenderer.removeAllListeners("timePerClip");
+      ipcRenderer.removeAllListeners("step");
     };
   }, []);
 
