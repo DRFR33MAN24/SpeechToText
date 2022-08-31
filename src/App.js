@@ -75,6 +75,16 @@ const SettingsModal = ({ toggleModal }) => {
     conversionEngine,
     setConversionEngine,
   } = useContext(Context);
+
+  useEffect(() => {
+    ipcRenderer.on("file", (event, path) => {
+      setOutputDirectory(path);
+
+      return () => {
+        ipcRenderer.removeAllListeners("file");
+      };
+    });
+  }, []);
   return (
     <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
       <div className="card bg-base-100 shadow p-10 w-96">
@@ -167,6 +177,7 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input
             type="text"
+            value={outputDirectory}
             disabled
             placeholder="/output"
             class="input input-bordered w-full max-w-xs"
