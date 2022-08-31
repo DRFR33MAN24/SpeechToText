@@ -11,6 +11,34 @@ export default function ContextWrapper(props) {
   const [timePerClip, setTimePerClip] = useState(0);
   const [filesToProcess, setFilesToProcess] = useState([]);
 
+  const [speechLanguage, setSpeechLanguage] = useState(
+    localStorage.getItem("speechLanguage")
+  );
+  const [conversionEngine, setConversionEngine] = useState(
+    localStorage.getItem("conversionEnginge")
+  );
+  const [apiKey, setApiKey] = useState(localStorage.getItem("apiKey"));
+  const [interfaceLanguage, setInterfaceLanguage] = useState(
+    localStorage.getItem("interfaceLanguage")
+  );
+  const [outputDirectory, setOutputDirectory] = useState(
+    localStorage.getItem("outputDirectory")
+  );
+
+  useEffect(() => {
+    localStorage.setItem("speechLanguage", speechLanguage);
+    localStorage.setItem("conversionEnginge", conversionEnginge);
+    localStorage.setItem("interfaceLanguage", interfaceLanguage);
+    localStorage.setItem("outputDirectory", outputDirectory);
+    localStorage.setItem("apiKey", apiKey);
+  }, [
+    speechLanguage,
+    conversionEngine,
+    apiKey,
+    interfaceLanguage,
+    outputDirectory,
+  ]);
+
   useEffect(() => {
     setTotalFiles(filesToProcess.length);
   }, [filesToProcess]);

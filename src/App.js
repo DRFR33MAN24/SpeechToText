@@ -63,14 +63,6 @@ const FileItem = ({ name, index, duration, deleteFile }) => {
 };
 
 const SettingsModal = ({ toggleModal }) => {
-  useEffect(() => {
-    const speechLanguage = localStorage.getItem("speechLanguage");
-    const conversionEnginge = localStorage.getItem("conversionEnginge");
-    const apiKey = localStorage.getItem("apiKey");
-    const interfaceLanguage = localStorage.getItem("interfaceLanguage");
-    const outputDirectory = localStorage.getItem("outputDirectory");
-  }, []);
-
   return (
     <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
       <div className="card bg-base-100 shadow p-10 w-96">
