@@ -74,7 +74,7 @@ const getFilesDurations = async (files) => {
   return files;
 };
 
-const proccessFile = (file, index, token) => {
+const proccessFile = (file, index) => {
   // create a tmp folder for the file in tmp folder
   ipcMain.send("step", 0);
   split({
@@ -84,8 +84,8 @@ const proccessFile = (file, index, token) => {
     outputPath: "tmp/",
   });
 
-  const txtStream = fs.createWriteStream(`output/${file.name}.txt`);
-  const srtStream = fs.createWriteStream(`output/${file.name}.srt`);
+  const txtStream = fs.createWriteStream(`${outputDirectory}${file.name}.txt`);
+  const srtStream = fs.createWriteStream(`${outputDirectory}${file.name}.srt`);
   const audioClips = glob.sync("tmp/*.*");
 
   ipcMain.send("numberOfClips", audioClips.length);
