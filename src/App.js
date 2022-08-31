@@ -502,6 +502,10 @@ const App = () => {
     ipcRenderer.on("fileComplete", (event, file) => {
       console.log(file);
     });
+    ipcRenderer.on("currentFile", (event, file) => {
+      console.log(file);
+      setCurrentFile(file);
+    });
     ipcRenderer.on("timePerClip", (event, time) => {
       console.log(time);
     });

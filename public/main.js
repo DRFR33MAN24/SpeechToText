@@ -76,6 +76,8 @@ const getFilesDurations = async (files) => {
 
 const proccessFile = (file, index) => {
   // create a tmp folder for the file in tmp folder
+
+  ipcMain.send("currentFile", file);
   ipcMain.send("step", 0);
   split({
     filepath: file.path,
