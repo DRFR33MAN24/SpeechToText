@@ -1,10 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require("tailwindcss-flip")],
   daisyui: {
     base: false,
     styled: true,
+    rtl: true,
     themes: [
       "light",
       // {
