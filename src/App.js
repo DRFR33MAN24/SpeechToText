@@ -26,7 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { secondsToHHMMSS } from "./util";
-
+import loc from "./localization";
 import Context from "./Context/Context";
 const { ipcRenderer } = window.require("electron");
 const FileItem = ({ name, index, duration, deleteFile }) => {
@@ -85,17 +85,17 @@ const SettingsModal = ({ toggleModal }) => {
         <div className="mb-2">
           <select class="select w-full max-w-xs">
             <option disabled selected>
-              Speech language
+              {loc.speech_language}
             </option>
-            <option>Arabic</option>
-            <option>English</option>
+            <option>{loc.arabic}</option>
+            <option>{loc.english}</option>
           </select>
           <hr></hr>
         </div>
         <div className="mb-2">
           <select class="select w-full max-w-xs">
             <option disabled selected>
-              Conversion engine
+              {loc.conversion_engine}
             </option>
             <option>Google</option>
             <option>Wit.ai</option>
@@ -105,17 +105,17 @@ const SettingsModal = ({ toggleModal }) => {
         <div className="mb-2">
           <select class="select w-full max-w-xs">
             <option disabled selected>
-              Interface language
+              {loc.interface_language}
             </option>
-            <option>Arabic</option>
-            <option>English</option>
+            <option>{loc.arabic}</option>
+            <option>{loc.english}</option>
           </select>
           <hr></hr>
         </div>
         <div className="mb-2">
           <div className="text-start my-1">
             <span className="mx-1">
-              Choose output directory
+              {loc.choose_output_directory}
               <button
                 className="btn  btn-ghost btn-xs mx-2 rounded-lg"
                 onClick={() => {
@@ -141,7 +141,7 @@ const SettingsModal = ({ toggleModal }) => {
         </div>
         <div className="mb-2">
           <div className="text-start my-1">
-            <span className="mx-1">Enter Wit.ai client key</span>
+            <span className="mx-1">{loc.enter_wit_api_key}</span>
             <FontAwesomeIcon
               icon={faKey}
               fixedWidth
@@ -149,18 +149,27 @@ const SettingsModal = ({ toggleModal }) => {
               className="text-warning mx-2"
             />
           </div>
-          <input
-            type="text"
-            placeholder="API Key"
-            class="input input-bordered w-full max-w-xs"
-          />
+          <input type="text" class="input input-bordered w-full max-w-xs" />
+          <hr></hr>
+        </div>
+        <div className="mb-2">
+          <div className="text-start my-1">
+            <span className="mx-1">{loc.enter_google_api_key}</span>
+            <FontAwesomeIcon
+              icon={faKey}
+              fixedWidth
+              size="l"
+              className="text-warning mx-2"
+            />
+          </div>
+          <input type="text" class="input input-bordered w-full max-w-xs" />
           <hr></hr>
         </div>
         <button
           className="btn btn-sm btn-success rounded-lg"
           onClick={toggleModal}
         >
-          Save
+          {loc.save}
         </button>
       </div>
     </div>
@@ -231,7 +240,7 @@ function MyDropzone() {
             <div className="btn btn-success btn-sm rounded-lg ">
               <div class="flex flex-row   items-center justify-center ">
                 <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
-                <div>Add</div>
+                <div>{loc.add}</div>
               </div>
             </div>
             <button className="btn btn-error btn-sm btn-outline rounded-lg  ">
@@ -242,7 +251,7 @@ function MyDropzone() {
                 }}
               >
                 <FontAwesomeIcon icon={faTrashCan} fixedWidth size="lg" />
-                <div>Clear</div>
+                <div>{loc.clear}</div>
               </div>
             </button>
           </div>
@@ -267,17 +276,17 @@ function MyDropzone() {
             height="128px"
           />
           {isDragActive ? (
-            <p>Drop the files here ...</p>
+            <p>{loc.drop_files_here}</p>
           ) : (
             <div>
-              <p>Drag 'n' drop some files here, or click to select files</p>
+              <p>{loc.drag_and_drop_or_click_select_button}</p>
               <button
                 className="btn btn-success btn-sm rounded-lg "
                 onClick={open}
               >
                 <div class="flex flex-row   items-center justify-center ">
                   <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
-                  <div>Add</div>
+                  <div>{loc.add}</div>
                 </div>
               </button>
             </div>
@@ -301,7 +310,7 @@ const ProcessStats = () => {
                 <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
               </div>
             </div>
-            <div className="mt-2 text-lg font-bold">Start</div>
+            <div className="mt-2 text-lg font-bold">{loc.start}</div>
           </div>
         ) : (
           <div className="stat  items-center ">
@@ -310,21 +319,21 @@ const ProcessStats = () => {
                 <FontAwesomeIcon icon={faStop} fixedWidth size="lg" />
               </div>
             </div>
-            <div className="mt-2 text-lg font-bold">Stop</div>
+            <div className="mt-2 text-lg font-bold">{loc.stop}</div>
           </div>
         )}
         <div className="stat">
-          <div className="stat-title">Files</div>
+          <div className="stat-title">{loc.files}</div>
           <div className="text-lg font-bold">{totalFiles}</div>
         </div>
         <div className="stat">
-          <div className="stat-title">Estimated Time</div>
-          <div className=" text-lg font-bold">1 Hr</div>
-          <div className=" text-lg font-bold">40 Min</div>
+          <div className="stat-title">{loc.estimated_time}</div>
+          <div className=" text-lg font-bold">1 {loc.hour}</div>
+          <div className=" text-lg font-bold">40 {loc.min}</div>
         </div>
         <div className="stat">
-          <div className="stat-title">Network</div>
-          <div className="stat-title">Requests</div>
+          <div className="stat-title">{loc.network}</div>
+          <div className="stat-title">{loc.requests}</div>
           <div className="text-lg font-bold">{numApiRequests}</div>
         </div>
       </div>
@@ -349,7 +358,7 @@ const TitleBar = ({ closeApp, toggleModal }) => {
           <FontAwesomeIcon icon={faGear} fixedWidth size="lg" />
         </button>
       </div>
-      <div className="title-bar  top-1 text-base-100 "> Speech to text..</div>
+      <div className="title-bar  top-1 text-base-100 "> </div>
     </div>
   );
 };
@@ -381,7 +390,7 @@ const FileStats = () => {
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>
               <div className="text-l ">
-                Split Audio files{" "}
+                {loc.split_audio_files}{" "}
                 <span className="font-bold">
                   {" "}
                   {currentClip} / {totalClipsInFile}
@@ -389,7 +398,7 @@ const FileStats = () => {
               </div>
             </li>
             <li class={`step step-${step === 1 ? "success" : "neutral"}`}>
-              <div className="text-l ">Upload to server</div>
+              <div className="text-l ">{loc.upload_to_server}</div>
             </li>
           </ul>
         </div>
