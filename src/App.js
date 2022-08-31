@@ -90,34 +90,59 @@ const SettingsModal = ({ toggleModal }) => {
           <select
             class="select w-full max-w-xs"
             onChange={(event) => {
-              console.log(event);
+              const options = event.target.options;
+              setSpeechLanguage(options[event.target.selectedIndex].id);
             }}
           >
-            <option disabled selected>
+            <option disabled selected={speechLanguage === ""}>
               {loc.speech_language}
             </option>
-            <option>{loc.arabic}</option>
-            <option>{loc.english}</option>
+            <option id="ar" selected={speechLanguage === "ar"}>
+              {loc.arabic}
+            </option>
+            <option id="en" selected={speechLanguage === "en"}>
+              {loc.english}
+            </option>
           </select>
           <hr></hr>
         </div>
         <div className="mb-2">
-          <select class="select w-full max-w-xs">
-            <option disabled selected>
+          <select
+            class="select w-full max-w-xs"
+            onChange={(event) => {
+              const options = event.target.options;
+              setConversionEngine(options[event.target.selectedIndex].id);
+            }}
+          >
+            <option disabled selected={conversionEngine === ""}>
               {loc.conversion_engine}
             </option>
-            <option>Google</option>
-            <option>Wit.ai</option>
+            <option id="google" selected={conversionEngine === "google"}>
+              Google
+            </option>
+            <option id="wit" selected={conversionEngine === "wit"}>
+              Wit.ai
+            </option>
           </select>
           <hr></hr>
         </div>
         <div className="mb-2">
-          <select class="select w-full max-w-xs">
-            <option disabled selected>
+          <select
+            class="select w-full max-w-xs"
+            onChange={(event) => {
+              const options = event.target.options;
+              setInterfaceLanguage(options[event.target.selectedIndex].id);
+            }}
+          >
+            <option disabled selected={interfaceLanguage === ""}>
               {loc.interface_language}
             </option>
-            <option>{loc.arabic}</option>
-            <option>{loc.english}</option>
+            <option id="ar" selected={interfaceLanguage === "ar"}>
+              {loc.arabic}
+            </option>
+            <option id="en" selected={interfaceLanguage === "en"}>
+              {loc.english}
+            </option>
           </select>
           <hr></hr>
         </div>
