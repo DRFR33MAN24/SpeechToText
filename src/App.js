@@ -183,7 +183,14 @@ const SettingsModal = ({ toggleModal }) => {
               className="text-warning mx-2"
             />
           </div>
-          <input type="text" class="input input-bordered w-full max-w-xs" />
+          <input
+            type="text"
+            defaultValue={apiKey}
+            class="input input-bordered w-full max-w-xs"
+            onChange={(event) => {
+              setApiKey(event.target.value);
+            }}
+          />
           <hr></hr>
         </div>
         <div className="mb-2">
