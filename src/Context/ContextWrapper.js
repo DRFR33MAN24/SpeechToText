@@ -10,6 +10,7 @@ export default function ContextWrapper(props) {
   const [step, setStep] = useState(-1);
   const [timePerClip, setTimePerClip] = useState(0);
   const [filesToProcess, setFilesToProcess] = useState([]);
+  const [processStarted, setProcessStarted] = useState(false);
 
   const [speechLanguage, setSpeechLanguage] = useState(
     localStorage.getItem("speechLanguage")
@@ -72,6 +73,8 @@ export default function ContextWrapper(props) {
         setOutputDirectory,
         conversionEngine,
         setConversionEngine,
+        processStarted,
+        setProcessStarted,
       }}
     >
       {props.children}

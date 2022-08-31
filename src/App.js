@@ -255,10 +255,16 @@ function MyDropzone() {
     ipcRenderer.on("getDurations-reply", (event, files) => {
       console.log(files);
       addFiles(files);
+
+      ipcRenderer.on("fileComplete", (event, index) => {
+        console.log(index);
+        deleteFile(index);
+      });
     });
 
     return () => {
       ipcRenderer.removeAllListeners("getDurations-reply");
+      ipcRenderer.removeAllListeners("fileComplete");
     };
   }, []);
 
@@ -356,11 +362,23 @@ const ProcessStats = () => {
     totalFiles,
     numApiRequests,
     filesToProcess,
+    apiKey,
+    speechLanguage,
+    outputDirectory,
   } = useContext(Context);
 
   const start = () => {
+    if (!filesToProcess.length) {
+      return;
+    }
     setProcessStarted(true);
-    ipcRenderer.send("start", filesToProcess);
+    ipcRenderer.send(
+      "start",
+      filesToProcess,
+      apiKey,
+      speechLanguage,
+      outputDirectory
+    );
   };
   const stop = () => {
     setProcessStarted(false);
@@ -499,8 +517,9 @@ const App = () => {
       console.log(clip);
       setCurrentClip(clip);
     });
-    ipcRenderer.on("fileComplete", (event, file) => {
-      console.log(file);
+
+    ipcRenderer.on("processComplete", () => {
+      setProcessStarted(false);
     });
     ipcRenderer.on("currentFile", (event, file) => {
       console.log(file);
@@ -517,7 +536,9 @@ const App = () => {
       ipcRenderer.removeAllListeners("numberOfClips");
       ipcRenderer.removeAllListeners("APIHit");
       ipcRenderer.removeAllListeners("currentClip");
-      ipcRenderer.removeAllListeners("fileComplete");
+      ipcRenderer.removeAllListeners("currentFile");
+
+      ipcRenderer.removeAllListeners("processComplete");
       ipcRenderer.removeAllListeners("timePerClip");
       ipcRenderer.removeAllListeners("step");
     };

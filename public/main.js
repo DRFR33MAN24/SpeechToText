@@ -4,7 +4,7 @@ const glob = require("glob");
 const {
   app,
   BrowserWindow,
-  webContents,
+
   ipcMain,
   dialog,
 } = require("electron");
@@ -18,18 +18,19 @@ const {
 const { getAudioDurationInSeconds } = require("get-audio-duration");
 const split = require("audio-split");
 const fs = require("fs");
-
+const { IncomingMessage } = require("http");
+let win;
 let clipLength = 10;
 let token = "";
 
 let speechLanguage = "ar";
 
 let outputDirectory = "output/";
-
+let pause = false;
 //setupTitlebar();
 function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 480,
     height: 800,
     titleBarStyle: "hidden",
@@ -77,25 +78,26 @@ const getFilesDurations = async (files) => {
 const proccessFile = (file, index) => {
   // create a tmp folder for the file in tmp folder
 
-  ipcMain.send("currentFile", file);
-  ipcMain.send("step", 0);
+  win.webContents.send("currentFile", file);
+  win.webContents.send("step", 0);
+
   split({
     filepath: file.path,
     minClipLength: clipLength,
     maxClipLength: clipLength,
     outputPath: "tmp/",
   });
+  const audioClips = glob.sync("tmp/*.*");
 
   const txtStream = fs.createWriteStream(`${outputDirectory}${file.name}.txt`);
   const srtStream = fs.createWriteStream(`${outputDirectory}${file.name}.srt`);
-  const audioClips = glob.sync("tmp/*.*");
 
-  ipcMain.send("numberOfClips", audioClips.length);
-  ipcMain.send("step", 1);
+  win.webContents.send("numberOfClips", audioClips.length);
+  win.webContents.send("step", 1);
   if (audioClips.length) {
     audioClips.map((clip, index) => {
       //notify current clip
-      ipcMain.send("currentClip", index);
+      win.webContents.send("currentClip", index);
       const txt = transcribeFile(clip, token);
       txtStream.write(txt);
       srtStream.write(`00:33:33 => 33:44:44${txt}`);
@@ -111,7 +113,7 @@ const proccessFile = (file, index) => {
     });
   }
   //notify file procced
-  ipcMain.send("fileComplete", index);
+  win.webContents.send("fileComplete", index);
 };
 
 const transcribeFile = async (clip, token) => {
@@ -122,7 +124,7 @@ const transcribeFile = async (clip, token) => {
   //   },
   // });
 
-  ipcMain.send("APIHit");
+  win.webContents.send("APIHit");
   return "done";
   //return res.txt;
 };
@@ -152,13 +154,26 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
-ipcMain.on("start", (files, token, speechLanguage, outputDirectory) => {
+ipcMain.on("start", (e, files, token, speechLanguage, outputDirectory) => {
+  //console.log(files);
   token = token;
   speechLanguage = speechLanguage;
   outputDirectory = outputDirectory;
+
   files.map((file, index) => {
-    proccessFile(file);
+    proccessFile(file, index);
   });
+});
+
+ipcMain.on("stop", (e) => {
+  pause = true;
+  const audioClips = glob.sync("tmp/*.*");
+
+  if (audioClips.length) {
+    audioClips.map((clip, index) => {
+      fs.unlink(clip);
+    });
+  }
 });
 
 ipcMain.on("chooseDir", (event) => {
