@@ -257,9 +257,7 @@ function MyDropzone() {
       addFiles(files);
 
       ipcRenderer.on("fileComplete", (event, idx) => {
-        
         deleteFile(idx);
-        
       });
     });
 
@@ -273,18 +271,21 @@ function MyDropzone() {
     setFilesToProcess([]);
   };
   const addFiles = (files) => {
-    
     const newList = files.concat(filesToProcess);
     setFilesToProcess(newList);
   };
 
   const deleteFile = (idx) => {
+    console.log(idx);
     if (idx !== -1) {
-      const newList = [...filesToProcess];
-      console.log(filesToProcess)
-      newList.splice(idx, 1);
+      setFilesToProcess((filesToProcess) => {
+        const newList = [...filesToProcess].filter((file) => {
+          return file.id != idx;
+        });
 
-      setFilesToProcess(newList);
+        // newList.splice(idx, 1);
+        return newList;
+      });
     }
   };
 
@@ -449,8 +450,7 @@ const TitleBar = ({ closeApp, toggleModal }) => {
   );
 };
 const Progress = () => {
-    const {  currentClip, totalClipsInFile } =
-    useContext(Context);
+  const { currentClip, totalClipsInFile } = useContext(Context);
   let progressPercent = (currentClip / totalClipsInFile) * 100;
   if (!progressPercent) {
     progressPercent = 0;
@@ -458,7 +458,11 @@ const Progress = () => {
   return (
     <div
       className="radial-progress text-success font-bold"
-      style={{ "--value": progressPercent, "--thickness": "15px", "--size": "5rem" }}
+      style={{
+        "--value": progressPercent,
+        "--thickness": "15px",
+        "--size": "5rem",
+      }}
     >
       {progressPercent}%
     </div>
@@ -467,7 +471,6 @@ const Progress = () => {
 const FileStats = () => {
   const { currentFile, currentClip, totalClipsInFile, step } =
     useContext(Context);
-  
 
   return (
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
@@ -518,8 +521,8 @@ const App = () => {
     });
     ipcRenderer.on("APIHit", (event) => {
       //console.log("API hit");
-     
-      setNumApiRequests((num)=>num +1);
+
+      setNumApiRequests((num) => num + 1);
     });
     ipcRenderer.on("currentClip", (event, clip) => {
       //console.log(clip);
