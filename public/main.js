@@ -101,8 +101,8 @@ const proccessFile = async (file, index) => {
       fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt);
       fs.writeFileSync(
         `${outputDirectory}${file.name}.srt`,
-        `${idx}\n${secondsToHHMMSS(clipLength)} ---> ${secondsToHHMMSS(
-          clipLength
+        `${idx}\n${secondsToHHMMSS(clipLength * idx)} ---> ${secondsToHHMMSS(
+          clipLength * idx + clipLength
         )}\n${txt}`
       );
       idx += 1;
