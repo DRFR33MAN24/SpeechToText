@@ -98,12 +98,15 @@ const proccessFile = async (file, index) => {
       let txt;
       txt = await transcribeFile(clip, token);
       // })();
-      fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt);
+      fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
+        flag: "a",
+      });
       fs.writeFileSync(
         `${outputDirectory}${file.name}.srt`,
         `${idx}\n${secondsToHHMMSS(clipLength * idx)} ---> ${secondsToHHMMSS(
           clipLength * idx + clipLength
-        )}\n${txt}`
+        )}\n${txt}`,
+        { flag: "a" }
       );
       idx += 1;
     }
