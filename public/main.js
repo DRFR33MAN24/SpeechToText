@@ -148,6 +148,7 @@ const transcribeFile = async (clip, token) => {
   await sleep(2000);
   win.webContents.send("APIHit");
   //return "done";
+  console.log(res.data);
   return res.text;
 };
 app.on("ready", createWindow);
