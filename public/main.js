@@ -28,6 +28,10 @@ let speechLanguage = "ar";
 let outputDirectory = "output/";
 let pause = false;
 //setupTitlebar();
+
+function secondsToHHMMSS(seconds) {
+  return new Date(seconds * 1000).toISOString().substring(14, 19);
+}
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -90,13 +94,18 @@ const proccessFile = async (file, index) => {
     for (const clip of audioClips) {
       // (async () => {
       //notify current clip
-      win.webContents.send("currentClip", idx+1);
+      win.webContents.send("currentClip", idx + 1);
       let txt;
       txt = await transcribeFile(clip, token);
-      idx += 1;
       // })();
       fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt);
-      fs.writeFileSync(`${outputDirectory}${file.name}.srt`, txt);
+      fs.writeFileSync(
+        `${outputDirectory}${file.name}.srt`,
+        `${idx}\n${secondsToHHMMSS(clipLength)} ---> ${secondsToHHMMSS(
+          clipLength
+        )}\n${txt}`
+      );
+      idx += 1;
     }
   }
 
@@ -180,7 +189,7 @@ ipcMain.on(
     for (const file of files) {
       await splitAwaited(file.path);
       await proccessFile(file, idx);
-      idx = idx+1;
+      idx = idx + 1;
     }
 
     win.webContents.send("processComplete");
