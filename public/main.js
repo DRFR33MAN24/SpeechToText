@@ -75,7 +75,7 @@ const getFilesDurations = async (files) => {
   return files;
 };
 
-const proccessFile = async(file, index) => {
+const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
 
   win.webContents.send("currentFile", file);
@@ -94,15 +94,15 @@ const proccessFile = async(file, index) => {
   if (audioClips.length) {
     let idx = 0;
     for (const clip of audioClips) {
-      
-        //notify current clip
-        let txt;
-        txt = await transcribeFile(clip, token);
-        fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt);
-        fs.writeFileSync(`${outputDirectory}${file.name}.srt`, txt);
-        idx += 1;
-      
+      // (async () => {
+      //notify current clip
       win.webContents.send("currentClip", index);
+      let txt;
+      txt = await transcribeFile(clip, token);
+      idx += 1;
+      // })();
+      fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt);
+      fs.writeFileSync(`${outputDirectory}${file.name}.srt`, txt);
     }
   }
 
@@ -153,14 +153,14 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
-ipcMain.on("start",async (e, files, token, speechLanguage, outputDirectory) => {
+ipcMain.on("start", (e, files, token, speechLanguage, outputDirectory) => {
   //console.log(files);
   token = token;
   speechLanguage = speechLanguage;
   outputDirectory = outputDirectory;
 
   files.map((file, index) => {
-   await proccessFile(file, index);
+    proccessFile(file, index);
   });
 });
 
