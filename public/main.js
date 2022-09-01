@@ -156,18 +156,13 @@ ipcMain.on(
     outputDirectory = outputDirectory;
     let idx = 0;
     for (const file of files) {
-      split(
-        {
-          filepath: file.path,
-          minClipLength: clipLength,
-          maxClipLength: clipLength,
-          outputPath: "tmp/",
-        },
-        () => {
-          proccessFile(file, idx);
-        }
-      );
-      // await proccessFile(file, idx);
+      await split({
+        filepath: file.path,
+        minClipLength: clipLength,
+        maxClipLength: clipLength,
+        outputPath: "tmp/",
+      });
+      await proccessFile(file, idx);
       idx += 1;
     }
 
