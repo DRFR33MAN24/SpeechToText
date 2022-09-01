@@ -21,7 +21,7 @@ const fs = require("fs");
 const { IncomingMessage } = require("http");
 let win;
 let clipLength = 10;
-let token = "";
+let apiToken = "";
 
 let speechLanguage = "ar";
 
@@ -96,7 +96,7 @@ const proccessFile = async (file, index) => {
       //notify current clip
       win.webContents.send("currentClip", idx + 1);
       let txt;
-      txt = await transcribeFile(clip, token);
+      txt = await transcribeFile(clip, apiToken);
       // })();
       if (txt) {
         fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
@@ -132,14 +132,18 @@ async function sleep(ms) {
   });
 }
 const transcribeFile = async (clip, token) => {
-  let res = await axios.post("https://api.wit.ai/speech", clip, {
-    params: { v: "20220622" },
-
-    headers: {
-      "Content-Type": "audio/mpeg",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  console.log(token);
+  let res;
+  try {
+    res = await axios.post("https://api.wit.ai/speech?v=20220622", clip, {
+      headers: {
+        "Content-Type": "audio/mpeg",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   await sleep(2000);
   win.webContents.send("APIHit");
@@ -193,13 +197,13 @@ ipcMain.on(
   "start",
   async (e, files, token, speechLanguage, outputDirectory) => {
     console.log(token, speechLanguage, outputDirectory);
-    token = token;
+    apiToken = token;
     speechLanguage = speechLanguage;
     outputDirectory = outputDirectory;
     let idx = 0;
     for (const file of files) {
       await splitAwaited(file.path);
-      await proccessFile(file, idx);
+      await proccessFile(file, idx, token, speechLanguage, outputDirectory);
       idx = idx + 1;
     }
 
