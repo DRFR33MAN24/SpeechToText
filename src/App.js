@@ -499,9 +499,10 @@ const App = () => {
     setTotalFiles,
     setTotalClipsInFile,
     setProcessStarted,
-    numApiRequests,
     setStep,
+    numApiRequests,
     step,
+    processStarted,
   } = useContext(Context);
 
   useEffect(() => {
@@ -558,6 +559,7 @@ const App = () => {
 
       <div className="mx-5 pt-16  ">
         <ProcessStats />
+
         <FileStats />
 
         <MyDropzone />
