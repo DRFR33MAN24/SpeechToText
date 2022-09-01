@@ -109,6 +109,11 @@ const proccessFile = async (file, index) => {
   win.webContents.send("fileComplete", index);
 };
 
+async function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 const transcribeFile = async (clip, token) => {
   // let res = await axios.post("http://httpbin.org/post", clip, {
   //   headers: {
@@ -116,7 +121,7 @@ const transcribeFile = async (clip, token) => {
   //     Authorization: `Bearer ${token}`,
   //   },
   // });
-
+  await sleep(2000);
   win.webContents.send("APIHit");
   return "done";
   //return res.txt;

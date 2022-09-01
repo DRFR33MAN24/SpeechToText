@@ -26,6 +26,12 @@ export default function ContextWrapper(props) {
     localStorage.getItem("outputDirectory")
   );
 
+  const resetStats = () => {
+    setCurrentClip(0);
+    setCurrentFile("");
+    setTotalClipsInFile(0);
+    setStep(-1);
+  };
   useEffect(() => {
     localStorage.setItem("speechLanguage", speechLanguage);
     localStorage.setItem("conversionEngine", conversionEngine);
@@ -75,6 +81,7 @@ export default function ContextWrapper(props) {
         setConversionEngine,
         processStarted,
         setProcessStarted,
+        resetStats,
       }}
     >
       {props.children}

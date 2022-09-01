@@ -503,6 +503,7 @@ const App = () => {
     numApiRequests,
     step,
     processStarted,
+    resetStats,
   } = useContext(Context);
 
   useEffect(() => {
@@ -521,6 +522,7 @@ const App = () => {
 
     ipcRenderer.on("processComplete", () => {
       setProcessStarted(false);
+      resetStats();
     });
     ipcRenderer.on("currentFile", (event, file) => {
       console.log(file);

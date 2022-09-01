@@ -30,6 +30,7 @@ const GlobalContext = React.createContext({
   setFilesToProcess: () => {},
   setStep: () => {},
   setTimePerClip: () => {},
+  resetStats: () => {},
 });
 
 export default GlobalContext;
