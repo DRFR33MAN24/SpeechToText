@@ -81,12 +81,6 @@ const proccessFile = async (file, index) => {
   win.webContents.send("currentFile", file);
   win.webContents.send("step", 0);
 
-  split({
-    filepath: file.path,
-    minClipLength: clipLength,
-    maxClipLength: clipLength,
-    outputPath: "tmp/",
-  });
   const audioClips = glob.sync("tmp/*.*");
 
   win.webContents.send("numberOfClips", audioClips.length);
@@ -162,7 +156,18 @@ ipcMain.on(
     outputDirectory = outputDirectory;
     let idx = 0;
     for (const file of files) {
-      await proccessFile(file, idx);
+      split(
+        {
+          filepath: file.path,
+          minClipLength: clipLength,
+          maxClipLength: clipLength,
+          outputPath: "tmp/",
+        },
+        () => {
+          proccessFile(file, idx);
+        }
+      );
+      // await proccessFile(file, idx);
       idx += 1;
     }
   }
