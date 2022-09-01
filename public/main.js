@@ -170,6 +170,8 @@ ipcMain.on(
       // await proccessFile(file, idx);
       idx += 1;
     }
+
+    win.webContents.send("processComplete");
   }
 );
 
