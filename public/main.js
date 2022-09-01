@@ -147,6 +147,23 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
+const splitAwaited = (path) => {
+  return new Promise((resolve, reject) => {
+    split(
+      {
+        filepath: path,
+        minClipLength: clipLength,
+        maxClipLength: clipLength,
+        outputPath: "tmp/",
+      },
+
+      (err, data) => {
+        if (err) return reject(err);
+        resolve(data);
+      }
+    );
+  });
+};
 ipcMain.on(
   "start",
   async (e, files, token, speechLanguage, outputDirectory) => {
@@ -156,13 +173,8 @@ ipcMain.on(
     outputDirectory = outputDirectory;
     let idx = 0;
     for (const file of files) {
-      await split({
-        filepath: file.path,
-        minClipLength: clipLength,
-        maxClipLength: clipLength,
-        outputPath: "tmp/",
-      });
-      await proccessFile(file, idx);
+      await splitAwaited(file.path);
+      await await proccessFile(file, idx);
       idx += 1;
     }
 
