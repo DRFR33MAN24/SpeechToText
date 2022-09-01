@@ -179,7 +179,7 @@ ipcMain.on(
     let idx = 0;
     for (const file of files) {
       await splitAwaited(file.path);
-      await await proccessFile(file, idx);
+      await proccessFile(file, idx);
       idx += 1;
     }
 
