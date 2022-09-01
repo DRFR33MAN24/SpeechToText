@@ -30,7 +30,7 @@ let pause = false;
 //setupTitlebar();
 
 function secondsToHHMMSS(seconds) {
-  return new Date(seconds * 1000).toISOString().substring(14, 19);
+  return new Date(seconds * 1000).toISOString().substring(11, 16);
 }
 function createWindow() {
   // Create the browser window.
@@ -98,7 +98,8 @@ const proccessFile = async (file, index) => {
       let txt;
       txt = await transcribeFile(clip, token);
       // })();
-      fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
+      if (txt) {
+              fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
         flag: "a",
       });
       fs.writeFileSync(
@@ -108,6 +109,10 @@ const proccessFile = async (file, index) => {
         )}\n${txt}`,
         { flag: "a" }
       );
+
+      win.webContents.send('currentSubtitle',txt);
+      }
+
       idx += 1;
     }
   }
@@ -127,16 +132,19 @@ async function sleep(ms) {
   });
 }
 const transcribeFile = async (clip, token) => {
-  // let res = await axios.post("http://httpbin.org/post", clip, {
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // });
+
+  let res = await axios.post("https://api.wit.ai/speech", clip, {
+    headers: {
+      "Content-Type": "audio/mpeg",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  
   await sleep(2000);
   win.webContents.send("APIHit");
-  return "done";
-  //return res.txt;
+  //return "done";
+  return res.text;
 };
 app.on("ready", createWindow);
 
@@ -184,7 +192,7 @@ const splitAwaited = (path) => {
 ipcMain.on(
   "start",
   async (e, files, token, speechLanguage, outputDirectory) => {
-    //console.log(files);
+    console.log(token,speechLanguage,outputDirectory);
     token = token;
     speechLanguage = speechLanguage;
     outputDirectory = outputDirectory;
@@ -203,11 +211,11 @@ ipcMain.on("stop", (e) => {
   pause = true;
   const audioClips = glob.sync("tmp/*.*");
 
-  // if (audioClips.length) {
-  //   audioClips.map((clip, index) => {
-  //     fs.unlinkSync(clip);
-  //   });
-  // }
+  if (audioClips.length) {
+    audioClips.map((clip, index) => {
+      fs.unlinkSync(clip);
+    });
+  }
 });
 
 ipcMain.on("chooseDir", (event) => {

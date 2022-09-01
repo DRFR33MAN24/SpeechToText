@@ -227,11 +227,22 @@ const SettingsModal = ({ toggleModal }) => {
     </div>
   );
 };
+
+const LoadingModal = ()=>{
+  return(
+        <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
+      <div className="card bg-base-100 shadow p-10 w-96">
+      Loading ....
+      </div>
+      </div>
+    )
+}
 function MyDropzone() {
   //const [filesToConvert, setFilesToConvert] = useState([]);
-  const { filesToProcess, setFilesToProcess } = useContext(Context);
+  const { filesToProcess, setFilesToProcess,setLoading } = useContext(Context);
 
   const onDrop = useCallback((acceptedFiles) => {
+    setLoading(true);
     const files = [];
     acceptedFiles.map((file, index) => {
       files.push({
@@ -255,6 +266,7 @@ function MyDropzone() {
     ipcRenderer.on("getDurations-reply", (event, files) => {
       //console.log(files);
       addFiles(files);
+      setLoading(false);
 
       ipcRenderer.on("fileComplete", (event, idx) => {
         deleteFile(idx);
@@ -271,8 +283,21 @@ function MyDropzone() {
     setFilesToProcess([]);
   };
   const addFiles = (files) => {
+    
+    
+    files.map((file,fileIdx)=>{
+
+     const idx = filesToProcess.findIndex(item=>{
+       return item.path === file.path
+      });
+     if (idx !== -1) {
+      files.splice(fileIdx,1);
+     }
+      
+    })
     const newList = files.concat(filesToProcess);
     setFilesToProcess(newList);
+
   };
 
   const deleteFile = (idx) => {
@@ -298,7 +323,7 @@ function MyDropzone() {
       {filesToProcess?.length !== 0 ? (
         <div className="">
           <div className="flex flex-row justify-evenly my-2">
-            <div className="btn btn-success btn-sm rounded-lg ">
+            <div className="btn btn-success btn-sm rounded-lg " onClick={open}>
               <div class="flex flex-row   items-center justify-center ">
                 <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
                 <div>{loc.add}</div>
@@ -469,7 +494,7 @@ const Progress = () => {
   );
 };
 const FileStats = () => {
-  const { currentFile, currentClip, totalClipsInFile, step } =
+  const { currentFile, currentClip, totalClipsInFile, step,currentSubtitle } =
     useContext(Context);
 
   return (
@@ -495,6 +520,9 @@ const FileStats = () => {
           </ul>
         </div>
       </div>
+      <div>
+        {currentSubtitle}
+      </div>
     </div>
   );
 };
@@ -512,6 +540,8 @@ const App = () => {
     step,
     processStarted,
     resetStats,
+    setCurrentSubtitle,
+    loading
   } = useContext(Context);
 
   useEffect(() => {
@@ -543,6 +573,9 @@ const App = () => {
     ipcRenderer.on("step", (event, num) => {
       setStep(num);
     });
+        ipcRenderer.on("currentSubtitle", (event,sub) => {
+      setCurrentSubtitle(sub);
+    });
 
     return () => {
       ipcRenderer.removeAllListeners("numberOfClips");
@@ -553,6 +586,7 @@ const App = () => {
       ipcRenderer.removeAllListeners("processComplete");
       ipcRenderer.removeAllListeners("timePerClip");
       ipcRenderer.removeAllListeners("step");
+      ipcRenderer.removeAllListeners("currentSubtitle");
     };
   }, []);
 
@@ -565,6 +599,7 @@ const App = () => {
   return (
     <div className="App bg-slate-200" dir="rtl">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
+       {loading ? <LoadingModal /> : null}
       <section className="z-0 bg-success"></section>
       <TitleBar closeApp={closeApp} toggleModal={toggleModal} />
 

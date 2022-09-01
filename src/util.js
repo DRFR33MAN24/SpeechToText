@@ -16,5 +16,5 @@ export function getFormattedDate(date) {
 }
 
 export function secondsToHHMMSS(seconds) {
-  return new Date(seconds * 1000).toISOString().substring(14, 19);
+  return new Date(seconds * 1000).toISOString().substring(11, 16);
 }

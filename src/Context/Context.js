@@ -14,6 +14,8 @@ const GlobalContext = React.createContext({
   apiKey: "",
   interfaceLanguage: "ar",
   outputDirectory: "",
+  currentSubtitle:'',
+  loading:false,
   conversionEngine: "wit",
   setSpeechLanguage: () => {},
   setApiKey: () => {},
@@ -22,6 +24,8 @@ const GlobalContext = React.createContext({
   setConversionEngine: () => {},
   setProcessStarted: () => {},
   setCurrentFile: () => {},
+  setCurrentSubtitle: () => {},
+  setLoading: () => {},
 
   setCurrentClip: () => {},
   setNumApiRequests: () => {},
