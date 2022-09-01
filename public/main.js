@@ -180,7 +180,7 @@ ipcMain.on(
     for (const file of files) {
       await splitAwaited(file.path);
       await proccessFile(file, idx);
-      idx += 1;
+      idx = +1;
     }
 
     win.webContents.send("processComplete");
