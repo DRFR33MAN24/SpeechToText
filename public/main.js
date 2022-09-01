@@ -135,7 +135,8 @@ const transcribeFile = async (clip, token) => {
   console.log(token);
   let res;
   try {
-    res = await axios.post("https://api.wit.ai/speech?v=20220622", clip, {
+    const file = fs.readFileSync(clip);
+    res = await axios.post("https://api.wit.ai/speech?v=20220622", file, {
       headers: {
         "Content-Type": "audio/mpeg",
         Authorization: `Bearer ${token}`,
