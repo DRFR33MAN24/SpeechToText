@@ -161,7 +161,7 @@ ipcMain.on(
     speechLanguage = speechLanguage;
     outputDirectory = outputDirectory;
     let idx = 0;
-    for (const clip of audioClips) {
+    for (const file of files) {
       await proccessFile(file, idx);
       idx += 1;
     }
