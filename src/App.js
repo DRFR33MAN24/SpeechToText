@@ -469,7 +469,7 @@ const FileStats = () => {
       <div className="flex flex-row justify-between items-center">
         <Progress value={progressPercent} />
 
-        {currentFile}
+        {currentFile.name}
         <div className="mr-5">
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>

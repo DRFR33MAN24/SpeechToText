@@ -75,7 +75,7 @@ const getFilesDurations = async (files) => {
   return files;
 };
 
-const proccessFile = (file, index) => {
+const proccessFile =  (file, index) => {
   // create a tmp folder for the file in tmp folder
 
   win.webContents.send("currentFile", file);
@@ -89,29 +89,30 @@ const proccessFile = (file, index) => {
   });
   const audioClips = glob.sync("tmp/*.*");
 
-  const txtStream = fs.createWriteStream(`${outputDirectory}${file.name}.txt`);
-  const srtStream = fs.createWriteStream(`${outputDirectory}${file.name}.srt`);
+  // const txtStream = fs.createWriteStream(`${outputDirectory}${file.name}.txt`);
+  // const srtStream = fs.createWriteStream(`${outputDirectory}${file.name}.srt`);
 
   win.webContents.send("numberOfClips", audioClips.length);
   win.webContents.send("step", 1);
   if (audioClips.length) {
-    audioClips.map((clip, index) => {
+    audioClips.map(async (clip, index) => {
       //notify current clip
       win.webContents.send("currentClip", index);
-      const txt = transcribeFile(clip, token);
-      txtStream.write(txt);
-      srtStream.write(`00:33:33 => 33:44:44${txt}`);
+     // const txt =  await transcribeFile(clip, token);
+      fs.writeFileSync(`${outputDirectory}${file.name}.txt`,'txt');
+      // txtStream.writeSync(txt);
+      // srtStream.writeSync(`00:33:33 => 33:44:44${txt}`);
     });
   }
 
-  txtStream.end();
-  srtStream.end();
+  // txtStream.end();
+  // srtStream.end();
 
-  if (audioClips.length) {
-    audioClips.map((clip, index) => {
-      fs.unlink(clip);
-    });
-  }
+  // if (audioClips.length) {
+  //   audioClips.map((clip, index) => {
+  //     fs.unlinkSync(clip);
+  //   });
+  // }
   //notify file procced
   win.webContents.send("fileComplete", index);
 };
@@ -154,14 +155,14 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
-ipcMain.on("start", (e, files, token, speechLanguage, outputDirectory) => {
+ipcMain.on("start",  (e, files, token, speechLanguage, outputDirectory) => {
   //console.log(files);
   token = token;
   speechLanguage = speechLanguage;
   outputDirectory = outputDirectory;
 
-  files.map((file, index) => {
-    proccessFile(file, index);
+  files.map( (file, index) => {
+     proccessFile(file, index);
   });
 });
 
@@ -169,11 +170,11 @@ ipcMain.on("stop", (e) => {
   pause = true;
   const audioClips = glob.sync("tmp/*.*");
 
-  if (audioClips.length) {
-    audioClips.map((clip, index) => {
-      fs.unlink(clip);
-    });
-  }
+  // if (audioClips.length) {
+  //   audioClips.map((clip, index) => {
+  //     fs.unlinkSync(clip);
+  //   });
+  // }
 });
 
 ipcMain.on("chooseDir", (event) => {
