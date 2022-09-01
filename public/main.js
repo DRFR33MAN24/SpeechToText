@@ -96,7 +96,7 @@ const proccessFile = async (file, index) => {
     for (const clip of audioClips) {
       // (async () => {
       //notify current clip
-      win.webContents.send("currentClip", index);
+      win.webContents.send("currentClip", idx);
       let txt;
       txt = await transcribeFile(clip, token);
       idx += 1;
@@ -153,16 +153,20 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
-ipcMain.on("start", (e, files, token, speechLanguage, outputDirectory) => {
-  //console.log(files);
-  token = token;
-  speechLanguage = speechLanguage;
-  outputDirectory = outputDirectory;
-
-  files.map((file, index) => {
-    proccessFile(file, index);
-  });
-});
+ipcMain.on(
+  "start",
+  async (e, files, token, speechLanguage, outputDirectory) => {
+    //console.log(files);
+    token = token;
+    speechLanguage = speechLanguage;
+    outputDirectory = outputDirectory;
+    let idx = 0;
+    for (const clip of audioClips) {
+      await proccessFile(file, idx);
+      idx += 1;
+    }
+  }
+);
 
 ipcMain.on("stop", (e) => {
   pause = true;
