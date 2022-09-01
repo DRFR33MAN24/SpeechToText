@@ -177,7 +177,7 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input
             type="text"
-            value={outputDirectory}
+            value={outputDirectory ? outputDirectory : ""}
             disabled
             placeholder="/output"
             class="input input-bordered w-full max-w-xs"
@@ -196,7 +196,7 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input
             type="text"
-            defaultValue={apiKey}
+            defaultValue={apiKey ? apiKey : ""}
             class="input input-bordered w-full max-w-xs"
             onChange={(event) => {
               setApiKey(event.target.value);
@@ -228,18 +228,16 @@ const SettingsModal = ({ toggleModal }) => {
   );
 };
 
-const LoadingModal = ()=>{
-  return(
-        <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
-      <div className="card bg-base-100 shadow p-10 w-96">
-      Loading ....
-      </div>
-      </div>
-    )
-}
+const LoadingModal = () => {
+  return (
+    <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
+      <div className="card bg-base-100 shadow p-10 w-96">Loading ....</div>
+    </div>
+  );
+};
 function MyDropzone() {
   //const [filesToConvert, setFilesToConvert] = useState([]);
-  const { filesToProcess, setFilesToProcess,setLoading } = useContext(Context);
+  const { filesToProcess, setFilesToProcess, setLoading } = useContext(Context);
 
   const onDrop = useCallback((acceptedFiles) => {
     setLoading(true);
@@ -283,21 +281,16 @@ function MyDropzone() {
     setFilesToProcess([]);
   };
   const addFiles = (files) => {
-    
-    
-    files.map((file,fileIdx)=>{
-
-     const idx = filesToProcess.findIndex(item=>{
-       return item.path === file.path
+    files.map((file, fileIdx) => {
+      const idx = filesToProcess.findIndex((item) => {
+        return item.path === file.path;
       });
-     if (idx !== -1) {
-      files.splice(fileIdx,1);
-     }
-      
-    })
+      if (idx !== -1) {
+        files.splice(fileIdx, 1);
+      }
+    });
     const newList = files.concat(filesToProcess);
     setFilesToProcess(newList);
-
   };
 
   const deleteFile = (idx) => {
@@ -494,7 +487,7 @@ const Progress = () => {
   );
 };
 const FileStats = () => {
-  const { currentFile, currentClip, totalClipsInFile, step,currentSubtitle } =
+  const { currentFile, currentClip, totalClipsInFile, step, currentSubtitle } =
     useContext(Context);
 
   return (
@@ -520,9 +513,7 @@ const FileStats = () => {
           </ul>
         </div>
       </div>
-      <div>
-        {currentSubtitle}
-      </div>
+      <div>{currentSubtitle}</div>
     </div>
   );
 };
@@ -541,7 +532,7 @@ const App = () => {
     processStarted,
     resetStats,
     setCurrentSubtitle,
-    loading
+    loading,
   } = useContext(Context);
 
   useEffect(() => {
@@ -573,7 +564,7 @@ const App = () => {
     ipcRenderer.on("step", (event, num) => {
       setStep(num);
     });
-        ipcRenderer.on("currentSubtitle", (event,sub) => {
+    ipcRenderer.on("currentSubtitle", (event, sub) => {
       setCurrentSubtitle(sub);
     });
 
@@ -599,7 +590,7 @@ const App = () => {
   return (
     <div className="App bg-slate-200" dir="rtl">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
-       {loading ? <LoadingModal /> : null}
+      {loading ? <LoadingModal /> : null}
       <section className="z-0 bg-success"></section>
       <TitleBar closeApp={closeApp} toggleModal={toggleModal} />
 

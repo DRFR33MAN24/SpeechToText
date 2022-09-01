@@ -99,18 +99,18 @@ const proccessFile = async (file, index) => {
       txt = await transcribeFile(clip, token);
       // })();
       if (txt) {
-              fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
-        flag: "a",
-      });
-      fs.writeFileSync(
-        `${outputDirectory}${file.name}.srt`,
-        `${idx}\n${secondsToHHMMSS(clipLength * idx)} ---> ${secondsToHHMMSS(
-          clipLength * idx + clipLength
-        )}\n${txt}`,
-        { flag: "a" }
-      );
+        fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
+          flag: "a",
+        });
+        fs.writeFileSync(
+          `${outputDirectory}${file.name}.srt`,
+          `${idx}\n${secondsToHHMMSS(clipLength * idx)} ---> ${secondsToHHMMSS(
+            clipLength * idx + clipLength
+          )}\n${txt}`,
+          { flag: "a" }
+        );
 
-      win.webContents.send('currentSubtitle',txt);
+        win.webContents.send("currentSubtitle", txt);
       }
 
       idx += 1;
@@ -132,15 +132,15 @@ async function sleep(ms) {
   });
 }
 const transcribeFile = async (clip, token) => {
-
   let res = await axios.post("https://api.wit.ai/speech", clip, {
+    params: { v: "20220622" },
+
     headers: {
       "Content-Type": "audio/mpeg",
       Authorization: `Bearer ${token}`,
     },
   });
 
-  
   await sleep(2000);
   win.webContents.send("APIHit");
   //return "done";
@@ -192,7 +192,7 @@ const splitAwaited = (path) => {
 ipcMain.on(
   "start",
   async (e, files, token, speechLanguage, outputDirectory) => {
-    console.log(token,speechLanguage,outputDirectory);
+    console.log(token, speechLanguage, outputDirectory);
     token = token;
     speechLanguage = speechLanguage;
     outputDirectory = outputDirectory;
@@ -211,11 +211,11 @@ ipcMain.on("stop", (e) => {
   pause = true;
   const audioClips = glob.sync("tmp/*.*");
 
-  if (audioClips.length) {
-    audioClips.map((clip, index) => {
-      fs.unlinkSync(clip);
-    });
-  }
+  // if (audioClips.length) {
+  //   audioClips.map((clip, index) => {
+  //     fs.unlinkSync(clip);
+  //   });
+  // }
 });
 
 ipcMain.on("chooseDir", (event) => {
