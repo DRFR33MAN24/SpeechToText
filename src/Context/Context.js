@@ -31,6 +31,7 @@ const GlobalContext = React.createContext({
   setStep: () => {},
   setTimePerClip: () => {},
   resetStats: () => {},
+  resetStats: () => {},
 });
 
 export default GlobalContext;

@@ -90,7 +90,7 @@ const proccessFile = async (file, index) => {
     for (const clip of audioClips) {
       // (async () => {
       //notify current clip
-      win.webContents.send("currentClip", idx);
+      win.webContents.send("currentClip", idx+1);
       let txt;
       txt = await transcribeFile(clip, token);
       idx += 1;
@@ -180,7 +180,7 @@ ipcMain.on(
     for (const file of files) {
       await splitAwaited(file.path);
       await proccessFile(file, idx);
-      idx = +1;
+      idx = idx+1;
     }
 
     win.webContents.send("processComplete");

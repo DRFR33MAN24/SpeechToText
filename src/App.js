@@ -253,12 +253,13 @@ function MyDropzone() {
 
   useEffect(() => {
     ipcRenderer.on("getDurations-reply", (event, files) => {
-      console.log(files);
+      //console.log(files);
       addFiles(files);
 
-      ipcRenderer.on("fileComplete", (event, index) => {
-        console.log(index);
-        deleteFile(index);
+      ipcRenderer.on("fileComplete", (event, idx) => {
+        
+        deleteFile(idx);
+        
       });
     });
 
@@ -272,6 +273,7 @@ function MyDropzone() {
     setFilesToProcess([]);
   };
   const addFiles = (files) => {
+    
     const newList = files.concat(filesToProcess);
     setFilesToProcess(newList);
   };
@@ -279,7 +281,7 @@ function MyDropzone() {
   const deleteFile = (idx) => {
     if (idx !== -1) {
       const newList = [...filesToProcess];
-
+      console.log(filesToProcess)
       newList.splice(idx, 1);
 
       setFilesToProcess(newList);
@@ -446,28 +448,31 @@ const TitleBar = ({ closeApp, toggleModal }) => {
     </div>
   );
 };
-const Progress = ({ value }) => {
-  if (!value) {
-    value = 0;
+const Progress = () => {
+    const {  currentClip, totalClipsInFile } =
+    useContext(Context);
+  let progressPercent = (currentClip / totalClipsInFile) * 100;
+  if (!progressPercent) {
+    progressPercent = 0;
   }
   return (
     <div
       className="radial-progress text-success font-bold"
-      style={{ "--value": value, "--thickness": "15px", "--size": "5rem" }}
+      style={{ "--value": progressPercent, "--thickness": "15px", "--size": "5rem" }}
     >
-      {value}%
+      {progressPercent}%
     </div>
   );
 };
 const FileStats = () => {
   const { currentFile, currentClip, totalClipsInFile, step } =
     useContext(Context);
-  const progressPercent = (currentClip / totalClipsInFile) * 100;
+  
 
   return (
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="flex flex-row justify-between items-center">
-        <Progress value={progressPercent} />
+        <Progress />
 
         {currentFile.name}
         <div className="mr-5">
@@ -512,11 +517,12 @@ const App = () => {
       setTotalClipsInFile(num);
     });
     ipcRenderer.on("APIHit", (event) => {
-      console.log("API hit");
-      setNumApiRequests(numApiRequests + 1);
+      //console.log("API hit");
+     
+      setNumApiRequests((num)=>num +1);
     });
     ipcRenderer.on("currentClip", (event, clip) => {
-      console.log(clip);
+      //console.log(clip);
       setCurrentClip(clip);
     });
 
