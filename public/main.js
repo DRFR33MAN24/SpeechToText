@@ -132,7 +132,6 @@ async function sleep(ms) {
   });
 }
 const transcribeFile = async (clip, token) => {
-  console.log(token);
   let res;
   try {
     const file = fs.readFileSync(clip);
@@ -148,9 +147,8 @@ const transcribeFile = async (clip, token) => {
 
   await sleep(2000);
   win.webContents.send("APIHit");
-  //return "done";
-  console.log(res.data);
-  return res.text;
+
+  return res.data.text;
 };
 app.on("ready", createWindow);
 
