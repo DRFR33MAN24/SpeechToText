@@ -95,8 +95,9 @@ const proccessFile = async (file, index) => {
       // (async () => {
       //notify current clip
       win.webContents.send("currentClip", idx + 1);
-      let txt;
-      txt = await transcribeFile(clip, apiToken);
+
+      let txt = await transcribeFile(clip, apiToken);
+      console.log(txt);
       // })();
       if (txt) {
         fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
@@ -141,6 +142,7 @@ const transcribeFile = async (clip, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(JSON.parse(res.data));
   } catch (error) {
     console.log(error);
   }
