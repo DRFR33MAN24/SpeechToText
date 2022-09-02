@@ -1,7 +1,9 @@
 import LocalizedStrings from "react-localization";
 
 let loc = new LocalizedStrings({
-  en: {},
+  en: {
+    arabic: "Arabic",
+  },
   ar: {
     delete: "",
     convertedFiles: "",

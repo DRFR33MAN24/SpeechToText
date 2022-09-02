@@ -266,7 +266,6 @@ function MyDropzone() {
       //console.log(files);
       addFiles(files);
       setLoading(false);
-
       ipcRenderer.on("fileComplete", (event, idx) => {
         deleteFile(idx);
       });
@@ -553,6 +552,7 @@ const App = () => {
     setTimePerClip,
     loading,
     speechLanguage,
+    interfaceLanguage,
   } = useContext(Context);
 
   useEffect(() => {
@@ -610,10 +610,11 @@ const App = () => {
   const minimizeApp = () => {
     ipcRenderer.send("minimize");
   };
+  //loc.setLanguage(interfaceLanguage);
   return (
     <div
       className="App bg-slate-200"
-      dir={speechLanguage === "en" ? "ltr" : "rtl"}
+      dir={interfaceLanguage === "en" ? "ltr" : "rtl"}
     >
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       {loading ? <LoadingModal /> : null}
