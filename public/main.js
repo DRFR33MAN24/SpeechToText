@@ -1,7 +1,7 @@
 const path = require("path");
 const axios = require("axios");
 const glob = require("glob");
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 const {
   app,
   BrowserWindow,
@@ -31,7 +31,7 @@ let pause = false;
 //setupTitlebar();
 
 function secondsToHHMMSS(seconds) {
-  return new Date(seconds * 1000).toISOString().substring(11, 16);
+  return new Date(seconds * 1000).toISOString().substring(11, 19);
 }
 function createWindow() {
   // Create the browser window.
@@ -93,12 +93,13 @@ const proccessFile = async (file, index) => {
   if (audioClips.length) {
     let idx = 0;
     for (const clip of audioClips) {
+      if (pause) return;
       // (async () => {
       //notify current clip
       win.webContents.send("currentClip", idx + 1);
-
+      const startTime = new Date().getTime();
       let txt = await transcribeFile(clip, apiToken);
-      console.log(txt);
+      txt = txt.replace(".", "\n");
       // })();
       if (txt) {
         fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
@@ -114,7 +115,9 @@ const proccessFile = async (file, index) => {
 
         win.webContents.send("currentSubtitle", txt);
       }
-
+      const endTime = new Date().getTime();
+      const elapsedTime = endTime - startTime;
+      win.webContents.send("timePerClip", elapsedTime);
       idx += 1;
     }
   }
@@ -135,6 +138,7 @@ async function sleep(ms) {
 }
 const transcribeFile = async (clip, token) => {
   let json;
+
   try {
     const file = fs.readFileSync(clip);
     // res = await axios.post("https://api.wit.ai/speech?v=20220622", file, {
@@ -144,19 +148,18 @@ const transcribeFile = async (clip, token) => {
     //     Authorization: `Bearer ${token}`,
     //   },
     // });
-   let res = await fetch("https://api.wit.ai/speech",
-      {
-        method: 'post',
-        body: file,
-        headers: {
-          "Content-Type": "audio/mpeg",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    let res = await fetch("https://api.wit.ai/speech", {
+      method: "post",
+      body: file,
+      headers: {
+        "Content-Type": "audio/mpeg",
+        Accept: "application/vnd.wit.20200513+json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-	json = await res.json();
-    console.log(json);
+    json = await res.json();
+    //console.log(json);
   } catch (error) {
     console.log(error);
   }
@@ -185,6 +188,9 @@ app.on("activate", () => {
 
 ipcMain.on("quit", () => {
   app.quit();
+});
+ipcMain.on("minimize", () => {
+  win.minimize();
 });
 
 ipcMain.on("getDurations", async (e, files) => {
@@ -218,6 +224,7 @@ ipcMain.on(
     outputDirectory = outputDirectory;
     let idx = 0;
     for (const file of files) {
+      if (pause) return;
       await splitAwaited(file.path);
       await proccessFile(file, idx, token, speechLanguage, outputDirectory);
       idx = idx + 1;
@@ -231,11 +238,11 @@ ipcMain.on("stop", (e) => {
   pause = true;
   const audioClips = glob.sync("tmp/*.*");
 
-  // if (audioClips.length) {
-  //   audioClips.map((clip, index) => {
-  //     fs.unlinkSync(clip);
-  //   });
-  // }
+  if (audioClips.length) {
+    audioClips.map((clip, index) => {
+      fs.unlinkSync(clip);
+    });
+  }
 });
 
 ipcMain.on("chooseDir", (event) => {

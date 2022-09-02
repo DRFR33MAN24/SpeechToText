@@ -23,6 +23,7 @@ import {
   faKey,
   faFolder,
   faStop,
+  faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { secondsToHHMMSS } from "./util";
@@ -386,6 +387,8 @@ const ProcessStats = () => {
     apiKey,
     speechLanguage,
     outputDirectory,
+    timePerClip,
+    totalClipsInFile,
   } = useContext(Context);
 
   const start = () => {
@@ -405,6 +408,12 @@ const ProcessStats = () => {
     setProcessStarted(false);
     ipcRenderer.send("stop");
   };
+  const getTimeInHourSeconds = (timemili) => {
+    return secondsToHHMMSS((timemili * totalClipsInFile * totalFiles) / 1000)
+      .split(":")
+      .map((s) => Math.round(s));
+  };
+  const eta = getTimeInHourSeconds(timePerClip);
   return (
     <div class="card ">
       <div className=" stats stats-horizontal  shadow   mb-1  rounded-lg flex">
@@ -433,8 +442,12 @@ const ProcessStats = () => {
         </div>
         <div className="stat">
           <div className="stat-title">{loc.estimated_time}</div>
-          <div className=" text-lg font-bold">1 {loc.hour}</div>
-          <div className=" text-lg font-bold">40 {loc.min}</div>
+          <div className=" text-lg font-bold">
+            {eta[0]} {loc.hour}
+          </div>
+          <div className=" text-lg font-bold">
+            {eta[1]} {loc.min}
+          </div>
         </div>
         <div className="stat">
           <div className="stat-title">{loc.network}</div>
@@ -446,7 +459,7 @@ const ProcessStats = () => {
   );
 };
 
-const TitleBar = ({ closeApp, toggleModal }) => {
+const TitleBar = ({ closeApp, toggleModal, minimizeApp }) => {
   return (
     <div className="flex flex-row justify-between items-center fixed top-0  bg-success   w-full  ">
       <div className="flex flex-row justify-start items-center p-2  ">
@@ -455,6 +468,12 @@ const TitleBar = ({ closeApp, toggleModal }) => {
           onClick={closeApp}
         >
           <FontAwesomeIcon icon={faPowerOff} fixedWidth size="lg" />
+        </button>
+        <button
+          className="btn btn-ghost btn-square btn-error btn-sm"
+          onClick={minimizeApp}
+        >
+          <FontAwesomeIcon icon={faMinus} fixedWidth size="lg" />
         </button>
         <button
           className="btn btn-ghost btn-square   btn-sm  mx-1"
@@ -494,10 +513,7 @@ const FileStats = () => {
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="flex flex-row justify-between items-center">
         <Progress />
-        <div className="text-sm">
-
-          {currentFile.name.substring(0, 10)}
-        </div>
+        <div className="text-sm">{currentFile.name}</div>
         <div className="mr-5">
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>
@@ -534,6 +550,7 @@ const App = () => {
     processStarted,
     resetStats,
     setCurrentSubtitle,
+    setTimePerClip,
     loading,
   } = useContext(Context);
 
@@ -561,7 +578,7 @@ const App = () => {
       setCurrentFile(file);
     });
     ipcRenderer.on("timePerClip", (event, time) => {
-      console.log(time);
+      setTimePerClip(time);
     });
     ipcRenderer.on("step", (event, num) => {
       setStep(num);
@@ -589,12 +606,19 @@ const App = () => {
   const closeApp = () => {
     ipcRenderer.send("quit");
   };
+  const minimizeApp = () => {
+    ipcRenderer.send("minimize");
+  };
   return (
     <div className="App bg-slate-200" dir="rtl">
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       {loading ? <LoadingModal /> : null}
       <section className="z-0 bg-success"></section>
-      <TitleBar closeApp={closeApp} toggleModal={toggleModal} />
+      <TitleBar
+        closeApp={closeApp}
+        toggleModal={toggleModal}
+        minimizeApp={minimizeApp}
+      />
 
       <div className="mx-5 pt-16  ">
         <ProcessStats />
