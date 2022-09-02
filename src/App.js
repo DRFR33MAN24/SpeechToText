@@ -98,6 +98,7 @@ const SettingsModal = ({ toggleModal }) => {
           </button>
         </div>
         <div className="mb-2">
+          <div className="text-start ">{loc.speech_language}</div>
           <select
             class="select w-full max-w-xs"
             onChange={(event) => {
@@ -118,6 +119,7 @@ const SettingsModal = ({ toggleModal }) => {
           <hr></hr>
         </div>
         <div className="mb-2">
+          <div className="text-start ">{loc.conversion_engine}</div>
           <select
             class="select w-full max-w-xs"
             onChange={(event) => {
@@ -138,6 +140,7 @@ const SettingsModal = ({ toggleModal }) => {
           <hr></hr>
         </div>
         <div className="mb-2">
+          <div className="text-start ">{loc.interface_language}</div>
           <select
             class="select w-full max-w-xs"
             onChange={(event) => {
@@ -610,7 +613,7 @@ const App = () => {
   const minimizeApp = () => {
     ipcRenderer.send("minimize");
   };
-  //loc.setLanguage(interfaceLanguage);
+  loc.setLanguage(interfaceLanguage);
   return (
     <div
       className="App bg-slate-200"
