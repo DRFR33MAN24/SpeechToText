@@ -79,7 +79,9 @@ const getFilesDurations = async (files) => {
   }
   return files;
 };
-
+const filterText = (txt) => {
+  return txt.replace(".", "\n");
+};
 const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
 
@@ -99,7 +101,8 @@ const proccessFile = async (file, index) => {
       win.webContents.send("currentClip", idx + 1);
       const startTime = new Date().getTime();
       let txt = await transcribeFile(clip, apiToken);
-      txt = txt.replace(".", "\n");
+      const filteredText = filterText(txt);
+
       // })();
       if (txt) {
         fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
@@ -109,7 +112,7 @@ const proccessFile = async (file, index) => {
           `${outputDirectory}${file.name}.srt`,
           `${idx}\n${secondsToHHMMSS(clipLength * idx)} ---> ${secondsToHHMMSS(
             clipLength * idx + clipLength
-          )}\n${txt}`,
+          )}\n${txt}\n`,
           { flag: "a" }
         );
 
@@ -218,7 +221,7 @@ const splitAwaited = (path) => {
 ipcMain.on(
   "start",
   async (e, files, token, speechLanguage, outputDirectory) => {
-    console.log(token, speechLanguage, outputDirectory);
+    console.log(speechLanguage, outputDirectory);
     apiToken = token;
     speechLanguage = speechLanguage;
     outputDirectory = outputDirectory;

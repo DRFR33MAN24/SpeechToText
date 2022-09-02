@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import loc from "../localization";
 import Context from "./Context";
 
 export default function ContextWrapper(props) {
@@ -11,8 +12,8 @@ export default function ContextWrapper(props) {
   const [timePerClip, setTimePerClip] = useState(0);
   const [filesToProcess, setFilesToProcess] = useState([]);
   const [processStarted, setProcessStarted] = useState(false);
-  const [currentSubtitle,setCurrentSubtitle] = useState('');
-  const [loading,setLoading]= useState(false);
+  const [currentSubtitle, setCurrentSubtitle] = useState("");
+  const [loading, setLoading] = useState(false);
   const [speechLanguage, setSpeechLanguage] = useState(
     localStorage.getItem("speechLanguage")
   );
@@ -37,6 +38,7 @@ export default function ContextWrapper(props) {
     localStorage.setItem("speechLanguage", speechLanguage);
     localStorage.setItem("conversionEngine", conversionEngine);
     localStorage.setItem("interfaceLanguage", interfaceLanguage);
+    loc.setLanguage(interfaceLanguage);
     localStorage.setItem("outputDirectory", outputDirectory);
     localStorage.setItem("apiKey", apiKey);
   }, [
@@ -86,8 +88,7 @@ export default function ContextWrapper(props) {
         currentSubtitle,
         setCurrentSubtitle,
         setLoading,
-        loading
-        
+        loading,
       }}
     >
       {props.children}

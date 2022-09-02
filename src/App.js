@@ -552,6 +552,7 @@ const App = () => {
     setCurrentSubtitle,
     setTimePerClip,
     loading,
+    speechLanguage,
   } = useContext(Context);
 
   useEffect(() => {
@@ -610,7 +611,10 @@ const App = () => {
     ipcRenderer.send("minimize");
   };
   return (
-    <div className="App bg-slate-200" dir="rtl">
+    <div
+      className="App bg-slate-200"
+      dir={speechLanguage === "en" ? "ltr" : "rtl"}
+    >
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       {loading ? <LoadingModal /> : null}
       <section className="z-0 bg-success"></section>
