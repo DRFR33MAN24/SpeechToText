@@ -2,6 +2,8 @@ const path = require("path");
 const axios = require("axios");
 const glob = require("glob");
 const fetch = require("node-fetch");
+
+const url = require("url");
 const {
   app,
   BrowserWindow,
@@ -49,7 +51,7 @@ function createWindow() {
       devTools: true,
       nodeIntegration: true,
       contextIsolation: false,
-      //preload: path.join(__dirname, "preload.js")
+      preload: path.join(__dirname, "preload.js"),
     },
   });
   win.setMenuBarVisibility(false);
@@ -60,6 +62,15 @@ function createWindow() {
       ? "http://localhost:3000/Login"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
+  // win.loadURL(
+  //   isDev
+  //     ? "http://localhost:3000/Login"
+  //     : url.format({
+  //         pathname: path.join(__dirname, "index.html"),
+  //         protocol: "file:",
+  //         slashes: true,
+  //       })
+  // );
   // Open the DevTools.
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
