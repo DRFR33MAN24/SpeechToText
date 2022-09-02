@@ -266,7 +266,7 @@ function MyDropzone() {
 
   useEffect(() => {
     ipcRenderer.on("getDurations-reply", (event, files) => {
-      //console.log(files);
+      console.log(files);
       addFiles(files);
       setLoading(false);
       ipcRenderer.on("fileComplete", (event, idx) => {
@@ -284,16 +284,20 @@ function MyDropzone() {
     setFilesToProcess([]);
   };
   const addFiles = (files) => {
-    files.map((file, fileIdx) => {
-      const idx = filesToProcess.findIndex((item) => {
-        return item.path === file.path;
+    setFilesToProcess((filesToProcess) => {
+      let newFiles = [...files];
+      files.map((file, fileIdx) => {
+        const idx = filesToProcess.findIndex((item) => {
+          return item.path === file.path;
+        });
+        console.log(idx, filesToProcess);
+        if (idx !== -1) {
+          newFiles.splice(fileIdx, 1);
+        }
       });
-      if (idx !== -1) {
-        files.splice(fileIdx, 1);
-      }
+      const newList = newFiles.concat(filesToProcess);
+      return newList;
     });
-    const newList = files.concat(filesToProcess);
-    setFilesToProcess(newList);
   };
 
   const deleteFile = (idx) => {

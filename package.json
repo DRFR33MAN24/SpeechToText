@@ -50,7 +50,7 @@
   "proxy": "http://localhost:5000",
   "build": {
     "extends": null,
-    "appId": "com.example.electron-cra",
+    "appId": "com.mediatech.mufareg",
     "files": [
       "dist/**/*",
       "build/**/*",
