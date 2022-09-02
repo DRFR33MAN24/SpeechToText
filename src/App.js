@@ -469,7 +469,7 @@ const TitleBar = ({ closeApp, toggleModal }) => {
 };
 const Progress = () => {
   const { currentClip, totalClipsInFile } = useContext(Context);
-  let progressPercent = (currentClip / totalClipsInFile) * 100;
+  let progressPercent = Math.round((currentClip / totalClipsInFile) * 100);
   if (!progressPercent) {
     progressPercent = 0;
   }
@@ -494,8 +494,10 @@ const FileStats = () => {
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="flex flex-row justify-between items-center">
         <Progress />
+        <div className="text-sm">
 
-        {currentFile.name}
+          {currentFile.name.substring(0, 10)}
+        </div>
         <div className="mr-5">
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>

@@ -1,6 +1,7 @@
 const path = require("path");
 const axios = require("axios");
 const glob = require("glob");
+const fetch = require('node-fetch');
 const {
   app,
   BrowserWindow,
@@ -133,17 +134,29 @@ async function sleep(ms) {
   });
 }
 const transcribeFile = async (clip, token) => {
-  let res;
+  let json;
   try {
     const file = fs.readFileSync(clip);
-    res = await axios.post("https://api.wit.ai/speech?v=20220622", file, {
-      headers: {
-        "Content-Type": "audio/mpeg",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(res.data);
+    // res = await axios.post("https://api.wit.ai/speech?v=20220622", file, {
+    //   headers: {
+    //     "Content-Type": "audio/mpeg",
+    //     Accept: "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+   let res = await fetch("https://api.wit.ai/speech",
+      {
+        method: 'post',
+        body: file,
+        headers: {
+          "Content-Type": "audio/mpeg",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+	json = await res.json();
+    console.log(json);
   } catch (error) {
     console.log(error);
   }
@@ -151,7 +164,7 @@ const transcribeFile = async (clip, token) => {
   await sleep(2000);
   win.webContents.send("APIHit");
 
-  return res.data.text;
+  return json.text;
 };
 app.on("ready", createWindow);
 
