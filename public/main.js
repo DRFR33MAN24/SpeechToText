@@ -10,6 +10,7 @@ const {
 
   ipcMain,
   dialog,
+  shell
 } = require("electron");
 
 const isDev = require("electron-is-dev");
@@ -205,6 +206,16 @@ ipcMain.on("quit", () => {
 });
 ipcMain.on("minimize", () => {
   win.minimize();
+});
+
+ipcMain.on("openOutputDir", (e,dir) => {
+  if (dir ==='/output') {
+    shell.openPath(__dirname+dir);
+  }
+  else{
+    shell.openPath(dir);
+  }
+  
 });
 
 ipcMain.on("getDurations", async (e, files) => {
