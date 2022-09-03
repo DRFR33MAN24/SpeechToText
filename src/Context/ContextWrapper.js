@@ -34,6 +34,7 @@ export default function ContextWrapper(props) {
     setCurrentFile("");
     setTotalClipsInFile(0);
     setStep(-1);
+    setCurrentSubtitle("");
   };
 
   useEffect(() => {
