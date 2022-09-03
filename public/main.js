@@ -247,24 +247,21 @@ const splitAwaited = (path) => {
     );
   });
 };
-ipcMain.on(
-  "start",
-  async (e, files, token, speechLanguage, outputDirectory) => {
-    console.log(speechLanguage, outputDirectory);
-    apiToken = token;
-    speechLanguage = speechLanguage;
-    outputDirectory = outputDirectory;
-    let idx = 0;
-    for (const file of files) {
-      if (pause) return;
-      await splitAwaited(file.path);
-      await proccessFile(file, idx, token, speechLanguage, outputDirectory);
-      idx = idx + 1;
-    }
-
-    win.webContents.send("processComplete");
+ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
+  console.log(speechLanguage, outputDirectory);
+  apiToken = token;
+  speechLanguage = speechLanguage;
+  outputDirectory = outputDir;
+  let idx = 0;
+  for (const file of files) {
+    if (pause) return;
+    await splitAwaited(file.path);
+    await proccessFile(file, idx);
+    idx = idx + 1;
   }
-);
+
+  win.webContents.send("processComplete");
+});
 
 ipcMain.on("stop", (e) => {
   pause = true;
