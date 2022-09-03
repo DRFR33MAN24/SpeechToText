@@ -105,12 +105,11 @@ const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
 
   win.webContents.send("currentFile", file);
-  win.webContents.send("step", 0);
 
   const audioClips = glob.sync("tmp/*.*");
 
   win.webContents.send("numberOfClips", audioClips.length);
-  win.webContents.send("step", 1);
+
   if (audioClips.length) {
     let idx = 0;
     for (const clip of audioClips) {
@@ -258,7 +257,9 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   try {
     for (const file of files) {
       if (pause) return;
+      win.webContents.send("step", 0);
       await splitAwaited(file.path);
+      win.webContents.send("step", 1);
       await proccessFile(file, idx);
 
       idx = idx + 1;
