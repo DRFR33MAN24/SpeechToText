@@ -541,7 +541,7 @@ const TitleBar = ({ closeApp, toggleModal, minimizeApp }) => {
   );
 };
 const Progress = () => {
-  const { currentClip, totalClipsInFile } = useContext(Context);
+  const { currentClip, totalClipsInFile, step } = useContext(Context);
   let progressPercent = Math.round((currentClip / totalClipsInFile) * 100);
   if (!progressPercent) {
     progressPercent = 0;
@@ -552,13 +552,11 @@ const Progress = () => {
         <div
           className="radial-progress text-success font-bold ml-5 animate-spin"
           style={{
-            "--value": progressPercent,
+            "--value": 50,
             "--thickness": "15px",
             "--size": "5rem",
           }}
-        >
-          {progressPercent}%
-        </div>
+        ></div>
       ) : (
         <div
           className="radial-progress text-success font-bold ml-5"
