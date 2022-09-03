@@ -627,6 +627,7 @@ const App = () => {
     setOutputDirectory,
     setInterfaceLanguage,
     error,
+    setError,
   } = useContext(Context);
 
   useEffect(() => {
@@ -661,6 +662,9 @@ const App = () => {
     ipcRenderer.on("currentSubtitle", (event, sub) => {
       setCurrentSubtitle(sub);
     });
+    ipcRenderer.on("error", (event, err) => {
+      setError(err);
+    });
 
     setTimeout(() => {
       setAppReady(true);
@@ -675,6 +679,7 @@ const App = () => {
       ipcRenderer.removeAllListeners("processComplete");
       ipcRenderer.removeAllListeners("timePerClip");
       ipcRenderer.removeAllListeners("step");
+      ipcRenderer.removeAllListeners("error");
       ipcRenderer.removeAllListeners("currentSubtitle");
     };
   }, []);

@@ -37,7 +37,7 @@ let loc = new LocalizedStrings({
   ar: {
     pleaseAddSomeFiles: "اضف بعض الملفات",
     pleaseEnterApiKey: "الرجاء ادخال مفتاح التحقق",
-    open_out_dir: "Open directory",
+    open_out_dir: "مجلد الاخراج",
     delete: "",
     convertedFiles: "",
     failedAttempts: "",

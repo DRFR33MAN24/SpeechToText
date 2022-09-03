@@ -43,7 +43,7 @@ function createWindow() {
     height: 800,
     titleBarStyle: "hidden",
     frame: false,
-    resizable: true,
+    resizable: false,
 
     transparent: true,
 
@@ -124,20 +124,26 @@ const proccessFile = async (file, index) => {
 
       // })();
       if (txt) {
-        fs.writeFileSync(`${outputDirectory}${file.name}.txt`, txt, {
-          flag: "a",
-        });
-        fs.writeFileSync(
-          `${outputDirectory}${file.name}.srt`,
-          `${idx}\n${secondsToHHMMSS(
-            clipLength * idx
-          )},000 ---> ${secondsToHHMMSS(
-            clipLength * idx + clipLength
-          )},000\n${txt}\n`,
-          { flag: "a" }
-        );
+        try {
 
-        win.webContents.send("currentSubtitle", txt);
+          fs.writeFileSync(`${outputDirectory}/${file.name}.txt`, filteredText, {
+            flag: "a",
+          });
+          fs.writeFileSync(
+            `${outputDirectory}/${file.name}.srt`,
+            `${idx}\n${secondsToHHMMSS(
+              clipLength * idx
+            )},000 ---> ${secondsToHHMMSS(
+              clipLength * idx + clipLength
+            )},000\n${filteredText}\n`,
+            { flag: "a" }
+          );
+
+          win.webContents.send("currentSubtitle", filteredText);
+        } catch (error) {
+          throw { msg: 'write to file error' }
+
+        }
       }
       const endTime = new Date().getTime();
       const elapsedTime = endTime - startTime;
@@ -160,18 +166,13 @@ async function sleep(ms) {
     setTimeout(resolve, ms);
   });
 }
+
 const transcribeFile = async (clip, token) => {
   let json;
 
   try {
     const file = fs.readFileSync(clip);
-    // res = await axios.post("https://api.wit.ai/speech?v=20220622", file, {
-    //   headers: {
-    //     "Content-Type": "audio/mpeg",
-    //     Accept: "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // });
+
     let res = await fetch("https://api.wit.ai/speech", {
       method: "post",
       body: file,
@@ -184,14 +185,15 @@ const transcribeFile = async (clip, token) => {
 
     json = await res.json();
     //console.log(json);
+    // await sleep(2000);
+    win.webContents.send("APIHit");
+
+    return json.text;
   } catch (error) {
-    console.log(error);
+    throw { msg: 'Network Error' };
+
   }
 
-  // await sleep(2000);
-  win.webContents.send("APIHit");
-
-  return json.text;
 };
 app.on("ready", createWindow);
 
@@ -248,16 +250,27 @@ const splitAwaited = (path) => {
   });
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
-  console.log(speechLanguage, outputDirectory);
+  console.log(speechLanguage, outputDir);
   apiToken = token;
   speechLanguage = speechLanguage;
   outputDirectory = outputDir;
   let idx = 0;
-  for (const file of files) {
-    if (pause) return;
-    await splitAwaited(file.path);
-    await proccessFile(file, idx);
-    idx = idx + 1;
+  try {
+    for (const file of files) {
+      if (pause) return;
+      await splitAwaited(file.path);
+      await proccessFile(file, idx);
+
+      idx = idx + 1;
+    }
+  } catch (error) {
+    if (error.msg) {
+      win.webContents.sent('error', error.msg)
+    }
+    else {
+      win.webContents.send('error', "Error");
+    }
+    win.webContents.send("processComplete");
   }
 
   win.webContents.send("processComplete");

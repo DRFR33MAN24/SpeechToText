@@ -1,26 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import store from "./store";
-//import '../src/style.scss'
-//import "./sb-admin-2.min.css";
-//import $ from "jquery";
-//import Popper from "popper.js";
 
-//import "bootstrap/dist/js/bootstrap.bundle.min";
 
 import "./index.css";
 
 import App from "./App";
 import ContextWrapper from "./Context/ContextWrapper";
-import LoginPage from "./Pages/LoginPage";
-import MainPage from "./Pages/MainPage";
-import SystemSettingsPage from "./Pages/SystemSettingsPage";
-import EmployeesPage from "./Pages/EmployeesPage";
-import ClientsPage from "./Pages/ClientsPage";
-import ShippingsPage from "./Pages/ShippingsPage";
+
 import reportWebVitals from "./reportWebVitals";
-import { Routes, Route, HashRouter } from "react-router-dom";
+
 
 ReactDOM.render(
   // <Provider store={store}>
