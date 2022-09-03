@@ -562,7 +562,13 @@ const FileStats = () => {
 const SplashScreen = () => {
   return (
     <div className="App justify-center items-center flex  bg-slate-200">
-      <div className="card w-full h-full">SplashScreen</div>
+      <div className="card w-full h-full">
+        <img
+          src={require("./Images/splash.png")}
+          width="480px"
+          height="250px"
+        />
+      </div>
     </div>
   );
 };

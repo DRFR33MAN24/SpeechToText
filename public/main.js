@@ -218,8 +218,8 @@ ipcMain.on("minimize", () => {
 });
 
 ipcMain.on("openOutputDir", (e, dir) => {
-  if (dir === "/output") {
-    shell.openPath(__dirname + dir);
+  if (dir === null) {
+    shell.openPath(__dirname + "./output");
   } else {
     shell.openPath(dir);
   }
