@@ -588,12 +588,10 @@ const FileStats = () => {
               <div className="text-l ">{loc.split_audio_files} </div>
             </li>
             <li class={`step step-${step === 1 ? "success" : "neutral"}`}>
-              <div className="text-l ">
-                {loc.upload_to_server}
-                <span className="font-bold">
-                  {" "}
-                  {currentClip} / {totalClipsInFile}
-                </span>
+              <div className="text-l ">{loc.upload_to_server}</div>
+              <div className="font-bold">
+                {" "}
+                {currentClip} / {totalClipsInFile}
               </div>
             </li>
           </ul>
