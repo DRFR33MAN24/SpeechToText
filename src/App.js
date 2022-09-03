@@ -580,8 +580,12 @@ const FileStats = () => {
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="text-sm">{currentFile.name}</div>
       <div className="flex flex-row justify-between items-center">
-        <Progress />
-
+        <div>
+          <Progress />
+          <div className="font-bold ">
+            {currentClip} / {totalClipsInFile}
+          </div>
+        </div>
         <div className="mr-5">
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>
@@ -589,10 +593,6 @@ const FileStats = () => {
             </li>
             <li class={`step step-${step === 1 ? "success" : "neutral"}`}>
               <div className="text-l ">{loc.upload_to_server}</div>
-              <div className="font-bold">
-                {" "}
-                {currentClip} / {totalClipsInFile}
-              </div>
             </li>
           </ul>
         </div>
