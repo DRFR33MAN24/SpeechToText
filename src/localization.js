@@ -2,6 +2,8 @@ import LocalizedStrings from "react-localization";
 
 let loc = new LocalizedStrings({
   en: {
+    pleaseEnterApiKey: "Please Enter API Key",
+    pleaseAddSomeFiles: "Please add some files",
     open_out_dir: "Open directory",
     delete: "Delete",
     convertedFiles: "Converted Files",
@@ -33,7 +35,8 @@ let loc = new LocalizedStrings({
     upload_to_server: "Upload to server",
   },
   ar: {
-    pleaseEnterApiKey: "Please enter API key",
+    pleaseAddSomeFiles: "اضف بعض الملفات",
+    pleaseEnterApiKey: "الرجاء ادخال مفتاح التحقق",
     open_out_dir: "Open directory",
     delete: "",
     convertedFiles: "",

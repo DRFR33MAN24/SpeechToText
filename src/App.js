@@ -250,7 +250,7 @@ const MessageModal = () => {
           </button>
         </div>
         <div className="mb-2">
-          <div className="text-start ">{error}</div>
+          <div>{error}</div>
         </div>
       </div>
     </div>
@@ -436,14 +436,17 @@ const ProcessStats = () => {
     timePerClip,
     totalClipsInFile,
     apiKey,
+    setError,
   } = useContext(Context);
 
   const start = () => {
     if (!filesToProcess.length) {
+      setError(loc.pleaseAddSomeFiles);
       return;
     }
     if (!apiKey || apiKey === "null") {
       setError(loc.pleaseEnterApiKey);
+      return;
     }
     setProcessStarted(true);
     ipcRenderer.send(
