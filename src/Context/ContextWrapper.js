@@ -35,19 +35,6 @@ export default function ContextWrapper(props) {
     setStep(-1);
   };
 
-  // useEffect(() => {
-  //   if (!localStorage.getItem("outputDirectory")) {
-  //     localStorage.setItem("outputDirectory", "./output");
-  //   }
-
-  //   if (!localStorage.getItem("apiKey")) {
-  //     localStorage.setItem("apiKey", "1234");
-  //   }
-  //   if (!localStorage.getItem("interfaceLanguage")) {
-  //     localStorage.setItem("interfaceLanguage", "ar");
-  //   }
-  // }, []);
-
   useEffect(() => {
     localStorage.setItem("speechLanguage", speechLanguage);
     localStorage.setItem("conversionEngine", conversionEngine);

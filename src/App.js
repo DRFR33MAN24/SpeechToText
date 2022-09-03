@@ -32,6 +32,7 @@ import Context from "./Context/Context";
 const { ipcRenderer } = window.require("electron");
 const FileItem = ({ name, index, duration, deleteFile }) => {
   const shortName = name.substring(0, 10) + "...";
+  const numberOfClips = Math.round(duration / 10);
   return (
     <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
@@ -45,7 +46,7 @@ const FileItem = ({ name, index, duration, deleteFile }) => {
           {shortName}
         </div>
         <div className="flex flex-row items-center">
-          <span className="badge badge-success mx-2 p-3 ">255</span>
+          <span className="badge badge-success mx-2 p-3 ">{numberOfClips}</span>
           <span className="badge badge-success-content mx-2 p-3 ">
             <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
             {secondsToHHMMSS(duration)}
@@ -585,6 +586,9 @@ const App = () => {
     loading,
     speechLanguage,
     interfaceLanguage,
+    setApiKey,
+    setOutputDirectory,
+    setInterfaceLanguage,
   } = useContext(Context);
 
   useEffect(() => {
