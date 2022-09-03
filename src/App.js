@@ -547,15 +547,30 @@ const Progress = () => {
     progressPercent = 0;
   }
   return (
-    <div
-      className="radial-progress text-success font-bold ml-5"
-      style={{
-        "--value": progressPercent,
-        "--thickness": "15px",
-        "--size": "5rem",
-      }}
-    >
-      {progressPercent}%
+    <div>
+      {step === 0 ? (
+        <div
+          className="radial-progress text-success font-bold ml-5 animate-spin"
+          style={{
+            "--value": progressPercent,
+            "--thickness": "15px",
+            "--size": "5rem",
+          }}
+        >
+          {progressPercent}%
+        </div>
+      ) : (
+        <div
+          className="radial-progress text-success font-bold ml-5"
+          style={{
+            "--value": progressPercent,
+            "--thickness": "15px",
+            "--size": "5rem",
+          }}
+        >
+          {progressPercent}%
+        </div>
+      )}
     </div>
   );
 };

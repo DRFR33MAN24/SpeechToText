@@ -125,15 +125,18 @@ const proccessFile = async (file, index) => {
       // })();
       if (txt) {
         try {
-
-          fs.writeFileSync(`${outputDirectory}/${file.name}.txt`, filteredText, {
-            flag: "a",
-          });
+          fs.writeFileSync(
+            `${outputDirectory}/${file.name}.txt`,
+            filteredText,
+            {
+              flag: "a",
+            }
+          );
           fs.writeFileSync(
             `${outputDirectory}/${file.name}.srt`,
-            `${idx}\n${secondsToHHMMSS(
+            `\n${idx + 1}\n${secondsToHHMMSS(
               clipLength * idx
-            )},000 ---> ${secondsToHHMMSS(
+            )},000 --> ${secondsToHHMMSS(
               clipLength * idx + clipLength
             )},000\n${filteredText}\n`,
             { flag: "a" }
@@ -141,8 +144,7 @@ const proccessFile = async (file, index) => {
 
           win.webContents.send("currentSubtitle", filteredText);
         } catch (error) {
-          throw { msg: 'write to file error' }
-
+          throw { msg: "write to file error" };
         }
       }
       const endTime = new Date().getTime();
@@ -190,10 +192,8 @@ const transcribeFile = async (clip, token) => {
 
     return json.text;
   } catch (error) {
-    throw { msg: 'Network Error' };
-
+    throw { msg: "Network Error" };
   }
-
 };
 app.on("ready", createWindow);
 
@@ -265,10 +265,9 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
     }
   } catch (error) {
     if (error.msg) {
-      win.webContents.sent('error', error.msg)
-    }
-    else {
-      win.webContents.send('error', "Error");
+      win.webContents.sent("error", error.msg);
+    } else {
+      win.webContents.send("error", "Error");
     }
     win.webContents.send("processComplete");
   }
