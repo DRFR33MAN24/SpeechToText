@@ -53,16 +53,6 @@
     "asar": false,
     "extends": null,
     "appId": "com.mediatech.mufareg",
-    "extraFiles": [
-      {
-        "from": "tmp",
-        "to": "tmp"
-      },
-      {
-        "from": "output",
-        "to": "output"
-      }
-    ],
     "files": [
       "dist/**/*",
       "build/**/*",

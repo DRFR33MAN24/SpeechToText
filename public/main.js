@@ -10,7 +10,7 @@ const {
 
   ipcMain,
   dialog,
-  shell
+  shell,
 } = require("electron");
 
 const isDev = require("electron-is-dev");
@@ -76,6 +76,13 @@ function createWindow() {
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
   }
+
+  if (!fs.existsSync("/output")) {
+    fs.mkdirSync("./output");
+  }
+  if (!fs.existsSync("/tmp")) {
+    fs.mkdirSync("./tmp");
+  }
 }
 
 if (process.platform === "linux") {
@@ -122,9 +129,11 @@ const proccessFile = async (file, index) => {
         });
         fs.writeFileSync(
           `${outputDirectory}${file.name}.srt`,
-          `${idx}\n${secondsToHHMMSS(clipLength * idx)} ---> ${secondsToHHMMSS(
+          `${idx}\n${secondsToHHMMSS(
+            clipLength * idx
+          )},000 ---> ${secondsToHHMMSS(
             clipLength * idx + clipLength
-          )}\n${txt}\n`,
+          )},000\n${txt}\n`,
           { flag: "a" }
         );
 
@@ -179,7 +188,7 @@ const transcribeFile = async (clip, token) => {
     console.log(error);
   }
 
-  await sleep(2000);
+  // await sleep(2000);
   win.webContents.send("APIHit");
 
   return json.text;
@@ -208,14 +217,12 @@ ipcMain.on("minimize", () => {
   win.minimize();
 });
 
-ipcMain.on("openOutputDir", (e,dir) => {
-  if (dir ==='/output') {
-    shell.openPath(__dirname+dir);
-  }
-  else{
+ipcMain.on("openOutputDir", (e, dir) => {
+  if (dir === "/output") {
+    shell.openPath(__dirname + dir);
+  } else {
     shell.openPath(dir);
   }
-  
 });
 
 ipcMain.on("getDurations", async (e, files) => {

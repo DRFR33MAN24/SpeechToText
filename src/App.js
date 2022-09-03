@@ -31,7 +31,7 @@ import loc from "./localization";
 import Context from "./Context/Context";
 const { ipcRenderer } = window.require("electron");
 const FileItem = ({ name, index, duration, deleteFile }) => {
-  const shortName = name.substring(0,10) + '...'
+  const shortName = name.substring(0, 10) + "...";
   return (
     <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
@@ -242,7 +242,8 @@ const LoadingModal = () => {
 };
 function MyDropzone() {
   //const [filesToConvert, setFilesToConvert] = useState([]);
-  const { filesToProcess, setFilesToProcess, setLoading,outputDirectory } = useContext(Context);
+  const { filesToProcess, setFilesToProcess, setLoading, outputDirectory } =
+    useContext(Context);
 
   const onDrop = useCallback((acceptedFiles) => {
     setLoading(true);
@@ -263,6 +264,9 @@ function MyDropzone() {
     onDrop,
     useFsAccessApi: false,
     noClick: true,
+    accept: {
+      "audio/mpeg": [".mp3", ".wav", ".ogg"],
+    },
   });
 
   useEffect(() => {
@@ -280,9 +284,9 @@ function MyDropzone() {
       ipcRenderer.removeAllListeners("fileComplete");
     };
   }, []);
-  const openOutputDir = ()=>{
-    ipcRenderer.send('openOutputDir',outputDirectory);
-  }
+  const openOutputDir = () => {
+    ipcRenderer.send("openOutputDir", outputDirectory);
+  };
   const clearFiles = () => {
     setFilesToProcess([]);
   };
@@ -332,7 +336,10 @@ function MyDropzone() {
                 <div>{loc.add}</div>
               </div>
             </div>
-                        <div className="btn btn-success btn-sm rounded-lg mx-2 " onClick={openOutputDir}>
+            <div
+              className="btn btn-success btn-sm rounded-lg mx-2 "
+              onClick={openOutputDir}
+            >
               <div class="flex flex-row   items-center justify-center ">
                 <FontAwesomeIcon icon={faFolder} fixedWidth size="lg" />
                 <div>{loc.open_out_dir}</div>
@@ -526,21 +533,19 @@ const FileStats = () => {
 
   return (
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
-     <div className="text-sm">{currentFile.name}</div>
+      <div className="text-sm">{currentFile.name}</div>
       <div className="flex flex-row justify-between items-center">
         <Progress />
-       
+
         <div className="mr-5">
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>
-              <div className="text-l ">
-                {loc.split_audio_files}{" "}
-                
-              </div>
+              <div className="text-l ">{loc.split_audio_files} </div>
             </li>
             <li class={`step step-${step === 1 ? "success" : "neutral"}`}>
-              <div className="text-l ">{loc.upload_to_server}
-              <span className="font-bold">
+              <div className="text-l ">
+                {loc.upload_to_server}
+                <span className="font-bold">
                   {" "}
                   {currentClip} / {totalClipsInFile}
                 </span>
@@ -553,18 +558,16 @@ const FileStats = () => {
     </div>
   );
 };
-const SplashScreen = ()=>{
-  return(
+const SplashScreen = () => {
+  return (
     <div className="App justify-center items-center flex  bg-slate-200">
-      <div className="card w-full h-full">
-        SplashScreen
-      </div>
+      <div className="card w-full h-full">SplashScreen</div>
     </div>
-    )
-}
+  );
+};
 const App = () => {
   const [modal, setModal] = useState(false);
-  const [appReady,setAppReady] = useState(false);
+  const [appReady, setAppReady] = useState(false);
   const {
     setCurrentFile,
     setCurrentClip,
@@ -582,7 +585,6 @@ const App = () => {
     loading,
     speechLanguage,
     interfaceLanguage,
-
   } = useContext(Context);
 
   useEffect(() => {
@@ -645,19 +647,15 @@ const App = () => {
     ipcRenderer.send("minimize");
   };
   if (!interfaceLanguage) {
-    loc.setLanguage('ar');
-  }
-  else{
+    loc.setLanguage("ar");
+  } else {
     loc.setLanguage(interfaceLanguage);
   }
-  
+
   if (!appReady) {
-    return(
-      <SplashScreen/>
-      )
+    return <SplashScreen />;
   }
   return (
-   
     <div
       className="App bg-slate-200"
       dir={interfaceLanguage === "en" ? "ltr" : "rtl"}
@@ -679,10 +677,6 @@ const App = () => {
         <MyDropzone />
       </div>
     </div>
-   
-
-    
-
   );
 };
 
