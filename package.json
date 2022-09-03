@@ -50,10 +50,7 @@
   },
   "proxy": "http://localhost:5000",
   "build": {
-    "win": {
-      "icon": "./build/icon.png",
-      "title": "ALMUFAREG"
-    },
+    "icon": "build/icon.png",
     "asar": false,
     "extends": null,
     "appId": "com.mediatech.mufareg",

@@ -182,7 +182,7 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input
             type="text"
-            value={outputDirectory ? outputDirectory : ""}
+            value="/output"
             disabled
             placeholder="/output"
             class="input input-bordered w-full max-w-xs"
@@ -201,7 +201,7 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input
             type="text"
-            defaultValue={apiKey ? apiKey : ""}
+            defaultValue=""
             class="input input-bordered w-full max-w-xs"
             onChange={(event) => {
               setApiKey(event.target.value);
@@ -337,7 +337,7 @@ function MyDropzone() {
               </div>
             </div>
             <div
-              className="btn btn-success btn-sm rounded-lg mx-2 "
+              className="btn btn-success btn-sm btn-outline rounded-lg mx-2 "
               onClick={openOutputDir}
             >
               <div class="flex flex-row   items-center justify-center ">
