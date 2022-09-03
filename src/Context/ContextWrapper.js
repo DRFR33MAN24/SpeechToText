@@ -13,6 +13,7 @@ export default function ContextWrapper(props) {
   const [filesToProcess, setFilesToProcess] = useState([]);
   const [processStarted, setProcessStarted] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [speechLanguage, setSpeechLanguage] = useState(
     localStorage.getItem("speechLanguage")
@@ -90,6 +91,8 @@ export default function ContextWrapper(props) {
         setCurrentSubtitle,
         setLoading,
         loading,
+        setError,
+        error,
       }}
     >
       {props.children}

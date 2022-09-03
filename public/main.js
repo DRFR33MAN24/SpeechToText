@@ -77,10 +77,10 @@ function createWindow() {
     win.webContents.openDevTools({ mode: "detach" });
   }
 
-  if (!fs.existsSync("/output")) {
+  if (!fs.existsSync("./output")) {
     fs.mkdirSync("./output");
   }
-  if (!fs.existsSync("/tmp")) {
+  if (!fs.existsSync("./tmp")) {
     fs.mkdirSync("./tmp");
   }
 }
@@ -218,8 +218,8 @@ ipcMain.on("minimize", () => {
 });
 
 ipcMain.on("openOutputDir", (e, dir) => {
-  if (dir === null) {
-    shell.openPath(__dirname + "./output");
+  if (dir === "null" || dir === "") {
+    shell.openPath(path.join(__dirname, "..", "output"));
   } else {
     shell.openPath(dir);
   }

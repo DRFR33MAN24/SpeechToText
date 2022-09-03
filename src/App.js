@@ -233,6 +233,29 @@ const SettingsModal = ({ toggleModal }) => {
     </div>
   );
 };
+const MessageModal = () => {
+  const { setError, error } = useContext(Context);
+
+  return (
+    <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
+      <div className="card bg-base-100 shadow p-10 w-96">
+        <div className="absolute top-2 right-2">
+          <button
+            className="btn btn-ghost btn-square   btn-sm  mx-1"
+            onClick={() => {
+              setError(false);
+            }}
+          >
+            <FontAwesomeIcon icon={faClose} fixedWidth size="lg" />
+          </button>
+        </div>
+        <div className="mb-2">
+          <div className="text-start ">{error}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const LoadingModal = () => {
   return (
@@ -407,16 +430,20 @@ const ProcessStats = () => {
     totalFiles,
     numApiRequests,
     filesToProcess,
-    apiKey,
+
     speechLanguage,
     outputDirectory,
     timePerClip,
     totalClipsInFile,
+    apiKey,
   } = useContext(Context);
 
   const start = () => {
     if (!filesToProcess.length) {
       return;
+    }
+    if (!apiKey || apiKey === "null") {
+      setError(loc.pleaseEnterApiKey);
     }
     setProcessStarted(true);
     ipcRenderer.send(
@@ -561,7 +588,7 @@ const FileStats = () => {
 };
 const SplashScreen = () => {
   return (
-    <div className="App justify-center items-center flex  bg-slate-200">
+    <div className="App justify-center items-center flex">
       <div className="card w-full h-full">
         <img
           src={require("./Images/splash.png")}
@@ -595,6 +622,7 @@ const App = () => {
     setApiKey,
     setOutputDirectory,
     setInterfaceLanguage,
+    error,
   } = useContext(Context);
 
   useEffect(() => {
@@ -672,6 +700,7 @@ const App = () => {
     >
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       {loading ? <LoadingModal /> : null}
+      {error ? <MessageModal /> : null}
       <section className="z-0 bg-success"></section>
       <TitleBar
         closeApp={closeApp}

@@ -17,6 +17,7 @@ const GlobalContext = React.createContext({
   currentSubtitle: "",
   loading: false,
   conversionEngine: "wit",
+  error: "",
   setSpeechLanguage: () => {},
   setApiKey: () => {},
   setInterfaceLanguage: () => {},
@@ -36,6 +37,7 @@ const GlobalContext = React.createContext({
   setTimePerClip: () => {},
   resetStats: () => {},
   resetStats: () => {},
+  setError: () => {},
 });
 
 export default GlobalContext;

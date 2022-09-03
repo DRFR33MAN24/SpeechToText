@@ -2,7 +2,7 @@ import LocalizedStrings from "react-localization";
 
 let loc = new LocalizedStrings({
   en: {
-    open_out_dir:"Open directory",
+    open_out_dir: "Open directory",
     delete: "Delete",
     convertedFiles: "Converted Files",
     failedAttempts: "Failed Attempts",
@@ -33,7 +33,8 @@ let loc = new LocalizedStrings({
     upload_to_server: "Upload to server",
   },
   ar: {
-    open_out_dir:"Open directory",
+    pleaseEnterApiKey: "Please enter API key",
+    open_out_dir: "Open directory",
     delete: "",
     convertedFiles: "",
     failedAttempts: "",
