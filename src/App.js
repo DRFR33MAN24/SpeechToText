@@ -622,7 +622,7 @@ const App = () => {
 
     setTimeout(() => {
       setAppReady(true);
-    }, 10000);
+    }, 1500);
 
     return () => {
       ipcRenderer.removeAllListeners("numberOfClips");
