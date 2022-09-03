@@ -183,7 +183,7 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input
             type="text"
-            value="/output"
+            value={outputDirectory}
             disabled
             placeholder="/output"
             class="input input-bordered w-full max-w-xs"
@@ -202,7 +202,8 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input
             type="text"
-            defaultValue=""
+            // defaultValue=""
+            value={apiKey}
             class="input input-bordered w-full max-w-xs"
             onChange={(event) => {
               setApiKey(event.target.value);
