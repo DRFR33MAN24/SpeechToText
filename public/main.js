@@ -2,6 +2,7 @@ const path = require("path");
 const axios = require("axios");
 const glob = require("glob");
 const fetch = require("node-fetch");
+const throttle = require("promise-ratelimit")(1200);
 
 const url = require("url");
 const {
@@ -173,7 +174,7 @@ const transcribeFile = async (clip, token) => {
 
   try {
     const file = fs.readFileSync(clip);
-
+    await throttle();
     let res = await fetch("https://api.wit.ai/speech", {
       method: "post",
       body: file,
@@ -231,7 +232,7 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
-const splitAwaited = (path) => {
+const splitAwaited = (path, pause) => {
   return new Promise((resolve, reject) => {
     split(
       {
@@ -239,6 +240,7 @@ const splitAwaited = (path) => {
         minClipLength: clipLength,
         maxClipLength: clipLength,
         outputPath: "tmp/",
+        isStopped: pause,
       },
 
       (err, data) => {
@@ -249,22 +251,31 @@ const splitAwaited = (path) => {
   });
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
+  cleanTmpFolder();
   console.log(speechLanguage, outputDir);
   apiToken = token;
   speechLanguage = speechLanguage;
   outputDirectory = outputDir;
+  pause = false;
   let idx = 0;
   try {
     for (const file of files) {
       if (pause) return;
       win.webContents.send("step", 0);
-      await splitAwaited(file.path);
+      const watcher = fs.watch("tmp/", (event) => {
+        if (event == "change") {
+          win.webContents.send("clipCreated");
+        }
+      });
+      await splitAwaited(file.path, pause);
+      watcher.close();
       win.webContents.send("step", 1);
       await proccessFile(file, idx);
 
       idx = idx + 1;
     }
   } catch (error) {
+    console.log(error);
     if (error.msg) {
       win.webContents.sent("error", error.msg);
     } else {
@@ -278,6 +289,8 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
 
 ipcMain.on("stop", (e) => {
   pause = true;
+});
+const cleanTmpFolder = () => {
   const audioClips = glob.sync("tmp/*.*");
 
   if (audioClips.length) {
@@ -285,7 +298,7 @@ ipcMain.on("stop", (e) => {
       fs.unlinkSync(clip);
     });
   }
-});
+};
 
 ipcMain.on("chooseDir", (event) => {
   // If the platform is 'win32' or 'Linux'

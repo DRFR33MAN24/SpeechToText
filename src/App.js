@@ -407,15 +407,26 @@ function MyDropzone() {
           ) : (
             <div>
               <p>{loc.drag_and_drop_or_click_select_button}</p>
-              <button
-                className="btn btn-success btn-sm rounded-lg "
-                onClick={open}
-              >
-                <div class="flex flex-row   items-center justify-center ">
-                  <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
-                  <div>{loc.add}</div>
+              <div className="flex flex-row items-center justify-center mt-2">
+                <button
+                  className="btn btn-success btn-sm rounded-lg "
+                  onClick={open}
+                >
+                  <div class="flex flex-row   items-center justify-center ">
+                    <FontAwesomeIcon icon={faAdd} fixedWidth size="lg" />
+                    <div>{loc.add}</div>
+                  </div>
+                </button>
+                <div
+                  className="btn btn-success btn-sm btn-outline rounded-lg mx-2 "
+                  onClick={openOutputDir}
+                >
+                  <div class="flex flex-row   items-center justify-center ">
+                    <FontAwesomeIcon icon={faFolder} fixedWidth size="lg" />
+                    <div>{loc.open_out_dir}</div>
+                  </div>
                 </div>
-              </button>
+              </div>
             </div>
           )}
         </div>
@@ -582,18 +593,19 @@ const FileStats = () => {
       <div className="flex flex-row justify-between items-center">
         <div>
           <Progress />
-          <div className="font-bold ">
-            {currentClip} / {totalClipsInFile}
-          </div>
         </div>
-        <div className="mr-5">
+        <div className="mr-5 ml-10 ">
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>
               <div className="text-l ">{loc.split_audio_files} </div>
             </li>
-            <li class={`step step-${step === 1 ? "success" : "neutral"}`}>
+            <div className="font-bold text-xl">{totalClipsInFile}</div>
+            <li class={`step step-${step === 1 ? "success" : "neutral"} `}>
               <div className="text-l ">{loc.upload_to_server}</div>
             </li>
+            <div className="font-bold text-xl">
+              {totalClipsInFile} / {currentClip}
+            </div>
           </ul>
         </div>
       </div>
@@ -673,6 +685,9 @@ const App = () => {
     ipcRenderer.on("currentSubtitle", (event, sub) => {
       setCurrentSubtitle(sub);
     });
+    ipcRenderer.on("clipCreated", () => {
+      setTotalClipsInFile((totalClipsInFile) => totalClipsInFile + 1);
+    });
     ipcRenderer.on("error", (event, err) => {
       setError(err);
     });
@@ -692,6 +707,7 @@ const App = () => {
       ipcRenderer.removeAllListeners("step");
       ipcRenderer.removeAllListeners("error");
       ipcRenderer.removeAllListeners("currentSubtitle");
+      ipcRenderer.removeAllListeners("clipCreated");
     };
   }, []);
 
@@ -722,6 +738,7 @@ const App = () => {
       {loading ? <LoadingModal /> : null}
       {error ? <MessageModal /> : null}
       <section className="z-0 bg-success"></section>
+      <hr />
       <TitleBar
         closeApp={closeApp}
         toggleModal={toggleModal}
