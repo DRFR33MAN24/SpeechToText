@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/tmp
+/output
 /.pnp
 .pnp.js
 
