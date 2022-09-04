@@ -13,7 +13,7 @@ const GlobalContext = React.createContext({
   speechLanguage: "ar",
   apiKey: "1234",
   interfaceLanguage: "ar",
-  outputDirectory: "/output",
+  outputDirectory: "",
   currentSubtitle: "",
   loading: false,
   conversionEngine: "wit",

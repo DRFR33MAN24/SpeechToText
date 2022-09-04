@@ -30,7 +30,7 @@ let apiToken = "";
 
 let speechLanguage = "ar";
 
-let outputDirectory = "output/";
+let outputDirectory = path.join(__dirname, "..", "output/");
 let pause = false;
 //setupTitlebar();
 
@@ -221,7 +221,7 @@ ipcMain.on("minimize", () => {
 
 ipcMain.on("openOutputDir", (e, dir) => {
   if (dir === "null" || dir === "") {
-    shell.openPath(path.join(__dirname, "..", "output"));
+    shell.openPath(outputDirectory);
   } else {
     shell.openPath(dir);
   }
@@ -255,7 +255,9 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   console.log(speechLanguage, outputDir);
   apiToken = token;
   speechLanguage = speechLanguage;
-  outputDirectory = outputDir;
+  if (outputDir) {
+    outputDirectory = outputDir;
+  }
   pause = false;
   let idx = 0;
   try {

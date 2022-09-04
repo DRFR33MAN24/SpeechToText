@@ -552,7 +552,8 @@ const TitleBar = ({ closeApp, toggleModal, minimizeApp }) => {
   );
 };
 const Progress = () => {
-  const { currentClip, totalClipsInFile, step } = useContext(Context);
+  const { currentClip, totalClipsInFile, step, currentSubtitle } =
+    useContext(Context);
   let progressPercent = Math.round((currentClip / totalClipsInFile) * 100);
   if (!progressPercent) {
     progressPercent = 0;
@@ -591,17 +592,17 @@ const FileStats = () => {
     <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
       <div className="text-sm">{currentFile.name}</div>
       <div className="flex flex-row justify-between items-center">
-        <div>
+        <div className="w-1/3">
           <Progress />
         </div>
-        <div className="mr-5 ml-10 ">
+        <div className="w-2/3">
           <ul class="steps steps-vertical">
             <li class={`step step-${step === 0 ? "success" : "neutral"}`}>
               <div className="text-l ">{loc.split_audio_files} </div>
             </li>
             <div className="font-bold text-xl">{totalClipsInFile}</div>
             <li class={`step step-${step === 1 ? "success" : "neutral"} `}>
-              <div className="text-l ">{loc.upload_to_server}</div>
+              <div className="text-l  ">{loc.upload_to_server}</div>
             </li>
             <div className="font-bold text-xl">
               {totalClipsInFile} / {currentClip}

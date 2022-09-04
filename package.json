@@ -47,7 +47,6 @@
     "extends": null,
     "appId": "com.mediatech.mufareg",
     "files": [
-      "dist/**/*",
       "build/**/*",
       "node_modules/**/*",
       "package.json"

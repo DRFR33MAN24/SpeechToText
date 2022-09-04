@@ -15,19 +15,41 @@ export default function ContextWrapper(props) {
   const [currentSubtitle, setCurrentSubtitle] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [speechLanguage, setSpeechLanguage] = useState(
-    localStorage.getItem("speechLanguage")
-  );
-  const [conversionEngine, setConversionEngine] = useState(
-    localStorage.getItem("conversionEnginge")
-  );
-  const [apiKey, setApiKey] = useState(localStorage.getItem("apiKey"));
-  const [interfaceLanguage, setInterfaceLanguage] = useState(
-    localStorage.getItem("interfaceLanguage")
-  );
-  const [outputDirectory, setOutputDirectory] = useState(
-    localStorage.getItem("outputDirectory")
-  );
+  const [speechLanguage, setSpeechLanguage] = useState(() => {
+    if (JSON.parse(localStorage.getItem("speechLanguage"))) {
+      return JSON.parse(localStorage.getItem("speechLanguage"));
+    } else {
+      return "ar";
+    }
+  });
+  const [conversionEngine, setConversionEngine] = useState(() => {
+    if (JSON.parse(localStorage.getItem("conversionEngine"))) {
+      return JSON.parse(localStorage.getItem("conversionEngine"));
+    } else {
+      return "wit";
+    }
+  });
+  const [apiKey, setApiKey] = useState(() => {
+    if (JSON.parse(localStorage.getItem("apiKey"))) {
+      return JSON.parse(localStorage.getItem("apiKey"));
+    } else {
+      return "";
+    }
+  });
+  const [interfaceLanguage, setInterfaceLanguage] = useState(() => {
+    if (JSON.parse(localStorage.getItem("interfaceLanguage"))) {
+      return JSON.parse(localStorage.getItem("interfaceLanguage"));
+    } else {
+      return "ar";
+    }
+  });
+  const [outputDirectory, setOutputDirectory] = useState(() => {
+    if (JSON.parse(localStorage.getItem("outputDirectory"))) {
+      return JSON.parse(localStorage.getItem("outputDirectory"));
+    } else {
+      return "";
+    }
+  });
 
   const resetStats = () => {
     setCurrentClip(0);
@@ -38,12 +60,15 @@ export default function ContextWrapper(props) {
   };
 
   useEffect(() => {
-    localStorage.setItem("speechLanguage", speechLanguage);
-    localStorage.setItem("conversionEngine", conversionEngine);
-    localStorage.setItem("interfaceLanguage", interfaceLanguage);
+    localStorage.setItem("speechLanguage", JSON.stringify(speechLanguage));
+    localStorage.setItem("conversionEngine", JSON.stringify(conversionEngine));
+    localStorage.setItem(
+      "interfaceLanguage",
+      JSON.stringify(interfaceLanguage)
+    );
     loc.setLanguage(interfaceLanguage);
-    localStorage.setItem("outputDirectory", outputDirectory);
-    localStorage.setItem("apiKey", apiKey);
+    localStorage.setItem("outputDirectory", JSON.stringify(outputDirectory));
+    localStorage.setItem("apiKey", JSON.stringify(apiKey));
   }, [
     speechLanguage,
     conversionEngine,
