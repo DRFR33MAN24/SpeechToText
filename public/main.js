@@ -104,6 +104,11 @@ const filterText = (txt) => {
 };
 const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
+  const filePattern = outputDirectory + '/' + file.name + '.*';
+  console.log(filePattern);
+  const filesToDelete = glob.sync(filePattern);
+  console.log(filesToDelete);
+  filesToDelete.map(file => { fs.unlinkSync(file) });
 
   win.webContents.send("currentFile", file);
 
@@ -252,7 +257,7 @@ const splitAwaited = (path, pause) => {
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   cleanTmpFolder();
-  console.log(speechLanguage, outputDir);
+  //console.log(speechLanguage, outputDir);
   apiToken = token;
   speechLanguage = speechLanguage;
   if (outputDir) {
