@@ -30,7 +30,7 @@ let apiToken = "";
 
 let speechLanguage = "ar";
 
-let outputDirectory = path.join(__dirname, "..", "output/");
+let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
 let pause = false;
 //setupTitlebar();
 
