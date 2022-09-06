@@ -250,7 +250,7 @@ const splitAwaited = (path) => {
         minClipLength: clipLength,
         maxClipLength: clipLength,
         outputPath: "tmp/",
-        isStopped: isStoppedObj,
+        isStoppedObj: isStoppedObj,
       },
 
       (err, data) => {
