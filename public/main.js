@@ -32,6 +32,7 @@ let speechLanguage = "ar";
 
 let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
 let pause = false;
+const isStoppedObj = { value: pause };
 //setupTitlebar();
 
 function secondsToHHMMSS(seconds) {
@@ -241,9 +242,8 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
-const splitAwaited = (path, pause) => {
+const splitAwaited = (path) => {
   return new Promise((resolve, reject) => {
-    const isStoppedObj = { value: pause };
     split(
       {
         filepath: path,
@@ -283,7 +283,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
 
         return;
       }
-      await splitAwaited(file.path, pause);
+      await splitAwaited(file.path);
 
       watcher.close();
       win.webContents.send("step", 1);
