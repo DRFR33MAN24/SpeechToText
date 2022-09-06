@@ -118,8 +118,6 @@ const proccessFile = async (file, index) => {
     return a.localeCompare(b, undefined, { numeric: true });
   });
 
-  console.log(audioClips);
-
   win.webContents.send("numberOfClips", audioClips.length);
 
   if (audioClips.length) {
@@ -245,13 +243,14 @@ ipcMain.on("getDurations", async (e, files) => {
 
 const splitAwaited = (path, pause) => {
   return new Promise((resolve, reject) => {
+    const isStoppedObj = { value: pause };
     split(
       {
         filepath: path,
         minClipLength: clipLength,
         maxClipLength: clipLength,
         outputPath: "tmp/",
-        isStopped: pause,
+        isStopped: isStoppedObj,
       },
 
       (err, data) => {
