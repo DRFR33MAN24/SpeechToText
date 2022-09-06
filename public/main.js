@@ -114,7 +114,11 @@ const proccessFile = async (file, index) => {
 
   win.webContents.send("currentFile", file);
 
-  const audioClips = glob.sync("tmp/*.*");
+  const audioClips = glob.sync("tmp/*.*").sort((a, b) => {
+    return a.localeCompare(b, undefined, { numeric: true });
+  });
+
+  console.log(audioClips);
 
   win.webContents.send("numberOfClips", audioClips.length);
 
