@@ -285,8 +285,22 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
 
         return;
       }
-      await splitAwaited(file.path);
 
+      try {
+        await splitAwaited(file.path);
+      } catch (error) {
+        if (error.msg) {
+          if (error.msg == "Stopped") {
+            global.isFileProcessStopped = false;
+            win.webContents.send("processComplete");
+            return;
+          } else {
+            throw error;
+          }
+        } else {
+          throw error;
+        }
+      }
       watcher.close();
       win.webContents.send("step", 1);
       await proccessFile(file, idx);
@@ -296,7 +310,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   } catch (error) {
     console.log(error);
     if (error.msg) {
-      win.webContents.sent("error", error.msg);
+      win.webContents.send("error", error.msg);
     } else {
       win.webContents.send("error", "Error");
     }
