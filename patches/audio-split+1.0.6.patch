@@ -1,5 +1,5 @@
 diff --git a/node_modules/audio-split/index.js b/node_modules/audio-split/index.js
-index 9c8fd7b..a911b17 100644
+index 9c8fd7b..29d5201 100644
 --- a/node_modules/audio-split/index.js
 +++ b/node_modules/audio-split/index.js
 @@ -3,6 +3,8 @@ const fs = require('fs'),
@@ -49,7 +49,7 @@ index 9c8fd7b..a911b17 100644
 +    if(global.isFileProcessStopped){
 +     
 +ffmpeg_instance.kill('SIGKILL');
-+return resolve();
++callback({msg:"Stopped"});
 +    } 
 +
      let startTime, duration;
