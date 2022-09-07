@@ -31,8 +31,8 @@ let apiToken = "";
 let speechLanguage = "ar";
 
 let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
-let pause = false;
-const isStoppedObj = { value: pause };
+global.isFileProcessStopped = false;
+
 //setupTitlebar();
 
 function secondsToHHMMSS(seconds) {
@@ -124,7 +124,7 @@ const proccessFile = async (file, index) => {
   if (audioClips.length) {
     let idx = 0;
     for (const clip of audioClips) {
-      if (pause) return;
+      if (global.isFileProcessStopped) return;
       // (async () => {
       //notify current clip
       win.webContents.send("currentClip", idx + 1);
@@ -250,7 +250,6 @@ const splitAwaited = (path) => {
         minClipLength: clipLength,
         maxClipLength: clipLength,
         outputPath: "tmp/",
-        isStoppedObj: isStoppedObj,
       },
 
       (err, data) => {
@@ -268,17 +267,20 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   if (outputDir) {
     outputDirectory = outputDir;
   }
-  pause = false;
+  global.isFileProcessStopped = false;
+
   let idx = 0;
   try {
     for (const file of files) {
       win.webContents.send("step", 0);
       const watcher = fs.watch("tmp/", (event) => {
         if (event == "change") {
-          win.webContents.send("clipCreated");
+          if (!global.isFileProcessStopped) {
+            win.webContents.send("clipCreated");
+          }
         }
       });
-      if (pause) {
+      if (global.isFileProcessStopped) {
         watcher.close();
 
         return;
@@ -305,7 +307,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
 });
 
 ipcMain.on("stop", (e) => {
-  pause = true;
+  global.isFileProcessStopped = true;
 });
 const cleanTmpFolder = () => {
   const audioClips = glob.sync("tmp/*.*");
