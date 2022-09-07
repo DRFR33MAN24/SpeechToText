@@ -292,6 +292,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
         if (error.msg) {
           if (error.msg == "Stopped") {
             global.isFileProcessStopped = false;
+            watcher.close();
             win.webContents.send("processComplete");
             return;
           } else {
@@ -301,7 +302,6 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
           throw error;
         }
       }
-      watcher.close();
       win.webContents.send("step", 1);
       await proccessFile(file, idx);
 
