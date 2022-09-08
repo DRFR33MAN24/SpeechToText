@@ -252,6 +252,10 @@ ipcMain.on("quit", () => {
 ipcMain.on("minimize", () => {
   win.minimize();
 });
+ipcMain.on("openLink", (e, link) => {
+  e.preventDefault();
+  shell.openExternal(link);
+});
 
 ipcMain.on("openOutputDir", (e, dir) => {
   if (dir === "null" || dir === "") {
@@ -354,6 +358,8 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
 
 ipcMain.on("stop", (e) => {
   global.isFileProcessStopped = true;
+  win.webContents.send("step", -1);
+  cleanTmpFolder();
 });
 const cleanTmpFolder = () => {
   const audioClips = glob.sync("tmp/*.*");

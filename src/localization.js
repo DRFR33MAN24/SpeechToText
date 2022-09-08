@@ -33,6 +33,8 @@ let loc = new LocalizedStrings({
     requests: "Requests",
     split_audio_files: "Split audio files",
     upload_to_server: "Upload to server",
+    version: "Version 1.0.0",
+    searchForUpdates: "Check Updates",
   },
   ar: {
     pleaseAddSomeFiles: "اضف بعض الملفات",
@@ -66,6 +68,8 @@ let loc = new LocalizedStrings({
     requests: "الطلبات",
     split_audio_files: "تقسيم الى مقاطع صوتية",
     upload_to_server: "الرفع الى المخدم",
+    version: "الاصدار 1.0.0",
+    searchForUpdates: "البحث عن تحديثات",
   },
 });
 

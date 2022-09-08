@@ -88,6 +88,11 @@ const SettingsModal = ({ toggleModal }) => {
       };
     });
   }, []);
+
+  const openLink = (link) => {
+    ipcRenderer.send("openLink", link);
+  };
+
   return (
     <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-slate-200 bg-opacity-50">
       <div className="card bg-base-100 shadow p-10 w-96">
@@ -114,9 +119,9 @@ const SettingsModal = ({ toggleModal }) => {
             <option id="ar" selected={speechLanguage === "ar"}>
               {loc.arabic}
             </option>
-            <option id="en" selected={speechLanguage === "en"}>
+            {/* <option id="en" selected={speechLanguage === "en"}>
               {loc.english}
-            </option>
+            </option> */}
           </select>
           <hr></hr>
         </div>
@@ -132,9 +137,9 @@ const SettingsModal = ({ toggleModal }) => {
             <option disabled selected={conversionEngine === ""}>
               {loc.conversion_engine}
             </option>
-            <option id="google" selected={conversionEngine === "google"}>
+            {/* <option id="google" selected={conversionEngine === "google"}>
               Google
-            </option>
+            </option> */}
             <option id="wit" selected={conversionEngine === "wit"}>
               Wit.ai
             </option>
@@ -211,7 +216,7 @@ const SettingsModal = ({ toggleModal }) => {
           />
           <hr></hr>
         </div>
-        <div className="mb-2">
+        {/* <div className="mb-2">
           <div className="text-start my-1">
             <span className="mx-1">{loc.enter_google_api_key}</span>
             <FontAwesomeIcon
@@ -223,13 +228,24 @@ const SettingsModal = ({ toggleModal }) => {
           </div>
           <input type="text" class="input input-bordered w-full max-w-xs" />
           <hr></hr>
-        </div>
+        </div> */}
         <button
           className="btn btn-sm btn-success rounded-lg"
           onClick={toggleModal}
         >
           {loc.save}
         </button>
+        <div className="mt-8 flex flex-row items-center justify-between">
+          <div className="text-slate-400">{loc.version}</div>
+          <div className="text-slate-400">
+            <button
+              className="btn btn-ghost"
+              onClick={() => openLink("https://almufragh.t.me")}
+            >
+              {loc.searchForUpdates}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
