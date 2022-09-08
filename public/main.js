@@ -22,6 +22,8 @@ const {
 
 const { getAudioDurationInSeconds } = require("get-audio-duration");
 const split = require("audio-split");
+const { splitAudio } = require("audio-splitter");
+
 const fs = require("fs");
 const { IncomingMessage } = require("http");
 let win;
@@ -100,6 +102,14 @@ const getFilesDurations = async (files) => {
   }
   return files;
 };
+const getClipsDurations = async (clips) => {
+  let durations = [];
+  for (let clip of clips) {
+    const time = await getAudioDurationInSeconds(clip);
+    durations.push(time);
+  }
+  return durations;
+};
 const filterText = (txt) => {
   return txt.replace(".", "\n");
 };
@@ -119,21 +129,30 @@ const proccessFile = async (file, index) => {
     return a.localeCompare(b, undefined, { numeric: true });
   });
 
+  const durations = await getClipsDurations(audioClips);
+  const getclipStart = (clipIdx) => {
+    let clipStart = 0;
+    for (let index = 0; index < clipIdx; index++) {
+      clipStart = clipStart + durations[index];
+    }
+    return clipStart;
+  };
+
   win.webContents.send("numberOfClips", audioClips.length);
 
   if (audioClips.length) {
     let idx = 0;
     for (const clip of audioClips) {
       if (global.isFileProcessStopped) return;
-      // (async () => {
-      //notify current clip
+
       win.webContents.send("currentClip", idx + 1);
       const startTime = new Date().getTime();
       let txt = await transcribeFile(clip, apiToken);
-      const filteredText = filterText(txt);
+      const filteredText = filterText(txt.text);
+      clipStartInMils = (txt.start % 1000).toString();
+      clipEndInMils = (txt.end % 1000).toString();
 
-      // })();
-      if (txt) {
+      if (txt.text) {
         try {
           fs.writeFileSync(
             `${outputDirectory}/${file.name}.txt`,
@@ -145,10 +164,10 @@ const proccessFile = async (file, index) => {
           fs.writeFileSync(
             `${outputDirectory}/${file.name}.srt`,
             `\n${idx + 1}\n${secondsToHHMMSS(
-              clipLength * idx
-            )},000 --> ${secondsToHHMMSS(
-              clipLength * idx + clipLength
-            )},000\n${filteredText}\n`,
+              getclipStart(idx) + txt.start / 1000
+            )},${clipStartInMils} --> ${secondsToHHMMSS(
+              getclipStart(idx) + txt.end / 1000
+            )},${clipEndInMils}\n${filteredText}\n`,
             { flag: "a" }
           );
 
@@ -197,10 +216,14 @@ const transcribeFile = async (clip, token) => {
 
     json = await res.json();
     //console.log(json);
-    // await sleep(2000);
     win.webContents.send("APIHit");
-
-    return json.text;
+    if (json.text) {
+      const start = json.speech.tokens[0].start;
+      const end = json.speech.tokens[json.speech.tokens.length - 1].end;
+      return { text: json.text, start: start, end: end };
+    } else {
+      return { text: "", start: 0, end: 0 };
+    }
   } catch (error) {
     throw { msg: "Network Error" };
   }
@@ -287,7 +310,14 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
       }
 
       try {
-        await splitAwaited(file.path);
+        //await splitAwaited(file.path);
+        await splitAudio({
+          mergedTrack: file.path,
+          outputDir: "tmp/",
+          minSilenceLength: 1,
+          minSongLength: 8,
+          maxNoiseLevel: -15,
+        });
       } catch (error) {
         if (error.msg) {
           if (error.msg == "Stopped") {
