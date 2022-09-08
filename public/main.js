@@ -3,7 +3,8 @@ const axios = require("axios");
 const glob = require("glob");
 const fetch = require("node-fetch");
 const throttle = require("promise-ratelimit")(1200);
-
+var ffmpeg = require("fluent-ffmpeg");
+var command = ffmpeg();
 const url = require("url");
 const {
   app,
@@ -164,9 +165,9 @@ const proccessFile = async (file, index) => {
           fs.writeFileSync(
             `${outputDirectory}/${file.name}.srt`,
             `\n${idx + 1}\n${secondsToHHMMSS(
-              getclipStart(idx) + txt.start / 1000
+              getclipStart(idx) + Math.abs(txt.start - 2) / 1000
             )},${clipStartInMils} --> ${secondsToHHMMSS(
-              getclipStart(idx) + txt.end / 1000
+              getclipStart(idx) + (txt.end - 2) / 1000
             )},${clipEndInMils}\n${filteredText}\n`,
             { flag: "a" }
           );
@@ -318,6 +319,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
           minSongLength: 8,
           maxNoiseLevel: -15,
         });
+        watcher.close();
       } catch (error) {
         if (error.msg) {
           if (error.msg == "Stopped") {
