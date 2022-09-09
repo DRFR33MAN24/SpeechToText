@@ -116,13 +116,16 @@ const filterText = (txt) => {
 };
 const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
-  // const filePattern = outputDirectory;
-  // console.log("filePattern", filePattern + "/*.*");
-  // const filesToDelete = glob.sync(filePattern);
-  // console.log(filesToDelete);
-  // filesToDelete.map((file) => {
-  //   fs.unlinkSync(file);
-  // });
+  const filePattern = outputDirectory;
+  //console.log("filePattern", filePattern + file.name);
+  const filesToDelete = glob.sync(`${file.name}.*`, {
+    cwd: filePattern + "\\",
+    absolute: true,
+  });
+  //console.log(filesToDelete);
+  filesToDelete.map((file) => {
+    fs.unlinkSync(file);
+  });
 
   win.webContents.send("currentFile", file);
 
