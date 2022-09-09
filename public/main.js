@@ -116,13 +116,13 @@ const filterText = (txt) => {
 };
 const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
-  const filePattern = outputDirectory + "/" + file.name + ".*";
-  console.log(filePattern);
-  const filesToDelete = glob.sync(filePattern);
-  console.log(filesToDelete);
-  filesToDelete.map((file) => {
-    fs.unlinkSync(file);
-  });
+  // const filePattern = outputDirectory;
+  // console.log("filePattern", filePattern + "/*.*");
+  // const filesToDelete = glob.sync(filePattern);
+  // console.log(filesToDelete);
+  // filesToDelete.map((file) => {
+  //   fs.unlinkSync(file);
+  // });
 
   win.webContents.send("currentFile", file);
 
@@ -309,7 +309,8 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
         }
       });
       if (global.isFileProcessStopped) {
-        watcher.close();
+        // watcher.close();
+        win.webContents.send("processComplete");
 
         return;
       }
@@ -359,7 +360,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
 ipcMain.on("stop", (e) => {
   global.isFileProcessStopped = true;
   win.webContents.send("step", -1);
-  cleanTmpFolder();
+  // cleanTmpFolder();
 });
 const cleanTmpFolder = () => {
   const audioClips = glob.sync("tmp/*.*");
