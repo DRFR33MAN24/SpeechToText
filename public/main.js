@@ -168,12 +168,12 @@ const fixTiming = (responses, idx) => {
   return tokens;
 };
 
+let subtitleCount = 0;
 const generateSubtitles = (responses, idx, file) => {
   const tokens = fixTiming(responses, idx);
 
   let subtitle = [];
   let preTokedId = 0;
-  let subtitleCount = 0;
   for (let tkId = 0; tkId < tokens.length; tkId++) {
     if (subtitle.length === 0) {
       subtitle.push(tokens[tkId]);
@@ -183,7 +183,7 @@ const generateSubtitles = (responses, idx, file) => {
       if (delay > maxDelay) {
         writeSubtitle(
           file,
-          subtitleCount + (idx - 2),
+          subtitleCount,
           subtitle[0].start,
           subtitle[subtitle.length - 1].end,
           subtitle.reduce((pre, curr) => pre + " " + curr.token, "")
@@ -202,7 +202,7 @@ const generateSubtitles = (responses, idx, file) => {
   if (subtitle.length !== 0) {
     writeSubtitle(
       file,
-      subtitleCount + (idx - 2),
+      subtitleCount,
       subtitle[0].start,
       subtitle[subtitle.length - 1].end,
       subtitle.reduce((pre, curr) => pre + " " + curr.token, "\n")
