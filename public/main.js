@@ -250,6 +250,8 @@ const proccessFile = async (file, index) => {
           generateSubtitles(responses);
           responses = [];
           responses.push(txt);
+        } else {
+          responses.push(txt);
         }
         // try {
         //   fs.writeFileSync(
