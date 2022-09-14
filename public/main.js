@@ -401,6 +401,7 @@ const splitAudioFile = async (filename, offset) => {
 
       outputTrack: `./tmp/track-${step}.mp3`, // output track
     });
+    // extract reminder
   }
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
