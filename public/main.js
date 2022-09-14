@@ -33,6 +33,10 @@ let apiToken = "";
 
 let speechLanguage = "ar";
 
+const maxDelay = 200;
+const offset = 9600;
+const cutLength = 18000;
+
 let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
 global.isFileProcessStopped = false;
 
@@ -290,6 +294,23 @@ const splitAwaited = (path) => {
     );
   });
 };
+const splitAudioFile = async (filename, offset) => {
+  const fileDuration = await getAudioDurationInSeconds(filename);
+  const splitCount = fileDuration / (cutLength / 1000);
+  const reminder = fileDuration % (cutLength / 1000);
+  console.log(splitCount, reminder, fileDuration);
+  for (let step = 0; step < splitCount; step++) {
+    // extract audio params
+    await extractAudio({
+      ffmpegPath: "ffmpeg", // path to ffmpeg.exe
+      inputTrack: filename, // source track
+      start: step * ((cutLength - 1000) / 1000), // start seconds in the source
+      length: cutLength / 1000, // duration to extract
+
+      outputTrack: `./tmp/track-${step}.mp3`, // output track
+    });
+  }
+};
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   cleanTmpFolder();
   //console.log(speechLanguage, outputDir);
@@ -321,13 +342,16 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
       try {
         //await splitAwaited(file.path);
         console.log("new Branch");
-        await splitAudio({
-          mergedTrack: file.path,
-          outputDir: "tmp/",
-          minSilenceLength: 1,
-          minSongLength: 8,
-          maxNoiseLevel: -15,
-        });
+
+        // await splitAudio({
+        //   mergedTrack: file.path,
+        //   outputDir: "tmp/",
+        //   minSilenceLength: 1,
+        //   minSongLength: 8,
+        //   maxNoiseLevel: -15,
+        // });
+
+        await splitAudioFile(file.path, offset);
         watcher.close();
       } catch (error) {
         if (error.msg) {
