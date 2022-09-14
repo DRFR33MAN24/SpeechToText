@@ -320,6 +320,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
 
       try {
         //await splitAwaited(file.path);
+        console.log("new Branch");
         await splitAudio({
           mergedTrack: file.path,
           outputDir: "tmp/",
