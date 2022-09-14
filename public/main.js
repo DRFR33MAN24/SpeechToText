@@ -3,7 +3,7 @@ const axios = require("axios");
 const glob = require("glob");
 const fetch = require("node-fetch");
 const throttle = require("promise-ratelimit")(1200);
-const { extractAudio } = require('audio-splitter')
+const { extractAudio } = require("audio-splitter");
 const url = require("url");
 const {
   app,
@@ -113,22 +113,16 @@ const getClipsDurations = async (clips) => {
   return durations;
 };
 const writeSubtitle = (file, id, start, end, content) => {
-
   fs.writeFileSync(
     `${outputDirectory}/${file.name}.srt`,
-    `\n${id + 1}\n${secondsToHHMMSS(Math.round(start / 1000))},000 --> ${secondsToHHMMSS(
-      Math.round(end / 1000)
-    )},000\n${content}\n`,
+    `\n${id + 1}\n${secondsToHHMMSS(
+      Math.round(start / 1000)
+    )},000 --> ${secondsToHHMMSS(Math.round(end / 1000))},000\n${content}\n`,
     { flag: "a" }
   );
-  fs.writeFileSync(
-    `${outputDirectory}/${file.name}.txt`,
-    content,
-    {
-      flag: "a",
-    }
-  );
-
+  fs.writeFileSync(`${outputDirectory}/${file.name}.txt`, content, {
+    flag: "a",
+  });
 };
 const fixTiming = (responses, idx) => {
   let tokens = [];
@@ -189,10 +183,10 @@ const generateSubtitles = (responses, idx, file) => {
       if (delay > maxDelay) {
         writeSubtitle(
           file,
-          subtitleCount,
+          subtitleCount + (idx - 2),
           subtitle[0].start,
           subtitle[subtitle.length - 1].end,
-          subtitle.reduce((pre, curr) => pre + " " + curr.token, "\n")
+          subtitle.reduce((pre, curr) => pre + " " + curr.token, "")
         );
         subtitleCount = subtitleCount + 1;
         subtitle = [];
@@ -208,7 +202,7 @@ const generateSubtitles = (responses, idx, file) => {
   if (subtitle.length !== 0) {
     writeSubtitle(
       file,
-      subtitleCount,
+      subtitleCount + (idx - 2),
       subtitle[0].start,
       subtitle[subtitle.length - 1].end,
       subtitle.reduce((pre, curr) => pre + " " + curr.token, "\n")
@@ -269,7 +263,6 @@ const proccessFile = async (file, index) => {
         }
         responses.push(txt);
         win.webContents.send("currentSubtitle", filteredText);
-
       }
       const endTime = new Date().getTime();
       const elapsedTime = endTime - startTime;
