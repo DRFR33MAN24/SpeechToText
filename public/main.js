@@ -3,8 +3,7 @@ const axios = require("axios");
 const glob = require("glob");
 const fetch = require("node-fetch");
 const throttle = require("promise-ratelimit")(1200);
-var ffmpeg = require("fluent-ffmpeg");
-var command = ffmpeg();
+const { extractAudio } = require('audio-splitter')
 const url = require("url");
 const {
   app,
@@ -22,8 +21,6 @@ const {
 } = require("custom-electron-titlebar/main");
 
 const { getAudioDurationInSeconds } = require("get-audio-duration");
-const split = require("audio-split");
-const { splitAudio } = require("audio-splitter");
 
 const fs = require("fs");
 const { IncomingMessage } = require("http");
@@ -34,7 +31,7 @@ let apiToken = "";
 let speechLanguage = "ar";
 
 const maxDelay = 200;
-const offset = 9600;
+const offset = 17600;
 const cutLength = 18000;
 
 let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
@@ -115,6 +112,24 @@ const getClipsDurations = async (clips) => {
   }
   return durations;
 };
+const writeSubtitle = (file, id, start, end, content) => {
+
+  fs.writeFileSync(
+    `${outputDirectory}/${file.name}.srt`,
+    `\n${id + 1}\n${secondsToHHMMSS(Math.round(start / 1000))},000 --> ${secondsToHHMMSS(
+      Math.round(end / 1000)
+    )},000\n${content}\n`,
+    { flag: "a" }
+  );
+  fs.writeFileSync(
+    `${outputDirectory}/${file.name}.txt`,
+    content,
+    {
+      flag: "a",
+    }
+  );
+
+};
 const fixTiming = (responses, idx) => {
   let tokens = [];
 
@@ -159,7 +174,7 @@ const fixTiming = (responses, idx) => {
   return tokens;
 };
 
-const generateSubtitles = (responses, idx) => {
+const generateSubtitles = (responses, idx, file) => {
   const tokens = fixTiming(responses, idx);
 
   let subtitle = [];
@@ -173,6 +188,7 @@ const generateSubtitles = (responses, idx) => {
       const delay = tokens[tkId].start - tokens[preTokedId].end;
       if (delay > maxDelay) {
         writeSubtitle(
+          file,
           subtitleCount,
           subtitle[0].start,
           subtitle[subtitle.length - 1].end,
@@ -191,6 +207,7 @@ const generateSubtitles = (responses, idx) => {
 
   if (subtitle.length !== 0) {
     writeSubtitle(
+      file,
       subtitleCount,
       subtitle[0].start,
       subtitle[subtitle.length - 1].end,
@@ -247,32 +264,12 @@ const proccessFile = async (file, index) => {
 
       if (txt.text) {
         if (responses.length === 2) {
-          generateSubtitles(responses, idx);
+          generateSubtitles(responses, idx, file);
           responses = [];
         }
         responses.push(txt);
-        // try {
-        //   fs.writeFileSync(
-        //     `${outputDirectory}/${file.name}.txt`,
-        //     filteredText,
-        //     {
-        //       flag: "a",
-        //     }
-        //   );
-        //   fs.writeFileSync(
-        //     `${outputDirectory}/${file.name}.srt`,
-        //     `\n${idx + 1}\n${secondsToHHMMSS(
-        //       getclipStart(idx) + Math.abs(txt.start - 2) / 1000
-        //     )},${clipStartInMils} --> ${secondsToHHMMSS(
-        //       getclipStart(idx) + (txt.end - 2) / 1000
-        //     )},${clipEndInMils}\n${filteredText}\n`,
-        //     { flag: "a" }
-        //   );
+        win.webContents.send("currentSubtitle", filteredText);
 
-        //   win.webContents.send("currentSubtitle", filteredText);
-        // } catch (error) {
-        //   throw { msg: "write to file error" };
-        // }
       }
       const endTime = new Date().getTime();
       const elapsedTime = endTime - startTime;

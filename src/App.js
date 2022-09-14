@@ -32,7 +32,7 @@ import Context from "./Context/Context";
 const { ipcRenderer } = window.require("electron");
 const FileItem = ({ name, index, duration, deleteFile }) => {
   const shortName = name.substring(0, 10) + "...";
-  const numberOfClips = Math.round(duration / 10);
+  const numberOfClips = Math.round(duration / 18);
   return (
     <div class=" card bg-base-100  p-2 my-1 rounded-none border-b-2">
       <div className="flex flex-row justify-between items-center">
