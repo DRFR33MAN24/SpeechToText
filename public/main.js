@@ -31,7 +31,7 @@ let apiToken = "";
 let speechLanguage = "ar";
 
 const maxDelay = 200;
-const offset = 17600;
+const offset = 17800;
 const cutLength = 18000;
 
 let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
@@ -119,9 +119,9 @@ const writeSubtitle = (file, id, start, end, content) => {
     `${outputDirectory}/${file.name}.srt`,
     `\n${id + 1}\n${secondsToHHMMSS(
       Math.round(start / 1000)
-    )},${startMils.toFixed(3)} --> ${secondsToHHMMSS(
+    )},${startMils} --> ${secondsToHHMMSS(
       Math.round(end / 1000)
-    )},${endMils.toFixed(3)}\n${content}\n`,
+    )},${endMils}\n${content}\n`,
     { flag: "a" }
   );
   fs.writeFileSync(`${outputDirectory}/${file.name}.txt`, content, {
