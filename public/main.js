@@ -115,6 +115,90 @@ const getClipsDurations = async (clips) => {
   }
   return durations;
 };
+const fixTiming = (responses) => {
+  let tokens = [];
+
+  for (let resId = 0; resId < responses.length; resId++) {
+    let currTokens = responses[resId].speech.tokens;
+
+    if (resId === responses.length - 1) {
+      const res = currTokens.map((tk, index) => {
+        return {
+          ...tk,
+          start: tk.start + offset * resId,
+          end: tk.end + offset * resId,
+        };
+      });
+      tokens = tokens.concat(res);
+    } else {
+      let nextTokens = responses[resId + 1].speech.tokens;
+
+      const currLastToken = currTokens[currTokens.length - 1];
+      const nextFirstToken = nextTokens[0];
+      if (currLastToken.end > nextFirstToken.start + offset) {
+        const currLastTokenDuration =
+          currTokens[currTokens.length - 1].end -
+          currTokens[currTokens.length - 1].start;
+        const nextFirstTokenDuration = nextTokens[0].end - nextTokens[0].start;
+        if (nextFirstTokenDuration >= currLastTokenDuration) {
+          currTokens.splice(currTokens.length - 1, 1);
+        } else {
+          nextTokens.splice(0, 1);
+        }
+      }
+      const res = currTokens.map((tk, index) => {
+        return {
+          ...tk,
+          start: tk.start + offset * resId,
+          end: tk.end + offset * resId,
+        };
+      });
+      tokens = tokens.concat(res);
+    }
+  }
+  return tokens;
+};
+
+const generateSubtitles = (responses) => {
+  const tokens = fixTiming(responses);
+
+  let subtitle = [];
+  let preTokedId = 0;
+  let subtitleCount = 0;
+  for (let tkId = 0; tkId < tokens.length; tkId++) {
+    if (subtitle.length === 0) {
+      subtitle.push(tokens[tkId]);
+      preTokedId = tkId;
+    } else {
+      const delay = tokens[tkId].start - tokens[preTokedId].end;
+      if (delay > maxDelay) {
+        writeSubtitle(
+          subtitleCount,
+          subtitle[0].start,
+          subtitle[subtitle.length - 1].end,
+          subtitle.reduce((pre, curr) => pre + " " + curr.token, "\n")
+        );
+        subtitleCount = subtitleCount + 1;
+        subtitle = [];
+        subtitle.push(tokens[tkId]);
+        preTokedId = tkId;
+      } else {
+        subtitle.push(tokens[tkId]);
+        preTokedId = tkId;
+      }
+    }
+  }
+
+  if (subtitle.length !== 0) {
+    writeSubtitle(
+      subtitleCount,
+      subtitle[0].start,
+      subtitle[subtitle.length - 1].end,
+      subtitle.reduce((pre, curr) => pre + " " + curr.token, "\n")
+    );
+    subtitleCount = subtitleCount + 1;
+  }
+};
 const filterText = (txt) => {
   return txt.replace(".", "\n");
 };
@@ -150,6 +234,7 @@ const proccessFile = async (file, index) => {
 
   if (audioClips.length) {
     let idx = 0;
+    let responses = [];
     for (const clip of audioClips) {
       if (global.isFileProcessStopped) return;
 
@@ -161,28 +246,33 @@ const proccessFile = async (file, index) => {
       clipEndInMils = (txt.end % 1000).toString();
 
       if (txt.text) {
-        try {
-          fs.writeFileSync(
-            `${outputDirectory}/${file.name}.txt`,
-            filteredText,
-            {
-              flag: "a",
-            }
-          );
-          fs.writeFileSync(
-            `${outputDirectory}/${file.name}.srt`,
-            `\n${idx + 1}\n${secondsToHHMMSS(
-              getclipStart(idx) + Math.abs(txt.start - 2) / 1000
-            )},${clipStartInMils} --> ${secondsToHHMMSS(
-              getclipStart(idx) + (txt.end - 2) / 1000
-            )},${clipEndInMils}\n${filteredText}\n`,
-            { flag: "a" }
-          );
-
-          win.webContents.send("currentSubtitle", filteredText);
-        } catch (error) {
-          throw { msg: "write to file error" };
+        if (responses.length === 2) {
+          generateSubtitles(responses);
+          responses = [];
+          responses.push(txt);
         }
+        // try {
+        //   fs.writeFileSync(
+        //     `${outputDirectory}/${file.name}.txt`,
+        //     filteredText,
+        //     {
+        //       flag: "a",
+        //     }
+        //   );
+        //   fs.writeFileSync(
+        //     `${outputDirectory}/${file.name}.srt`,
+        //     `\n${idx + 1}\n${secondsToHHMMSS(
+        //       getclipStart(idx) + Math.abs(txt.start - 2) / 1000
+        //     )},${clipStartInMils} --> ${secondsToHHMMSS(
+        //       getclipStart(idx) + (txt.end - 2) / 1000
+        //     )},${clipEndInMils}\n${filteredText}\n`,
+        //     { flag: "a" }
+        //   );
+
+        //   win.webContents.send("currentSubtitle", filteredText);
+        // } catch (error) {
+        //   throw { msg: "write to file error" };
+        // }
       }
       const endTime = new Date().getTime();
       const elapsedTime = endTime - startTime;
