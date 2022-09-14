@@ -159,7 +159,7 @@ const fixTiming = (responses) => {
   return tokens;
 };
 
-const generateSubtitles = (responses) => {
+const generateSubtitles = (responses, idx) => {
   const tokens = fixTiming(responses);
 
   let subtitle = [];
@@ -247,7 +247,7 @@ const proccessFile = async (file, index) => {
 
       if (txt.text) {
         if (responses.length === 2) {
-          generateSubtitles(responses);
+          generateSubtitles(responses, idx);
           responses = [];
           responses.push(txt);
         } else {
