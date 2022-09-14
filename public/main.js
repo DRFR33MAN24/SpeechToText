@@ -30,8 +30,8 @@ let apiToken = "";
 
 let speechLanguage = "ar";
 
-const maxDelay = 200;
-const offset = 17800;
+const maxDelay = 100;
+const offset = 17900;
 const cutLength = 18000;
 
 let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
