@@ -320,9 +320,10 @@ const transcribeFile = async (clip, token) => {
     if (json.text) {
       const start = json.speech.tokens[0].start;
       const end = json.speech.tokens[json.speech.tokens.length - 1].end;
-      return { text: json.text, start: start, end: end };
+      // return { text: json.text, start: start, end: end };
+      return json;
     } else {
-      return { text: "", start: 0, end: 0 };
+      return {};
     }
   } catch (error) {
     throw { msg: "Network Error" };
