@@ -113,11 +113,15 @@ const getClipsDurations = async (clips) => {
   return durations;
 };
 const writeSubtitle = (file, id, start, end, content) => {
+  const startMils = start % 1000;
+  const endMils = end % 1000;
   fs.writeFileSync(
     `${outputDirectory}/${file.name}.srt`,
     `\n${id + 1}\n${secondsToHHMMSS(
       Math.round(start / 1000)
-    )},000 --> ${secondsToHHMMSS(Math.round(end / 1000))},000\n${content}\n`,
+    )},${startMils.toFixed(3)} --> ${secondsToHHMMSS(
+      Math.round(end / 1000)
+    )},${endMils.toFixed(3)}\n${content}\n`,
     { flag: "a" }
   );
   fs.writeFileSync(`${outputDirectory}/${file.name}.txt`, content, {
