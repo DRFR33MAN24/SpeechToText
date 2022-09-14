@@ -242,17 +242,15 @@ const proccessFile = async (file, index) => {
       const startTime = new Date().getTime();
       let txt = await transcribeFile(clip, apiToken);
       const filteredText = filterText(txt.text);
-      clipStartInMils = (txt.start % 1000).toString();
-      clipEndInMils = (txt.end % 1000).toString();
+      // clipStartInMils = (txt.start % 1000).toString();
+      // clipEndInMils = (txt.end % 1000).toString();
 
       if (txt.text) {
         if (responses.length === 2) {
           generateSubtitles(responses, idx);
           responses = [];
-          responses.push(txt);
-        } else {
-          responses.push(txt);
         }
+        responses.push(txt);
         // try {
         //   fs.writeFileSync(
         //     `${outputDirectory}/${file.name}.txt`,
