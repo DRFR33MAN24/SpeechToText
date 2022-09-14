@@ -115,16 +115,17 @@ const getClipsDurations = async (clips) => {
 const writeSubtitle = (file, id, start, end, content) => {
   const startMils = start % 1000;
   const endMils = end % 1000;
+  filteredContent = filterText(content)
   fs.writeFileSync(
     `${outputDirectory}/${file.name}.srt`,
     `\n${id + 1}\n${secondsToHHMMSS(
       Math.round(start / 1000)
     )},${startMils} --> ${secondsToHHMMSS(
       Math.round(end / 1000)
-    )},${endMils}\n${content}\n`,
+    )},${endMils}\n${filteredContent}\n`,
     { flag: "a" }
   );
-  fs.writeFileSync(`${outputDirectory}/${file.name}.txt`, content, {
+  fs.writeFileSync(`${outputDirectory}/${file.name}.txt`, filteredContent, {
     flag: "a",
   });
 };
@@ -215,7 +216,8 @@ const generateSubtitles = (responses, idx, file) => {
   }
 };
 const filterText = (txt) => {
-  return txt.replace(".", "\n");
+
+  return txt.replace("\n", "");
 };
 const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
@@ -410,6 +412,8 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   let idx = 0;
   try {
     for (const file of files) {
+      subtitleCount = 0;
+
       win.webContents.send("step", 0);
       const watcher = fs.watch("tmp/", (event) => {
         if (event == "change") {
