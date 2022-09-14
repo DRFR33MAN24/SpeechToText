@@ -115,7 +115,7 @@ const getClipsDurations = async (clips) => {
   }
   return durations;
 };
-const fixTiming = (responses) => {
+const fixTiming = (responses, idx) => {
   let tokens = [];
 
   for (let resId = 0; resId < responses.length; resId++) {
@@ -125,8 +125,8 @@ const fixTiming = (responses) => {
       const res = currTokens.map((tk, index) => {
         return {
           ...tk,
-          start: tk.start + offset * resId,
-          end: tk.end + offset * resId,
+          start: tk.start + offset * (resId + (idx - 2)),
+          end: tk.end + offset * (resId + (idx - 2)),
         };
       });
       tokens = tokens.concat(res);
@@ -149,8 +149,8 @@ const fixTiming = (responses) => {
       const res = currTokens.map((tk, index) => {
         return {
           ...tk,
-          start: tk.start + offset * resId,
-          end: tk.end + offset * resId,
+          start: tk.start + offset * (resId + (idx - 2)),
+          end: tk.end + offset * (resId + (idx - 2)),
         };
       });
       tokens = tokens.concat(res);
@@ -160,7 +160,7 @@ const fixTiming = (responses) => {
 };
 
 const generateSubtitles = (responses, idx) => {
-  const tokens = fixTiming(responses);
+  const tokens = fixTiming(responses, idx);
 
   let subtitle = [];
   let preTokedId = 0;
