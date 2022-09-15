@@ -409,7 +409,7 @@ const splitAudioFile = async (filename, offset) => {
   await extractAudio({
     ffmpegPath: "ffmpeg", // path to ffmpeg.exe
     inputTrack: filename, // source track
-    start: splitCount * ((cutLength - 100) / 1000), // start seconds in the source
+    start: (Math.ceil(splitCount) - 1) * ((cutLength - 100) / 1000), // start seconds in the source
     length: reminder, // duration to extract
 
     outputTrack: `./tmp/track-${step}.mp3`, // output track
