@@ -115,7 +115,7 @@ const getClipsDurations = async (clips) => {
 const writeSubtitle = (file, id, start, end, content) => {
   const startMils = start % 1000;
   const endMils = end % 1000;
-  filteredContent = filterText(content)
+  filteredContent = filterText(content);
   fs.writeFileSync(
     `${outputDirectory}/${file.name}.srt`,
     `\n${id + 1}\n${secondsToHHMMSS(
@@ -129,6 +129,14 @@ const writeSubtitle = (file, id, start, end, content) => {
     flag: "a",
   });
 };
+function addNewlines(str) {
+  var result = "";
+  while (str.length > 0) {
+    result += str.substring(0, 50) + "\n";
+    str = str.substring(50);
+  }
+  return result;
+}
 const fixTiming = (responses, idx) => {
   let tokens = [];
 
@@ -216,8 +224,8 @@ const generateSubtitles = (responses, idx, file) => {
   }
 };
 const filterText = (txt) => {
-
-  return txt.replace("\n", "");
+  const newTxt = addNewlines(txt);
+  return newTxt.replace("\n", "").replace(".", "\n");
 };
 const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
