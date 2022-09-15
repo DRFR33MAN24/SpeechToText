@@ -224,8 +224,8 @@ const generateSubtitles = (responses, idx, file) => {
   }
 };
 const filterText = (txt) => {
-  const newTxt = addNewlines(txt);
-  return newTxt.replace("\n", "").replace(".", "\n");
+  //const newTxt = addNewlines(txt);
+  return txt.replace("\n", "").replace(/\./g, "\n");
 };
 const proccessFile = async (file, index) => {
   // create a tmp folder for the file in tmp folder
