@@ -406,6 +406,14 @@ const splitAudioFile = async (filename, offset) => {
     });
     // extract reminder
   }
+  await extractAudio({
+    ffmpegPath: "ffmpeg", // path to ffmpeg.exe
+    inputTrack: filename, // source track
+    start: splitCount * ((cutLength - 100) / 1000), // start seconds in the source
+    length: reminder, // duration to extract
+
+    outputTrack: `./tmp/track-${step}.mp3`, // output track
+  });
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   cleanTmpFolder();
@@ -500,37 +508,37 @@ const cleanTmpFolder = () => {
 
 ipcMain.on("chooseDir", (event) => {
   // If the platform is 'win32' or 'Linux'
-  if (process.platform !== "darwin") {
-    // Resolves to a Promise<Object>
-    dialog
-      .showOpenDialog({
-        title: "Select the File to be uploaded",
-        defaultPath: path.join(__dirname, "../assets/"),
-        buttonLabel: "Select",
-        // Restricting the user to only Text Files.
-        // filters: [
-        //   {
-        //     name: "Text Files",
-        //     extensions: ["txt", "docx"],
-        //   },
-        // ],
-        // Specifying the File Selector Property
-        properties: ["openFile", "openDirectory"],
-      })
-      .then((file) => {
-        // Stating whether dialog operation was
-        // cancelled or not.
-        console.log(file.canceled);
-        if (!file.canceled) {
-          const filepath = file.filePaths[0].toString();
-          console.log(filepath);
-          event.reply("file", filepath);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  // if (process.platform !== "darwin") {
+  // Resolves to a Promise<Object>
+  dialog
+    .showOpenDialog({
+      title: "Select the File to be uploaded",
+      defaultPath: path.join(__dirname, "../assets/"),
+      buttonLabel: "Select",
+      // Restricting the user to only Text Files.
+      // filters: [
+      //   {
+      //     name: "Text Files",
+      //     extensions: ["txt", "docx"],
+      //   },
+      // ],
+      // Specifying the File Selector Property
+      properties: ["openFile", "openDirectory"],
+    })
+    .then((file) => {
+      // Stating whether dialog operation was
+      // cancelled or not.
+      console.log(file.canceled);
+      if (!file.canceled) {
+        const filepath = file.filePaths[0].toString();
+        console.log(filepath);
+        event.reply("file", filepath);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  // }
 });
 ipcMain.on("changeWindowSize", (e, width, height, isMaximizable) => {
   let win = BrowserWindow.fromWebContents(e.sender);
