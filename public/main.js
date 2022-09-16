@@ -406,14 +406,14 @@ const splitAudioFile = async (filename, offset) => {
     });
     // extract reminder
   }
-  await extractAudio({
-    ffmpegPath: "ffmpeg", // path to ffmpeg.exe
-    inputTrack: filename, // source track
-    start: (Math.ceil(splitCount) - 1) * ((cutLength - 100) / 1000), // start seconds in the source
-    length: reminder, // duration to extract
+  // await extractAudio({
+  //   ffmpegPath: "ffmpeg", // path to ffmpeg.exe
+  //   inputTrack: filename, // source track
+  //   start: (Math.ceil(splitCount) - 1) * ((cutLength - 100) / 1000), // start seconds in the source
+  //   length: reminder, // duration to extract
 
-    outputTrack: `./tmp/track-${step}.mp3`, // output track
-  });
+  //   outputTrack: `./tmp/track-${splitCount}.mp3`, // output track
+  // });
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   cleanTmpFolder();
