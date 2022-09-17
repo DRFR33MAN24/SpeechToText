@@ -33,8 +33,17 @@ let speechLanguage = "ar";
 const maxDelay = 100;
 const offset = 17900;
 const cutLength = 18000;
+let outputDirectory;
+let tmpDirectory;
+if (process.platform === 'darwin') {
+  outputDirectory = process.env.HOME + '/Library/Application Support/almufargh/output/';
+  tmpDirectory = process.env.HOME + '/Library/Application Support/almufargh/tmp/';
+}
+else {
 
-let outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
+  outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
+  tmpDirectory = "tmp/"
+}
 global.isFileProcessStopped = false;
 
 //setupTitlebar();
@@ -83,12 +92,16 @@ function createWindow() {
     win.webContents.openDevTools({ mode: "detach" });
   }
 
-  if (!fs.existsSync("./output")) {
-    fs.mkdirSync("./output");
+
+
+  if (!fs.existsSync(outputDirectory)) {
+    fs.mkdirSync(outputDirectory);
   }
-  if (!fs.existsSync("./tmp")) {
-    fs.mkdirSync("./tmp");
+  if (!fs.existsSync(tmpDirectory)) {
+    fs.mkdirSync(tmpDirectory);
   }
+
+
 }
 
 if (process.platform === "linux") {
@@ -242,9 +255,13 @@ const proccessFile = async (file, index) => {
 
   win.webContents.send("currentFile", file);
 
-  const audioClips = glob.sync("tmp/*.*").sort((a, b) => {
+
+  const audioClips = glob.sync(tmpDirectory + '*.*').sort((a, b) => {
     return a.localeCompare(b, undefined, { numeric: true });
   });
+
+
+
 
   const durations = await getClipsDurations(audioClips);
   const getclipStart = (clipIdx) => {
@@ -384,7 +401,7 @@ const splitAwaited = (path) => {
         filepath: path,
         minClipLength: clipLength,
         maxClipLength: clipLength,
-        outputPath: "tmp/",
+        outputPath: tmpDirectory,
       },
 
       (err, data) => {
@@ -407,7 +424,7 @@ const splitAudioFile = async (filename, offset) => {
       start: step * ((cutLength - 100) / 1000), // start seconds in the source
       length: cutLength / 1000, // duration to extract
 
-      outputTrack: `./tmp/track-${step}.mp3`, // output track
+      outputTrack: `${tmpDirectory}track-${step}.mp3`, // output track
     });
     // extract reminder
   }
@@ -417,7 +434,7 @@ const splitAudioFile = async (filename, offset) => {
     start: Math.floor(splitCount) * ((cutLength - 100) / 1000), // start seconds in the source
     length: reminder, // duration to extract
 
-    outputTrack: `./tmp/track-${Math.ceil(splitCount)}.mp3`, // output track
+    outputTrack: `${tmpDirectory}track-${Math.ceil(splitCount)}.mp3`, // output track
   });
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
@@ -436,7 +453,7 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
       subtitleCount = 0;
 
       win.webContents.send("step", 0);
-      const watcher = fs.watch("tmp/", (event) => {
+      const watcher = fs.watch(tmpDirectory, (event) => {
         if (event == "change") {
           if (!global.isFileProcessStopped) {
             win.webContents.send("clipCreated");
@@ -502,7 +519,7 @@ ipcMain.on("stop", (e) => {
   // cleanTmpFolder();
 });
 const cleanTmpFolder = () => {
-  const audioClips = glob.sync("tmp/*.*");
+  const audioClips = glob.sync(tmpDirectory + "*.*");
 
   if (audioClips.length) {
     audioClips.map((clip, index) => {
