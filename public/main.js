@@ -36,8 +36,8 @@ const cutLength = 18000;
 let outputDirectory;
 let tmpDirectory;
 if (process.platform === 'darwin') {
-  outputDirectory = process.env.HOME + '/Library/Application Support/almufargh/output/';
-  tmpDirectory = process.env.HOME + '/Library/Application Support/almufargh/tmp/';
+  outputDirectory = process.env.HOME + '/Library/Application Support/output/';
+  tmpDirectory = process.env.HOME + '/Library/Application Support/tmp/';
 }
 else {
 
