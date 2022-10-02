@@ -21,6 +21,7 @@ const {
 } = require("custom-electron-titlebar/main");
 
 const { getAudioDurationInSeconds } = require("get-audio-duration");
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 
 const fs = require("fs");
 const { IncomingMessage } = require("http");
@@ -35,14 +36,12 @@ const offset = 17900;
 const cutLength = 18000;
 let outputDirectory;
 let tmpDirectory;
-if (process.platform === 'darwin') {
-  outputDirectory = process.env.HOME + '/Library/Application Support/output/';
-  tmpDirectory = process.env.HOME + '/Library/Application Support/tmp/';
-}
-else {
-
+if (process.platform === "darwin") {
+  outputDirectory = process.env.HOME + "/Library/Application Support/output/";
+  tmpDirectory = process.env.HOME + "/Library/Application Support/tmp/";
+} else {
   outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
-  tmpDirectory = "tmp/"
+  tmpDirectory = "tmp/";
 }
 global.isFileProcessStopped = false;
 
@@ -92,16 +91,12 @@ function createWindow() {
     win.webContents.openDevTools({ mode: "detach" });
   }
 
-
-
   if (!fs.existsSync(outputDirectory)) {
     fs.mkdirSync(outputDirectory);
   }
   if (!fs.existsSync(tmpDirectory)) {
     fs.mkdirSync(tmpDirectory);
   }
-
-
 }
 
 if (process.platform === "linux") {
@@ -117,18 +112,18 @@ const getFilesDurations = async (files) => {
   }
   return files;
 };
-const getClipsDurations = async (clips) => {
-  let durations = [];
-  for (let clip of clips) {
-    const time = await getAudioDurationInSeconds(clip);
-    durations.push(time);
-  }
-  return durations;
-};
+// const getClipsDurations = async (clips) => {
+//   let durations = [];
+//   for (let clip of clips) {
+//     const time = await getAudioDurationInSeconds(clip);
+//     durations.push(time);
+//   }
+//   return durations;
+// };
 const writeSubtitle = (file, id, start, end, content) => {
   const startMils = start % 1000;
   const endMils = end % 1000;
-  filteredContent = filterText(content);
+  let filteredContent = filterText(content);
   fs.writeFileSync(
     `${outputDirectory}/${file.name}.srt`,
     `\n${id + 1}\n${secondsToHHMMSS(
@@ -255,22 +250,18 @@ const proccessFile = async (file, index) => {
 
   win.webContents.send("currentFile", file);
 
-
-  const audioClips = glob.sync(tmpDirectory + '*.*').sort((a, b) => {
+  const audioClips = glob.sync(tmpDirectory + "*.*").sort((a, b) => {
     return a.localeCompare(b, undefined, { numeric: true });
   });
 
-
-
-
-  const durations = await getClipsDurations(audioClips);
-  const getclipStart = (clipIdx) => {
-    let clipStart = 0;
-    for (let index = 0; index < clipIdx; index++) {
-      clipStart = clipStart + durations[index];
-    }
-    return clipStart;
-  };
+  // const durations = await getClipsDurations(audioClips);
+  // const getclipStart = (clipIdx) => {
+  //   let clipStart = 0;
+  //   for (let index = 0; index < clipIdx; index++) {
+  //     clipStart = clipStart + durations[index];
+  //   }
+  //   return clipStart;
+  // };
 
   win.webContents.send("numberOfClips", audioClips.length);
 
@@ -288,11 +279,11 @@ const proccessFile = async (file, index) => {
       // clipEndInMils = (txt.end % 1000).toString();
 
       if (txt.text) {
+        responses.push(txt);
         if (responses.length === 2) {
           generateSubtitles(responses, idx, file);
           responses = [];
         }
-        responses.push(txt);
         win.webContents.send("currentSubtitle", filteredText);
       }
       const endTime = new Date().getTime();
@@ -300,8 +291,8 @@ const proccessFile = async (file, index) => {
       win.webContents.send("timePerClip", elapsedTime);
       idx += 1;
     }
-
     if (responses.length) {
+      console.log("idx", idx);
       generateSubtitles(responses, idx, file);
       responses = [];
     }
@@ -394,32 +385,37 @@ ipcMain.on("getDurations", async (e, files) => {
   e.reply("getDurations-reply", durations);
 });
 
-const splitAwaited = (path) => {
-  return new Promise((resolve, reject) => {
-    split(
-      {
-        filepath: path,
-        minClipLength: clipLength,
-        maxClipLength: clipLength,
-        outputPath: tmpDirectory,
-      },
+// const splitAwaited = (path) => {
+//   return new Promise((resolve, reject) => {
+//     split(
+//       {
+//         filepath: path,
+//         minClipLength: clipLength,
+//         maxClipLength: clipLength,
+//         outputPath: tmpDirectory,
+//       },
 
-      (err, data) => {
-        if (err) return reject(err);
-        resolve(data);
-      }
-    );
-  });
-};
+//       (err, data) => {
+//         if (err) return reject(err);
+//         resolve(data);
+//       }
+//     );
+//   });
+// };
 const splitAudioFile = async (filename, offset) => {
   const fileDuration = await getAudioDurationInSeconds(filename);
   const splitCount = fileDuration / (cutLength / 1000);
   const reminder = fileDuration % (cutLength / 1000);
+  console.log(
+    Math.floor(splitCount) * ((cutLength - 100) / 1000),
+    Math.ceil(splitCount)
+  );
   console.log(splitCount, reminder, fileDuration);
   for (let step = 0; step < splitCount; step++) {
     // extract audio params
+    console.log(step);
     await extractAudio({
-      ffmpegPath: "ffmpeg", // path to ffmpeg.exe
+      ffmpegPath: ffmpegPath, // path to ffmpeg.exe
       inputTrack: filename, // source track
       start: step * ((cutLength - 100) / 1000), // start seconds in the source
       length: cutLength / 1000, // duration to extract
@@ -428,14 +424,15 @@ const splitAudioFile = async (filename, offset) => {
     });
     // extract reminder
   }
-  await extractAudio({
-    ffmpegPath: "ffmpeg", // path to ffmpeg.exe
-    inputTrack: filename, // source track
-    start: Math.floor(splitCount) * ((cutLength - 100) / 1000), // start seconds in the source
-    length: reminder, // duration to extract
 
-    outputTrack: `${tmpDirectory}track-${Math.ceil(splitCount)}.mp3`, // output track
-  });
+  // await extractAudio({
+  //   ffmpegPath: ffmpegPath, // path to ffmpeg.exe
+  //   inputTrack: filename, // source track
+  //   start: Math.floor(splitCount) * ((cutLength - 100) / 1000), // start seconds in the source
+  //   length: reminder, // duration to extract
+
+  //   outputTrack: `${tmpDirectory}track-${Math.ceil(splitCount)}.mp3`, // output track
+  // });
 };
 ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
   cleanTmpFolder();
