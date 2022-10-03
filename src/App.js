@@ -48,8 +48,10 @@ const FileItem = ({ name, index, duration, deleteFile }) => {
         <div className="flex flex-row items-center">
           <span className="badge badge-success mx-2 p-3 ">{numberOfClips}</span>
           <span className="badge badge-success-content mx-2 p-3 ">
-            <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
-            {secondsToHHMMSS(duration)}
+            <div className="text-white">
+              <FontAwesomeIcon icon={faClock} fixedWidth size="lg" />
+              {secondsToHHMMSS(duration)}
+            </div>
           </span>
           <button
             className="btn btn-square btn-outline btn-sm btn-error rounded-lg "

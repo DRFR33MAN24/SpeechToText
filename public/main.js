@@ -191,7 +191,7 @@ const fixTiming = (responses, idx) => {
 
 let subtitleCount = 0;
 const generateSubtitles = (responses, idx, file) => {
-  console.log(responses);
+  // console.log(responses);
   const tokens = fixTiming(responses, idx);
 
   let subtitle = [];
@@ -272,7 +272,7 @@ const proccessFile = async (file, index) => {
     for (const clip of audioClips) {
       if (global.isFileProcessStopped) return;
 
-      win.webContents.send("currentClip", idx + 1);
+      win.webContents.send("currentClip", idx);
       const startTime = new Date().getTime();
       let txt = await transcribeFile(clip, apiToken);
       const filteredText = filterText(txt.text);
