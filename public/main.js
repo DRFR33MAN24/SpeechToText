@@ -191,6 +191,7 @@ const fixTiming = (responses, idx) => {
 
 let subtitleCount = 0;
 const generateSubtitles = (responses, idx, file) => {
+  console.log(responses);
   const tokens = fixTiming(responses, idx);
 
   let subtitle = [];
@@ -266,7 +267,7 @@ const proccessFile = async (file, index) => {
   win.webContents.send("numberOfClips", audioClips.length);
 
   if (audioClips.length) {
-    let idx = 0;
+    let idx = 1;
     let responses = [];
     for (const clip of audioClips) {
       if (global.isFileProcessStopped) return;
@@ -292,7 +293,7 @@ const proccessFile = async (file, index) => {
       idx += 1;
     }
     if (responses.length) {
-      console.log("idx", idx);
+      // console.log("idx", idx);
       generateSubtitles(responses, idx, file);
       responses = [];
     }
@@ -307,11 +308,11 @@ const proccessFile = async (file, index) => {
   win.webContents.send("fileComplete", index);
 };
 
-async function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+// async function sleep(ms) {
+//   return new Promise((resolve) => {
+//     setTimeout(resolve, ms);
+//   });
+// }
 
 const transcribeFile = async (clip, token) => {
   let json;
@@ -404,13 +405,13 @@ ipcMain.on("getDurations", async (e, files) => {
 // };
 const splitAudioFile = async (filename, offset) => {
   const fileDuration = await getAudioDurationInSeconds(filename);
-  const splitCount = fileDuration / (cutLength / 1000);
-  const reminder = fileDuration % (cutLength / 1000);
-  console.log(
-    Math.floor(splitCount) * ((cutLength - 100) / 1000),
-    Math.ceil(splitCount)
-  );
-  console.log(splitCount, reminder, fileDuration);
+  const splitCount = Math.ceil(fileDuration / (cutLength / 1000));
+  // const reminder = fileDuration % (cutLength / 1000);
+  // console.log(
+  //   Math.floor(splitCount) * ((cutLength - 100) / 1000),
+  //   Math.ceil(splitCount)
+  // );
+  // console.log(splitCount, reminder, fileDuration);
   for (let step = 0; step < splitCount; step++) {
     // extract audio params
     console.log(step);

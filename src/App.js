@@ -77,6 +77,8 @@ const SettingsModal = ({ toggleModal }) => {
     setOutputDirectory,
     conversionEngine,
     setConversionEngine,
+    setTheme,
+    theme,
   } = useContext(Context);
 
   useEffect(() => {
@@ -163,6 +165,27 @@ const SettingsModal = ({ toggleModal }) => {
             </option>
             <option id="en" selected={interfaceLanguage === "en"}>
               {loc.english}
+            </option>
+          </select>
+          <hr></hr>
+        </div>
+        <div className="mb-2">
+          <div className="text-start ">{loc.theme}</div>
+          <select
+            class="select w-full max-w-xs"
+            onChange={(event) => {
+              const options = event.target.options;
+              setTheme(options[event.target.selectedIndex].id);
+            }}
+          >
+            <option disabled selected={theme === ""}>
+              {loc.theme}
+            </option>
+            <option id="light" selected={theme === "light"}>
+              {loc.light}
+            </option>
+            <option id="dark" selected={theme === "dark"}>
+              {loc.dark}
             </option>
           </select>
           <hr></hr>
@@ -502,7 +525,12 @@ const ProcessStats = () => {
           <div className="stat  items-center ">
             <div className="justify-center items-center">
               <button className="btn btn-circle btn-success " onClick={start}>
-                <FontAwesomeIcon icon={faPlayCircle} fixedWidth size="lg" />
+                <FontAwesomeIcon
+                  icon={faPlayCircle}
+                  fixedWidth
+                  size="lg"
+                  className="text-accent-content"
+                />
               </button>
             </div>
             <div className="mt-2 text-lg font-bold">{loc.start}</div>
@@ -605,7 +633,7 @@ const FileStats = () => {
     useContext(Context);
 
   return (
-    <div className="card bg-base-100 shadow-xl p-3 rounded-lg  ">
+    <div className="card bg-base-100  shadow-xl p-3 rounded-lg  ">
       <div className="text-sm">{currentFile.name}</div>
       <div className="flex flex-row justify-between items-center">
         <div className="w-1/3">
@@ -620,7 +648,7 @@ const FileStats = () => {
             <li class={`step step-${step === 1 ? "success" : "neutral"} `}>
               <div className="text-l  ">{loc.upload_to_server}</div>
             </li>
-            <div className="font-bold text-xl">
+            <div className="font-bold text-xl  ">
               {totalClipsInFile} / {currentClip}
             </div>
           </ul>
@@ -667,6 +695,7 @@ const App = () => {
     setOutputDirectory,
     setInterfaceLanguage,
     error,
+    theme,
     setError,
   } = useContext(Context);
 
@@ -748,13 +777,15 @@ const App = () => {
   }
   return (
     <div
-      className="App bg-slate-200"
+      className={`App bg-neutral-content text-accent-content `}
+      data-theme={theme === "dark" ? "dark" : "light"}
       dir={interfaceLanguage === "en" ? "ltr" : "rtl"}
     >
       {modal ? <SettingsModal toggleModal={toggleModal} /> : null}
       {loading ? <LoadingModal /> : null}
       {error ? <MessageModal /> : null}
-      <section className="z-0 bg-success"></section>
+      <section className={`z-0 bg-success `}></section>
+
       <hr />
       <TitleBar
         closeApp={closeApp}
@@ -764,7 +795,6 @@ const App = () => {
 
       <div className="mx-5 pt-16  ">
         <ProcessStats />
-
         <FileStats />
 
         <MyDropzone />

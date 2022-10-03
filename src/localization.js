@@ -2,6 +2,9 @@ import LocalizedStrings from "react-localization";
 
 let loc = new LocalizedStrings({
   en: {
+    theme: "Theme",
+    dark: "dark",
+    light: "light",
     pleaseEnterApiKey: "Please Enter API Key",
     pleaseAddSomeFiles: "Please add some files",
     open_out_dir: "Open directory",
@@ -37,6 +40,9 @@ let loc = new LocalizedStrings({
     searchForUpdates: "Check Updates",
   },
   ar: {
+    theme: "السمة",
+    dark: "داكن",
+    light: "فاتح",
     pleaseAddSomeFiles: "اضف بعض الملفات",
     pleaseEnterApiKey: "الرجاء ادخال مفتاح التحقق",
     open_out_dir: "مجلد الاخراج",

@@ -13,6 +13,7 @@ export default function ContextWrapper(props) {
   const [filesToProcess, setFilesToProcess] = useState([]);
   const [processStarted, setProcessStarted] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [speechLanguage, setSpeechLanguage] = useState(() => {
@@ -20,6 +21,13 @@ export default function ContextWrapper(props) {
       return JSON.parse(localStorage.getItem("speechLanguage"));
     } else {
       return "ar";
+    }
+  });
+  const [theme, setTheme] = useState(() => {
+    if (JSON.parse(localStorage.getItem("theme"))) {
+      return JSON.parse(localStorage.getItem("theme"));
+    } else {
+      return "light";
     }
   });
   const [conversionEngine, setConversionEngine] = useState(() => {
@@ -69,12 +77,14 @@ export default function ContextWrapper(props) {
     loc.setLanguage(interfaceLanguage);
     localStorage.setItem("outputDirectory", JSON.stringify(outputDirectory));
     localStorage.setItem("apiKey", JSON.stringify(apiKey));
+    localStorage.setItem("theme", JSON.stringify(theme));
   }, [
     speechLanguage,
     conversionEngine,
     apiKey,
     interfaceLanguage,
     outputDirectory,
+    theme,
   ]);
 
   useEffect(() => {
@@ -119,6 +129,8 @@ export default function ContextWrapper(props) {
         loading,
         setError,
         error,
+        theme,
+        setTheme,
       }}
     >
       {props.children}

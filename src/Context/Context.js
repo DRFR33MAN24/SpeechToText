@@ -18,6 +18,7 @@ const GlobalContext = React.createContext({
   loading: false,
   conversionEngine: "wit",
   error: "",
+  theme: "",
   setSpeechLanguage: () => {},
   setApiKey: () => {},
   setInterfaceLanguage: () => {},
@@ -27,6 +28,7 @@ const GlobalContext = React.createContext({
   setCurrentFile: () => {},
   setCurrentSubtitle: () => {},
   setLoading: () => {},
+  setTheme: () => {},
 
   setCurrentClip: () => {},
   setNumApiRequests: () => {},
