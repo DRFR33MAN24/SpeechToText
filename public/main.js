@@ -35,12 +35,15 @@ const maxDelay = 100;
 const offset = 17900;
 const cutLength = 18000;
 let outputDirectory;
+let logsDirectory;
 let tmpDirectory;
 if (process.platform === "darwin") {
   outputDirectory = process.env.HOME + "/Library/Application Support/output/";
+  outputDirectory = process.env.HOME + "/Library/Application Support/logs/";
   tmpDirectory = process.env.HOME + "/Library/Application Support/tmp/";
 } else {
   outputDirectory = path.join(__dirname, "..", "..", "..", "output/");
+  logsDirectory = path.join(__dirname, "..", "..", "..", "logs/");
   tmpDirectory = "tmp/";
 }
 global.isFileProcessStopped = false;
@@ -96,6 +99,9 @@ function createWindow() {
   }
   if (!fs.existsSync(tmpDirectory)) {
     fs.mkdirSync(tmpDirectory);
+  }
+  if (!fs.existsSync(logsDirectory)) {
+    fs.mkdirSync(logsDirectory);
   }
 }
 
@@ -339,7 +345,14 @@ const transcribeFile = async (clip, token) => {
       // return { text: json.text, start: start, end: end };
       return json;
     } else {
-      return {};
+      fs.writeFileSync(
+        `${logsDirectory}/logs.txt`,
+        JSON.stringify(json) + "\n",
+        {
+          flag: "a",
+        }
+      );
+      throw { msg: "Empty Response" };
     }
   } catch (error) {
     throw { msg: "Network Error" };
@@ -485,6 +498,9 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
             global.isFileProcessStopped = false;
             watcher.close();
             win.webContents.send("processComplete");
+            fs.writeFileSync(`${logsDirectory}/logs.txt`, error + "\n", {
+              flag: "a",
+            });
             return;
           } else {
             throw error;
@@ -500,6 +516,9 @@ ipcMain.on("start", async (e, files, token, speechLanguage, outputDir) => {
     }
   } catch (error) {
     console.log(error);
+    fs.writeFileSync(`${logsDirectory}/logs.txt`, error + "\n", {
+      flag: "a",
+    });
     if (error.msg) {
       win.webContents.send("error", error.msg);
     } else {
@@ -557,6 +576,9 @@ ipcMain.on("chooseDir", (event) => {
     })
     .catch((err) => {
       console.log(err);
+      fs.writeFileSync(`${logsDirectory}/logs.txt`, err + "\n", {
+        flag: "a",
+      });
     });
   // }
 });
