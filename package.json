@@ -45,11 +45,8 @@
   "proxy": "http://localhost:5000",
   "build": {
     "icon": "build/icon.png",
-    "asar": true,
-    "asarUnpack": [
-      "node_modules/@ffmpeg-installer",
-      "node_modules/@ffprobe-installer"
-    ],
+    "asar": false,
+
     "extends": null,
     "appId": "com.mediatech.mufareg",
     "files": [
