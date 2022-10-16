@@ -1,5 +1,5 @@
 const path = require("path");
-const axios = require("axios");
+
 const glob = require("glob");
 const fetch = require("node-fetch");
 const throttle = require("promise-ratelimit")(1200);
